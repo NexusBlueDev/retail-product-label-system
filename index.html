@@ -557,8 +557,10 @@
                 });
 
                 if (!response.ok) {
-                    const error = await response.json();
-                    throw new Error(error.message || 'Save failed');
+                    const errorData = await response.json();
+                    // Supabase returns errors in different formats
+                    const errorMsg = errorData.message || errorData.error || errorData.hint || JSON.stringify(errorData);
+                    throw new Error(errorMsg);
                 }
 
                 // Show success modal
@@ -576,13 +578,23 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (error) {
-                // Check for duplicate error
-                if (error.message.includes('unique_sku') || error.message.includes('duplicate')) {
-                    showStatus('⚠️ Product with this SKU already exists!', 'error');
-                } else if (error.message.includes('unique_barcode')) {
-                    showStatus('⚠️ Product with this barcode already exists!', 'error');
+                // Parse the error response
+                let errorMessage = error.message || '';
+                
+                // Check for duplicate errors (Postgres returns different error formats)
+                if (errorMessage.toLowerCase().includes('duplicate') || 
+                    errorMessage.toLowerCase().includes('unique') ||
+                    errorMessage.includes('23505')) {  // Postgres unique violation error code
+                    
+                    if (errorMessage.toLowerCase().includes('sku') || errorMessage.includes('unique_sku')) {
+                        showStatus('⚠️ Product with this SKU already exists!', 'error');
+                    } else if (errorMessage.toLowerCase().includes('barcode') || errorMessage.includes('unique_barcode')) {
+                        showStatus('⚠️ Product with this barcode already exists!', 'error');
+                    } else {
+                        showStatus('⚠️ This product already exists in the database!', 'error');
+                    }
                 } else {
-                    showStatus(`Save error: ${error.message}`, 'error');
+                    showStatus(`Save error: ${errorMessage}`, 'error');
                 }
                 console.error('Save error:', error);
                 saveBtn.disabled = false;
