@@ -270,7 +270,7 @@
         <!-- Camera Section -->
         <div class="camera-section">
             <div class="file-input-wrapper" id="fileWrapper">
-                <input type="file" id="cameraInput" accept="image/*" capture="environment">
+                <input type="file" id="cameraInput" accept="image/*">
                 <div class="camera-icon">📷</div>
                 <div class="camera-text">Tap to take photo or select image</div>
                 <img id="previewImage" class="preview-image" alt="Preview">
@@ -362,9 +362,9 @@
     </div>
 
     <script>
-        // Configuration - REPLACE SUPABASE_KEY WITH YOUR PUBLISHABLE KEY
+        // Configuration
         const SUPABASE_URL = 'https://ayfwyvripnetwrkimxka.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_54gmrrTrRQFdHNshMr8aMw_CeH9r02k';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5Znd5dnJpcG5ldHdya2lteGthIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1NjA1NzAsImV4cCI6MjA4NjEzNjU3MH0.sb_publishable_54gmrrTrRQFdHNshMr8aMw_CeH9r02k';
         const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/extract-product`;
 
         // DOM Elements
@@ -549,6 +549,9 @@
                 cameraInput.value = '';
                 saveBtn.disabled = true;
                 extractedData = null;
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (error) {
                 showStatus(`Save error: ${error.message}`, 'error');
