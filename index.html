@@ -202,35 +202,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        .config-section {
-            background: #FFF9E6;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #FFE082;
-        }
-
-        .config-section h3 {
-            font-size: 16px;
-            margin-bottom: 12px;
-            color: #F57C00;
-        }
-
-        .config-input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #FFD54F;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: monospace;
-        }
-
-        .config-note {
-            font-size: 12px;
-            color: #E65100;
-            margin-top: 8px;
-        }
-
         .modal {
             display: none;
             position: fixed;
@@ -295,16 +266,6 @@
 <body>
     <div class="container">
         <h1>📦 Product Scanner</h1>
-
-        <!-- Configuration Section -->
-        <div class="config-section" id="configSection">
-            <h3>⚙️ Setup Required</h3>
-            <div class="form-group">
-                <label>OpenAI API Key:</label>
-                <input type="password" id="openaiKey" class="config-input" placeholder="sk-proj-...">
-            </div>
-            <p class="config-note">Get your API key from: platform.openai.com/api-keys</p>
-        </div>
 
         <!-- Camera Section -->
         <div class="camera-section">
@@ -401,9 +362,10 @@
     </div>
 
     <script>
-        // Configuration - REPLACE THESE WITH YOUR VALUES
+        // Configuration - REPLACE SUPABASE_KEY WITH YOUR PUBLISHABLE KEY
         const SUPABASE_URL = 'https://ayfwyvripnetwrkimxka.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_54gmrrTrRQFdHNshMr8aMw_CeH9r02k'; // Replace this!
+        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY_HERE';
+        const FUNCTION_URL = `${SUPABASE_URL}/functions/v1/extract-product`;
 
         // DOM Elements
         const cameraInput = document.getElementById('cameraInput');
@@ -414,25 +376,6 @@
         const saveBtn = document.getElementById('saveBtn');
         const exportBtn = document.getElementById('exportBtn');
         const form = document.getElementById('productForm');
-        const openaiKeyInput = document.getElementById('openaiKey');
-        const configSection = document.getElementById('configSection');
-
-        // Check for saved API key
-        const savedKey = localStorage.getItem('openai_api_key');
-        if (savedKey) {
-            openaiKeyInput.value = savedKey;
-            configSection.style.display = 'none';
-        }
-
-        // Save API key on change
-        openaiKeyInput.addEventListener('change', () => {
-            const key = openaiKeyInput.value.trim();
-            if (key) {
-                localStorage.setItem('openai_api_key', key);
-                configSection.style.display = 'none';
-                showStatus('API key saved!', 'success');
-            }
-        });
 
         let currentImageBase64 = null;
         let extractedData = null;
@@ -441,14 +384,6 @@
         cameraInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
-            // Check for API key
-            const apiKey = openaiKeyInput.value.trim() || localStorage.getItem('openai_api_key');
-            if (!apiKey) {
-                showStatus('Please enter your OpenAI API key first!', 'error');
-                configSection.style.display = 'block';
-                return;
-            }
 
             showStatus('Image uploaded ✓', 'info');
             fileWrapper.classList.add('has-image');
@@ -465,10 +400,10 @@
             const base64 = await compressImage(file);
             currentImageBase64 = base64;
             
-            showStatus('Base64 ready ✓', 'info');
+            showStatus('Processing with AI...', 'info');
 
-            // Extract product data with AI
-            await extractProductData(base64, apiKey);
+            // Extract product data via Supabase Edge Function
+            await extractProductData(base64);
         });
 
         // Compress image
@@ -512,105 +447,27 @@
             });
         }
 
-        // Extract product data using GPT-4o vision
-        async function extractProductData(base64Image, apiKey) {
+        // Extract product data using Supabase Edge Function
+        async function extractProductData(base64Image) {
             loading.style.display = 'block';
-            showStatus('Analyzing product with AI...', 'info');
-
-            const prompt = `You are an experienced retail inventory specialist reviewing product tags and labels for Lightspeed POS import.
-TASK: Analyze this product image to identify the item and extract key retail data fields in Lightspeed-compatible format.
-CRITICAL PRICE RULES (apply first and always):
-- Scan EVERY visible price (printed tags, stickers, crossed-out originals, handwritten notes, "was/now" markings).
-- ALWAYS use the LOWEST clearly readable numeric price as retail_price.
-- Handwritten prices are the current selling price — prioritize them over printed/crossed-out ones.
-- If "was $X now $Y", use the lower $Y.
-- Only extract a price if you can clearly read the digits (ignore if blurry/unreadable).
-- Note price context in "notes" (e.g., "handwritten current $29.85", "clearance .97", "sale .95").
-YOUR EXPERTISE:
-- You understand retail product labeling conventions
-- You know common tag layouts for apparel, footwear, accessories, and gifts
-- You recognize brand names, style codes, and SKU formats
-- You understand UPC/barcode formats (12-13 clean digits, no spaces/hyphens)
-- You can identify product categories and types
-- Prices ending in .97 = DISCOUNTED/CLEARANCE, .95 = REGULAR SALE, .99/.00 = FULL RETAIL
-INSTRUCTIONS:
-1. First, identify WHAT type of product this is (jeans, boots, shirt, hat, toy, etc.)
-2. Identify the BRAND if visible
-3. Determine the CATEGORY using this format:
-   - Apparel items: "Apparel - [Type]" (e.g., "Apparel - Jeans")
-   - Footwear: "Footwear - [Type]"
-   - Accessories: "Accessories - [Type]"
-   - Gifts/Toys: "Gifts & Novelties - [Type]"
-4. Extract standard retail fields:
-   - Style/SKU codes (alphanumeric like "13MWZ", "MDM0003")
-   - UPC barcodes (12-13 digits only)
-   - Size information (e.g., "33x32", "15 x 32")
-   - Product names or style names
-   - Gender tags (Ladies, Men, Kids, Unisex)
-5. Use retail knowledge for category if obvious
-6. If a value is not clearly readable, use null
-7. Do NOT invent, guess, or hallucinate any data — only what is clearly visible
-RETURN THIS EXACT LIGHTSPEED-COMPATIBLE JSON FORMAT (nothing else):
-{
-  "sku": "string or null - style/item code from label",
-  "barcode": "string or null - UPC/EAN digits only (12-13 digits, no spaces/hyphens)",
-  "name": "string - descriptive product name",
-  "brand_name": "string or null - brand name",
-  "product_category": "string or null - category in format 'Type - Subtype'",
-  "retail_price": "number or null - LOWEST clearly visible price",
-  "supply_price": null,
-  "size_or_dimensions": "string or null - size/dimensions",
-  "tags": "string or null - gender/target (e.g., 'Men')",
-  "description": "string or null - additional visible details",
-  "notes": "string or null - color, material, pricing context, etc."
-}
-EXAMPLES OF GOOD CATEGORY VALUES:
-- "Apparel - Jeans"
-- "Footwear - Boots"
-- "Accessories - Hats"
-- "Gifts & Novelties - Toys"
-Return only valid JSON with no markdown formatting or code blocks.`;
 
             try {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const response = await fetch(FUNCTION_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${apiKey}`
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
                     },
-                    body: JSON.stringify({
-                        model: 'gpt-4o',
-                        messages: [
-                            {
-                                role: 'user',
-                                content: [
-                                    { type: 'text', text: prompt },
-                                    {
-                                        type: 'image_url',
-                                        image_url: { url: base64Image }
-                                    }
-                                ]
-                            }
-                        ],
-                        max_tokens: 1000
-                    })
+                    body: JSON.stringify({ image: base64Image })
                 });
 
-                const data = await response.json();
+                const result = await response.json();
                 
-                if (data.error) {
-                    throw new Error(data.error.message);
+                if (!result.success) {
+                    throw new Error(result.error || 'Extraction failed');
                 }
 
-                const content = data.choices[0].message.content;
-                
-                // Parse JSON response
-                const jsonMatch = content.match(/\{[\s\S]*\}/);
-                if (!jsonMatch) {
-                    throw new Error('No JSON found in response');
-                }
-                
-                extractedData = JSON.parse(jsonMatch[0]);
+                extractedData = result.data;
                 
                 // Populate form
                 populateForm(extractedData);
@@ -641,7 +498,7 @@ Return only valid JSON with no markdown formatting or code blocks.`;
             document.getElementById('notes').value = data.notes || '';
         }
 
-        // Save product to Supabase using REST API
+        // Save product to Supabase
         saveBtn.addEventListener('click', async () => {
             const formData = {
                 name: document.getElementById('name').value,
@@ -681,8 +538,6 @@ Return only valid JSON with no markdown formatting or code blocks.`;
                     const error = await response.json();
                     throw new Error(error.message || 'Save failed');
                 }
-
-                const data = await response.json();
 
                 // Show success modal
                 document.getElementById('successModal').classList.add('show');
