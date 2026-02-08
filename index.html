@@ -347,6 +347,7 @@
 
     <!-- Fixed Bottom Buttons -->
     <div class="button-group">
+        <button type="button" class="btn-secondary" id="rescanBtn" disabled style="flex: 0.5;">🔄 Rescan</button>
         <button type="button" class="btn-primary" id="saveBtn" disabled>Save Product</button>
         <button type="button" class="btn-secondary" id="exportBtn">Export CSV</button>
     </div>
@@ -375,10 +376,21 @@
         const loading = document.getElementById('loading');
         const saveBtn = document.getElementById('saveBtn');
         const exportBtn = document.getElementById('exportBtn');
+        const rescanBtn = document.getElementById('rescanBtn');
         const form = document.getElementById('productForm');
 
         let currentImageBase64 = null;
         let extractedData = null;
+
+        // Rescan button handler
+        rescanBtn.addEventListener('click', async () => {
+            if (currentImageBase64) {
+                rescanBtn.disabled = true;
+                showStatus('Rescanning image...', 'info');
+                await extractProductData(currentImageBase64);
+                rescanBtn.disabled = false;
+            }
+        });
 
         // Camera input handler
         cameraInput.addEventListener('change', async (e) => {
@@ -475,6 +487,7 @@
                 loading.style.display = 'none';
                 showStatus(`✓ Product detected: ${extractedData.name}`, 'success');
                 saveBtn.disabled = false;
+                rescanBtn.disabled = false;
                 
             } catch (error) {
                 loading.style.display = 'none';
@@ -496,6 +509,11 @@
             document.getElementById('tags').value = data.tags || '';
             document.getElementById('description').value = data.description || '';
             document.getElementById('notes').value = data.notes || '';
+            
+            // Validate barcode length
+            if (data.barcode && (data.barcode.length !== 12 && data.barcode.length !== 13)) {
+                showStatus(`⚠️ Warning: Barcode has ${data.barcode.length} digits (should be 12 or 13). Please verify!`, 'error');
+            }
         }
 
         // Save product to Supabase
