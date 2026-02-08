@@ -500,9 +500,13 @@
 
         // Save product to Supabase
         saveBtn.addEventListener('click', async () => {
+            // Get and capitalize SKU
+            const skuValue = document.getElementById('sku').value;
+            const capitalizedSku = skuValue ? skuValue.toUpperCase() : null;
+            
             const formData = {
                 name: document.getElementById('name').value,
-                sku: document.getElementById('sku').value || null,
+                sku: capitalizedSku,
                 barcode: document.getElementById('barcode').value || null,
                 brand_name: document.getElementById('brand_name').value || null,
                 product_category: document.getElementById('product_category').value || null,
@@ -554,7 +558,14 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
             } catch (error) {
-                showStatus(`Save error: ${error.message}`, 'error');
+                // Check for duplicate error
+                if (error.message.includes('unique_sku') || error.message.includes('duplicate')) {
+                    showStatus('⚠️ Product with this SKU already exists!', 'error');
+                } else if (error.message.includes('unique_barcode')) {
+                    showStatus('⚠️ Product with this barcode already exists!', 'error');
+                } else {
+                    showStatus(`Save error: ${error.message}`, 'error');
+                }
                 console.error('Save error:', error);
                 saveBtn.disabled = false;
             }
