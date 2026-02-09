@@ -274,12 +274,26 @@
 
         <!-- Camera Section -->
         <div class="camera-section">
-            <div class="file-input-wrapper" id="fileWrapper">
-                <input type="file" id="cameraInput" accept="image/*" multiple>
-                <div class="camera-icon">📷</div>
-                <div class="camera-text">Tap to take photos or select images</div>
-                <div class="camera-subtext" style="font-size: 12px; color: #999; margin-top: 8px;">You can select multiple images (vendor label + handwritten notes)</div>
-                <div id="imagePreviewContainer" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;"></div>
+            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <button type="button" id="cameraBtn" style="flex: 1; padding: 12px; background: #007AFF; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
+                    📷 Take Photo
+                </button>
+                <button type="button" id="galleryBtn" style="flex: 1; padding: 12px; background: #5856D6; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
+                    🖼️ Choose Photos
+                </button>
+            </div>
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" multiple>
+            <input type="file" id="galleryInput" accept="image/*" style="display: none;" multiple>
+            
+            <div id="imagePreviewContainer" style="display: none; background: #f8f9fa; border: 2px solid #007AFF; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                <div style="font-weight: 600; margin-bottom: 8px; color: #333;">Selected Images:</div>
+                <div id="imagePreviewList" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;"></div>
+                <button type="button" id="processBtn" style="width: 100%; padding: 12px; background: #34C759; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                    🔍 Process Images with AI
+                </button>
+                <button type="button" id="clearBtn" style="width: 100%; padding: 8px; background: #FF3B30; color: white; border: none; border-radius: 8px; font-size: 14px; margin-top: 8px; cursor: pointer;">
+                    ❌ Clear All
+                </button>
             </div>
         </div>
 
@@ -385,53 +399,120 @@
         const rescanBtn = document.getElementById('rescanBtn');
         const form = document.getElementById('productForm');
 
+        // DOM Elements
+        const cameraBtn = document.getElementById('cameraBtn');
+        const galleryBtn = document.getElementById('galleryBtn');
+        const cameraInput = document.getElementById('cameraInput');
+        const galleryInput = document.getElementById('galleryInput');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const imagePreviewList = document.getElementById('imagePreviewList');
+        const processBtn = document.getElementById('processBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const status = document.getElementById('status');
+        const loading = document.getElementById('loading');
+        const saveBtn = document.getElementById('saveBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const rescanBtn = document.getElementById('rescanBtn');
+        const form = document.getElementById('productForm');
+
         let currentImages = [];
         let extractedData = null;
 
-        // Camera input handler - multiple images
-        cameraInput.addEventListener('change', async (e) => {
+        // Camera button - triggers camera
+        cameraBtn.addEventListener('click', () => {
+            cameraInput.click();
+        });
+
+        // Gallery button - triggers file picker
+        galleryBtn.addEventListener('click', () => {
+            galleryInput.click();
+        });
+
+        // Handle camera input
+        cameraInput.addEventListener('change', handleImageSelection);
+        
+        // Handle gallery input
+        galleryInput.addEventListener('change', handleImageSelection);
+
+        // Handle image selection (from camera or gallery)
+        async function handleImageSelection(e) {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
 
-            showStatus(`${files.length} image(s) uploaded ✓`, 'info');
-            fileWrapper.classList.add('has-image');
+            showStatus(`${files.length} image(s) selected ✓`, 'info');
 
-            // Clear previous previews
-            const previewContainer = document.getElementById('imagePreviewContainer');
-            previewContainer.innerHTML = '';
-            currentImages = [];
-
-            // Show previews for all images
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const imgWrapper = document.createElement('div');
-                    imgWrapper.style.cssText = 'position: relative; width: 80px; height: 80px;';
-                    
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    img.style.cssText = 'width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid #007AFF;';
-                    
-                    const label = document.createElement('div');
-                    label.textContent = i + 1;
-                    label.style.cssText = 'position: absolute; top: 2px; right: 2px; background: #007AFF; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;';
-                    
-                    imgWrapper.appendChild(img);
-                    imgWrapper.appendChild(label);
-                    previewContainer.appendChild(imgWrapper);
-                };
-                reader.readAsDataURL(file);
-
-                // Compress and store
+            // Add to current images
+            for (const file of files) {
                 const base64 = await compressImage(file);
-                currentImages.push(base64);
+                currentImages.push({
+                    base64: base64,
+                    preview: await createPreviewUrl(file)
+                });
             }
 
-            showStatus(`Processing ${files.length} image(s) with AI...`, 'info');
+            // Show preview container and update previews
+            updatePreviews();
+            
+            // Clear file inputs for next selection
+            cameraInput.value = '';
+            galleryInput.value = '';
+        }
 
-            // Process images: vendor label first (usually the clearer/printed one), then handwritten
-            await extractProductData(currentImages);
+        // Create preview URL
+        function createPreviewUrl(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (e) => resolve(e.target.result);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Update preview display
+        function updatePreviews() {
+            if (currentImages.length === 0) {
+                imagePreviewContainer.style.display = 'none';
+                return;
+            }
+
+            imagePreviewContainer.style.display = 'block';
+            imagePreviewList.innerHTML = '';
+
+            currentImages.forEach((img, index) => {
+                const imgWrapper = document.createElement('div');
+                imgWrapper.style.cssText = 'position: relative; width: 80px; height: 80px;';
+                
+                const imgEl = document.createElement('img');
+                imgEl.src = img.preview;
+                imgEl.style.cssText = 'width: 100%; height: 100%; object-fit: cover; border-radius: 8px; border: 2px solid #007AFF;';
+                
+                const label = document.createElement('div');
+                label.textContent = index + 1;
+                label.style.cssText = 'position: absolute; top: 2px; right: 2px; background: #007AFF; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold;';
+                
+                imgWrapper.appendChild(imgEl);
+                imgWrapper.appendChild(label);
+                imagePreviewList.appendChild(imgWrapper);
+            });
+        }
+
+        // Process button - run AI on selected images
+        processBtn.addEventListener('click', async () => {
+            if (currentImages.length === 0) return;
+            
+            processBtn.disabled = true;
+            showStatus(`Processing ${currentImages.length} image(s) with AI...`, 'info');
+            
+            const base64Images = currentImages.map(img => img.base64);
+            await extractProductData(base64Images);
+            
+            processBtn.disabled = false;
+        });
+
+        // Clear button - remove all selected images
+        clearBtn.addEventListener('click', () => {
+            currentImages = [];
+            updatePreviews();
+            showStatus('Images cleared', 'info');
         });
 
         // Compress image
@@ -622,9 +703,10 @@
                 
                 // Clear form and reset
                 form.reset();
-                document.getElementById('imagePreviewContainer').innerHTML = '';
-                fileWrapper.classList.remove('has-image');
+                imagePreviewList.innerHTML = '';
+                imagePreviewContainer.style.display = 'none';
                 cameraInput.value = '';
+                galleryInput.value = '';
                 saveBtn.disabled = true;
                 currentImages = [];
                 extractedData = null;
