@@ -349,6 +349,11 @@
             </div>
 
             <div class="form-group">
+                <label>Color</label>
+                <input type="text" id="color">
+            </div>
+
+            <div class="form-group">
                 <label>Tags</label>
                 <input type="text" id="tags">
             </div>
@@ -630,6 +635,7 @@
             document.getElementById('retail_price').value = data.retail_price || 0;
             document.getElementById('supply_price').value = data.supply_price || 0;
             document.getElementById('size_or_dimensions').value = data.size_or_dimensions || '';
+            document.getElementById('color').value = data.color || '';
             document.getElementById('tags').value = data.tags || '';
             document.getElementById('description').value = data.description || '';
             document.getElementById('notes').value = data.notes || '';
@@ -655,6 +661,7 @@
                 retail_price: parseFloat(document.getElementById('retail_price').value) || null,
                 supply_price: parseFloat(document.getElementById('supply_price').value) || null,
                 size_or_dimensions: document.getElementById('size_or_dimensions').value || null,
+                color: document.getElementById('color').value || null,
                 tags: document.getElementById('tags').value || null,
                 description: document.getElementById('description').value || null,
                 notes: document.getElementById('notes').value || null
@@ -750,9 +757,12 @@
                     return;
                 }
 
-                // Create CSV
-                const headers = ['Item Name', 'SKU', 'Barcode', 'Brand', 'Category', 'Retail Price', 'Supply Price', 'Description', 'Size', 'Tags'];
+                // Create CSV with ALL fields
+                const headers = ['ID', 'Created At', 'Updated At', 'Item Name', 'SKU', 'Barcode', 'Brand', 'Category', 'Retail Price', 'Supply Price', 'Size', 'Color', 'Tags', 'Description', 'Notes', 'Verified'];
                 const rows = data.map(p => [
+                    p.id || '',
+                    p.created_at || '',
+                    p.updated_at || '',
                     p.name || '',
                     p.sku || '',
                     p.barcode || '',
@@ -760,9 +770,12 @@
                     p.product_category || '',
                     p.retail_price || '',
                     p.supply_price || '',
-                    p.description || '',
                     p.size_or_dimensions || '',
-                    p.tags || ''
+                    p.color || '',
+                    p.tags || '',
+                    p.description || '',
+                    p.notes || '',
+                    p.verified || false
                 ]);
 
                 let csv = headers.join(',') + '\n';
