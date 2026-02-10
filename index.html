@@ -451,7 +451,6 @@
         let extractedData = null;
         let scannedBarcode = null;
         let lastDetectedCode = null;
-        let detectionCount = {};
 
         // Barcode Scanner Button
         scanBarcodeBtn.addEventListener('click', () => {
@@ -464,20 +463,10 @@
                 scannedBarcode = lastDetectedCode;
                 document.getElementById('barcode').value = lastDetectedCode;
                 document.getElementById('barcode').setAttribute('data-source', 'scanned');
-                scanResult.textContent = `✅ Captured: ${lastDetectedCode}`;
-                scanResult.style.color = '#34C759';
-                
-                if (lastDetectedCode.length === 12 || lastDetectedCode.length === 13) {
-                    showStatus(`✅ Barcode captured: ${lastDetectedCode}`, 'success');
-                } else {
-                    showStatus(`⚠️ Captured ${lastDetectedCode.length} digits: ${lastDetectedCode}. Expected 12 or 13.`, 'error');
-                }
-                
-                setTimeout(() => {
-                    stopBarcodeScanner();
-                }, 1000);
+                showStatus(`✅ Barcode captured: ${lastDetectedCode}`, 'success');
+                stopBarcodeScanner();
             } else {
-                showStatus('No barcode detected yet. Hold steady over barcode.', 'error');
+                showStatus('No barcode detected yet. Hold camera over barcode.', 'error');
             }
         });
 
@@ -486,13 +475,12 @@
             stopBarcodeScanner();
         });
 
-        // Start barcode scanner with IMPROVED ACCURACY
+        // Start barcode scanner - SIMPLE VERSION (like before, but with manual capture)
         function startBarcodeScanner() {
             barcodeScannerContainer.style.display = 'block';
-            scanResult.textContent = 'Hold camera steady over barcode...';
+            scanResult.textContent = 'Scanning for barcode...';
             scanResult.style.color = '#666';
             lastDetectedCode = null;
-            detectionCount = {};
             
             Quagga.init({
                 inputStream: {
@@ -504,28 +492,13 @@
                         height: 480,
                         facingMode: "environment"
                     },
-                    area: { // Focus on center 50% of frame
-                        top: "25%",
-                        right: "25%",
-                        left: "25%",
-                        bottom: "25%"
-                    }
                 },
-                locator: {
-                    patchSize: "medium",
-                    halfSample: true
-                },
-                numOfWorkers: 4,
-                frequency: 10,
                 decoder: {
                     readers: [
-                        "upc_reader",      // UPC-A (12 digits) - USA STANDARD
-                        "ean_reader"       // EAN-13 (13 digits) - INTERNATIONAL
-                        // REMOVED: Code 128, Code 39, etc. (causes wrong readings)
-                    ],
-                    multiple: false
+                        "upc_reader",
+                        "ean_reader"
+                    ]
                 },
-                locate: true
             }, function(err) {
                 if (err) {
                     console.error(err);
@@ -535,38 +508,16 @@
                 Quagga.start();
             });
 
-            // VALIDATION: Only accept consistent, high-confidence UPC/EAN reads
+            // Simple detection - shows code immediately when detected
             Quagga.onDetected(function(result) {
                 const code = result.codeResult.code;
                 
-                // FILTER 1: Only accept 12 or 13 digit codes (UPC-A or EAN-13)
-                if (code.length !== 12 && code.length !== 13) {
-                    return;
-                }
-                
-                // FILTER 2: Calculate confidence (lower error = better)
-                const errors = result.codeResult.decodedCodes
-                    .filter(d => d.error !== undefined)
-                    .map(d => d.error);
-                const avgError = errors.length > 0 ? errors.reduce((a, b) => a + b, 0) / errors.length : 1;
-                
-                // Only accept decent confidence reads (error < 0.15 - slightly relaxed)
-                if (avgError > 0.15) {
-                    return;
-                }
-                
-                // FILTER 3: Track detections - need 2 consistent reads (was 3)
-                detectionCount[code] = (detectionCount[code] || 0) + 1;
-                
-                if (detectionCount[code] >= 2) {
+                // Only accept 12 or 13 digit codes
+                if (code.length === 12 || code.length === 13) {
                     lastDetectedCode = code;
-                    scanResult.textContent = `✓ READY: ${code} (${code.length} digits) - CLICK CAPTURE`;
+                    scanResult.textContent = `✓ Found: ${code} - Click CAPTURE to use it`;
                     scanResult.style.color = '#34C759';
                     scanResult.style.fontWeight = 'bold';
-                    scanResult.style.fontSize = '16px';
-                } else {
-                    scanResult.textContent = `Scanning... ${code} (${detectionCount[code]}/2 consistent reads)`;
-                    scanResult.style.color = '#FF9500';
                 }
             });
         }
@@ -577,7 +528,6 @@
             barcodeScannerContainer.style.display = 'none';
             scanResult.textContent = '';
             lastDetectedCode = null;
-            detectionCount = {};
         }
 
         // Camera button - triggers camera
@@ -740,7 +690,26 @@
                         })
                     });
 
-                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(`Server error ${response.status}. Please try again.`);
+                    }
+
+                    let result;
+                    try {
+                        const text = await response.text();
+                        if (!text || text.trim() === '') {
+                            throw new Error('Empty response from server.');
+                        }
+                        result = JSON.parse(text);
+                    } catch (parseError) {
+                        console.error('Parse error:', parseError);
+                        throw new Error('Invalid response. Please try again in a moment.');
+                    }
+                    
+                    // Check for rate limit error
+                    if (result.error && result.error.toLowerCase().includes('rate limit')) {
+                        throw new Error('⏱️ Rate limit reached. Please wait 60 seconds and try again.');
+                    }
                     
                     if (!result.success) {
                         throw new Error(result.error || `Extraction failed for image ${i + 1}`);
