@@ -550,22 +550,22 @@
                     .map(d => d.error);
                 const avgError = errors.length > 0 ? errors.reduce((a, b) => a + b, 0) / errors.length : 1;
                 
-                // Only accept high confidence reads (error < 0.1)
-                if (avgError > 0.1) {
+                // Only accept decent confidence reads (error < 0.15 - slightly relaxed)
+                if (avgError > 0.15) {
                     return;
                 }
                 
-                // FILTER 3: Track detections - need 3 consistent reads
+                // FILTER 3: Track detections - need 2 consistent reads (was 3)
                 detectionCount[code] = (detectionCount[code] || 0) + 1;
                 
-                if (detectionCount[code] >= 3) {
+                if (detectionCount[code] >= 2) {
                     lastDetectedCode = code;
                     scanResult.textContent = `✓ READY: ${code} (${code.length} digits) - CLICK CAPTURE`;
                     scanResult.style.color = '#34C759';
                     scanResult.style.fontWeight = 'bold';
                     scanResult.style.fontSize = '16px';
                 } else {
-                    scanResult.textContent = `Scanning... ${code} (${detectionCount[code]}/3 consistent reads)`;
+                    scanResult.textContent = `Scanning... ${code} (${detectionCount[code]}/2 consistent reads)`;
                     scanResult.style.color = '#FF9500';
                 }
             });
