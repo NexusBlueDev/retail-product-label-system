@@ -283,22 +283,24 @@
                     🖼️ Photos
                 </button>
                 <button type="button" id="scanBarcodeBtn" style="flex: 1; padding: 12px; background: #FF9500; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
-                    📊 Scan UPC
+                    📊 Scan Barcode
                 </button>
             </div>
             
             <!-- Barcode Scanner View -->
             <div id="barcodeScannerContainer" style="display: none; margin-bottom: 12px;">
                 <div id="interactive" class="viewport" style="position: relative; width: 100%; height: 300px; overflow: hidden; border: 2px solid #FF9500; border-radius: 12px; background: #000;"></div>
-                <div style="text-align: center; margin-top: 8px; display: flex; gap: 8px; justify-content: center;">
-                    <button type="button" id="captureBtn" style="flex: 1; max-width: 200px; padding: 12px; background: #34C759; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
-                        📸 Capture Barcode
-                    </button>
-                    <button type="button" id="stopScanBtn" style="padding: 12px 24px; background: #FF3B30; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                        ❌ Cancel
-                    </button>
+                <div style="text-align: center; margin-top: 8px;">
+                    <div id="scanResult" style="font-weight: 600; color: #666; margin-bottom: 8px;">Position barcode in view, then click Capture</div>
+                    <div style="display: flex; gap: 8px; justify-content: center;">
+                        <button type="button" id="captureBarcodeBtn" style="padding: 12px 24px; background: #34C759; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                            📸 Capture Barcode
+                        </button>
+                        <button type="button" id="stopScanBtn" style="padding: 12px 24px; background: #FF3B30; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            ❌ Cancel
+                        </button>
+                    </div>
                 </div>
-                <div id="scanResult" style="font-weight: 600; color: #34C759; margin-top: 8px; text-align: center;"></div>
             </div>
             
             <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" multiple>
@@ -333,25 +335,25 @@
             </div>
 
             <div class="form-group">
-                <label>Style Number</label>
-                <input type="text" id="style_number" placeholder="Manufacturer's style code (e.g., DD1383-100)">
-            </div>
-
-            <div class="form-group">
-                <label>SKU (Auto-generated)</label>
-                <input type="text" id="sku" readonly style="background: #f0f0f0;">
-                <small style="color: #666; font-size: 12px;">Generated from Style + Brand + Color + Size</small>
-            </div>
-
-            <div class="form-group">
-                <label>Barcode (UPC)</label>
-                <input type="text" id="barcode" readonly style="background: #f0f0f0;">
-                <small style="color: #666; font-size: 12px;">Use "📊 Scan UPC" button above for accurate reading</small>
-            </div>
-
-            <div class="form-group">
                 <label>Quantity</label>
-                <input type="number" id="quantity" min="1" value="1" style="width: 100px;">
+                <input type="number" id="qty" value="1" min="1">
+            </div>
+
+            <div class="form-group">
+                <label>Style Number (Manufacturer)</label>
+                <input type="text" id="style_number" placeholder="e.g., DD1383-100">
+            </div>
+
+            <div class="form-group">
+                <label>SKU (Auto-generated or Edit)</label>
+                <input type="text" id="sku">
+                <div style="font-size: 11px; color: #666; margin-top: 4px;">Auto-generates from Style + Brand + Color + Size, or type manually</div>
+            </div>
+
+            <div class="form-group">
+                <label>Barcode</label>
+                <input type="text" id="barcode" maxlength="13">
+                <div style="font-size: 11px; color: #666; margin-top: 4px;">Use "📊 Scan UPC" button for 99% accuracy, or type manually</div>
             </div>
 
             <div class="form-group">
@@ -426,7 +428,7 @@
 
         // DOM Elements
         const scanBarcodeBtn = document.getElementById('scanBarcodeBtn');
-        const captureBtn = document.getElementById('captureBtn');
+        const captureBarcodeBtn = document.getElementById('captureBarcodeBtn');
         const stopScanBtn = document.getElementById('stopScanBtn');
         const barcodeScannerContainer = document.getElementById('barcodeScannerContainer');
         const scanResult = document.getElementById('scanResult');
@@ -449,24 +451,33 @@
         let extractedData = null;
         let scannedBarcode = null;
         let lastDetectedCode = null;
+        let detectionCount = {};
 
-        // Barcode Scanner Button - opens scanner
+        // Barcode Scanner Button
         scanBarcodeBtn.addEventListener('click', () => {
             startBarcodeScanner();
         });
 
-        // Capture Button - captures the current barcode reading
-        captureBtn.addEventListener('click', () => {
+        // Capture Barcode Button (manual)
+        captureBarcodeBtn.addEventListener('click', () => {
             if (lastDetectedCode) {
                 scannedBarcode = lastDetectedCode;
                 document.getElementById('barcode').value = lastDetectedCode;
-                showStatus(`✅ Barcode captured: ${lastDetectedCode}`, 'success');
-                stopBarcodeScanner();
-                
-                // Mark barcode as authoritative (scanned, not AI-extracted)
                 document.getElementById('barcode').setAttribute('data-source', 'scanned');
+                scanResult.textContent = `✅ Captured: ${lastDetectedCode}`;
+                scanResult.style.color = '#34C759';
+                
+                if (lastDetectedCode.length === 12 || lastDetectedCode.length === 13) {
+                    showStatus(`✅ Barcode captured: ${lastDetectedCode}`, 'success');
+                } else {
+                    showStatus(`⚠️ Captured ${lastDetectedCode.length} digits: ${lastDetectedCode}. Expected 12 or 13.`, 'error');
+                }
+                
+                setTimeout(() => {
+                    stopBarcodeScanner();
+                }, 1000);
             } else {
-                showStatus('⚠️ No barcode detected yet. Position camera over barcode.', 'error');
+                showStatus('No barcode detected yet. Hold steady over barcode.', 'error');
             }
         });
 
@@ -475,11 +486,13 @@
             stopBarcodeScanner();
         });
 
-        // Start barcode scanner (manual capture mode)
+        // Start barcode scanner with IMPROVED ACCURACY
         function startBarcodeScanner() {
             barcodeScannerContainer.style.display = 'block';
-            scanResult.textContent = 'Position barcode in view, then press Capture';
+            scanResult.textContent = 'Hold camera steady over barcode...';
+            scanResult.style.color = '#666';
             lastDetectedCode = null;
+            detectionCount = {};
             
             Quagga.init({
                 inputStream: {
@@ -491,16 +504,26 @@
                         height: 480,
                         facingMode: "environment"
                     },
+                    area: { // Focus on center 50% of frame
+                        top: "25%",
+                        right: "25%",
+                        left: "25%",
+                        bottom: "25%"
+                    }
                 },
+                locator: {
+                    patchSize: "medium",
+                    halfSample: true
+                },
+                numOfWorkers: 4,
+                frequency: 10,
                 decoder: {
                     readers: [
-                        "upc_reader",
-                        "ean_reader",
-                        "code_128_reader",
-                        "code_39_reader",
-                        "ean_8_reader",
-                        "upc_e_reader"
-                    ]
+                        "upc_reader",      // UPC-A (12 digits) - USA STANDARD
+                        "ean_reader"       // EAN-13 (13 digits) - INTERNATIONAL
+                        // REMOVED: Code 128, Code 39, etc. (causes wrong readings)
+                    ],
+                    multiple: false
                 },
                 locate: true
             }, function(err) {
@@ -512,12 +535,39 @@
                 Quagga.start();
             });
 
-            // Update detected code in real-time (but don't auto-capture)
+            // VALIDATION: Only accept consistent, high-confidence UPC/EAN reads
             Quagga.onDetected(function(result) {
                 const code = result.codeResult.code;
-                lastDetectedCode = code;
-                scanResult.textContent = `Barcode Ready: ${code} (${code.length} digits) - Press Capture`;
-                scanResult.style.color = '#34C759';
+                
+                // FILTER 1: Only accept 12 or 13 digit codes (UPC-A or EAN-13)
+                if (code.length !== 12 && code.length !== 13) {
+                    return;
+                }
+                
+                // FILTER 2: Calculate confidence (lower error = better)
+                const errors = result.codeResult.decodedCodes
+                    .filter(d => d.error !== undefined)
+                    .map(d => d.error);
+                const avgError = errors.length > 0 ? errors.reduce((a, b) => a + b, 0) / errors.length : 1;
+                
+                // Only accept high confidence reads (error < 0.1)
+                if (avgError > 0.1) {
+                    return;
+                }
+                
+                // FILTER 3: Track detections - need 3 consistent reads
+                detectionCount[code] = (detectionCount[code] || 0) + 1;
+                
+                if (detectionCount[code] >= 3) {
+                    lastDetectedCode = code;
+                    scanResult.textContent = `✓ READY: ${code} (${code.length} digits) - CLICK CAPTURE`;
+                    scanResult.style.color = '#34C759';
+                    scanResult.style.fontWeight = 'bold';
+                    scanResult.style.fontSize = '16px';
+                } else {
+                    scanResult.textContent = `Scanning... ${code} (${detectionCount[code]}/3 consistent reads)`;
+                    scanResult.style.color = '#FF9500';
+                }
             });
         }
 
@@ -527,6 +577,7 @@
             barcodeScannerContainer.style.display = 'none';
             scanResult.textContent = '';
             lastDetectedCode = null;
+            detectionCount = {};
         }
 
         // Camera button - triggers camera
@@ -689,18 +740,7 @@
                         })
                     });
 
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-
-                    let result;
-                    try {
-                        const text = await response.text();
-                        result = JSON.parse(text);
-                    } catch (parseError) {
-                        console.error('JSON parse error:', parseError);
-                        throw new Error('Invalid response from AI (slow internet may have interrupted). Please try again.');
-                    }
+                    const result = await response.json();
                     
                     if (!result.success) {
                         throw new Error(result.error || `Extraction failed for image ${i + 1}`);
@@ -753,116 +793,11 @@
             }
         });
 
-        // Auto-generate SKU based on style number, brand, color, size
-        function generateSKU() {
-            const style = document.getElementById('style_number').value.trim();
-            const brand = document.getElementById('brand_name').value.trim();
-            const color = document.getElementById('color').value.trim();
-            const size = document.getElementById('size_or_dimensions').value.trim();
-            
-            if (!style) {
-                return ''; // Can't generate without style number
-            }
-            
-            let sku = '';
-            
-            // 1. Style code (clean and shorten if needed)
-            let styleCode = style.toUpperCase()
-                .replace(/\s+/g, '') // Remove spaces
-                .replace(/[^A-Z0-9\-_.\/]/g, ''); // Remove invalid chars
-            
-            // Shorten if too long (keep first 8 chars if over 10)
-            if (styleCode.length > 10) {
-                styleCode = styleCode.substring(0, 8);
-            }
-            sku += styleCode;
-            
-            // 2. Brand code (2-3 letters)
-            if (brand) {
-                const brandMap = {
-                    'NIKE': 'NK',
-                    'ADIDAS': 'AD',
-                    'UNDER ARMOUR': 'UA',
-                    'PUMA': 'PM',
-                    'REEBOK': 'RB',
-                    'NEW BALANCE': 'NB',
-                    'VANS': 'VN',
-                    'CONVERSE': 'CV',
-                    'JORDAN': 'JD',
-                    'WRANGLER': 'WR',
-                    'LEVI': 'LV',
-                    'CARHARTT': 'CH',
-                    'DICKIES': 'DK',
-                    'COLE HAAN': 'CH',
-                    'TIMBERLAND': 'TB'
-                };
-                const brandUpper = brand.toUpperCase();
-                const brandCode = brandMap[brandUpper] || brand.substring(0, 2).toUpperCase();
-                sku += '-' + brandCode;
-            }
-            
-            // 3. Color code (3 letters)
-            if (color) {
-                const colorMap = {
-                    'BLACK': 'BLK',
-                    'WHITE': 'WHT',
-                    'RED': 'RED',
-                    'BLUE': 'BLU',
-                    'NAVY': 'NVY',
-                    'GRAY': 'GRY',
-                    'GREY': 'GRY',
-                    'GREEN': 'GRN',
-                    'YELLOW': 'YEL',
-                    'ORANGE': 'ORG',
-                    'PURPLE': 'PUR',
-                    'PINK': 'PNK',
-                    'BROWN': 'BRN',
-                    'TAN': 'TAN',
-                    'KHAKI': 'KHK'
-                };
-                const colorUpper = color.toUpperCase();
-                const colorCode = colorMap[colorUpper] || color.substring(0, 3).toUpperCase();
-                sku += '-' + colorCode;
-            }
-            
-            // 4. Size code
-            if (size) {
-                let sizeCode = size.toUpperCase()
-                    .replace(/\s+/g, '') // Remove spaces from "15 x 32" → "15X32"
-                    .replace(/[^A-Z0-9X]/g, ''); // Keep only letters, numbers, and X
-                if (sizeCode.length > 6) {
-                    sizeCode = sizeCode.substring(0, 6);
-                }
-                sku += '-' + sizeCode;
-            }
-            
-            // Ensure total length doesn't exceed 15 characters
-            if (sku.length > 15) {
-                sku = sku.substring(0, 15);
-            }
-            
-            return sku;
-        }
-
-        // Trigger SKU generation when relevant fields change
-        ['style_number', 'brand_name', 'color', 'size_or_dimensions'].forEach(fieldId => {
-            document.getElementById(fieldId).addEventListener('input', () => {
-                const generatedSKU = generateSKU();
-                document.getElementById('sku').value = generatedSKU;
-            });
-        });
-
-        // Populate form with extracted data (but preserve scanned barcode)
+        // Populate form with extracted data
         function populateForm(data) {
             document.getElementById('name').value = data.name || '';
-            document.getElementById('style_number').value = data.style_number || data.sku || '';
-            
-            // Only populate barcode if NOT scanned (scanned is authoritative)
-            const barcodeField = document.getElementById('barcode');
-            if (barcodeField.getAttribute('data-source') !== 'scanned') {
-                barcodeField.value = data.barcode || '';
-            }
-            
+            document.getElementById('sku').value = data.sku || '';
+            document.getElementById('barcode').value = data.barcode || '';
             document.getElementById('brand_name').value = data.brand_name || '';
             document.getElementById('product_category').value = data.product_category || '';
             document.getElementById('retail_price').value = data.retail_price || 0;
@@ -873,22 +808,21 @@
             document.getElementById('description').value = data.description || '';
             document.getElementById('notes').value = data.notes || '';
             
-            // Generate SKU after populating fields
-            const generatedSKU = generateSKU();
-            document.getElementById('sku').value = generatedSKU;
-            
-            // Validate barcode length (only if present)
-            if (barcodeField.value && (barcodeField.value.length !== 12 && barcodeField.value.length !== 13)) {
-                showStatus(`⚠️ Warning: Barcode has ${barcodeField.value.length} digits (should be 12 or 13). Use UPC scanner for accuracy!`, 'error');
+            // Validate barcode length
+            if (data.barcode && (data.barcode.length !== 12 && data.barcode.length !== 13)) {
+                showStatus(`⚠️ Warning: Barcode has ${data.barcode.length} digits (should be 12 or 13). Please verify!`, 'error');
             }
         }
 
         // Save product to Supabase
         saveBtn.addEventListener('click', async () => {
+            // Get and capitalize SKU
+            const skuValue = document.getElementById('sku').value;
+            const capitalizedSku = skuValue ? skuValue.toUpperCase() : null;
+            
             const formData = {
                 name: document.getElementById('name').value,
-                style_number: document.getElementById('style_number').value || null,
-                sku: document.getElementById('sku').value || null,
+                sku: capitalizedSku,
                 barcode: document.getElementById('barcode').value || null,
                 brand_name: document.getElementById('brand_name').value || null,
                 product_category: document.getElementById('product_category').value || null,
@@ -896,7 +830,6 @@
                 supply_price: parseFloat(document.getElementById('supply_price').value) || null,
                 size_or_dimensions: document.getElementById('size_or_dimensions').value || null,
                 color: document.getElementById('color').value || null,
-                quantity: parseInt(document.getElementById('quantity').value) || 1,
                 tags: document.getElementById('tags').value || null,
                 description: document.getElementById('description').value || null,
                 notes: document.getElementById('notes').value || null
@@ -993,13 +926,12 @@
                 }
 
                 // Create CSV with ALL fields
-                const headers = ['ID', 'Created At', 'Updated At', 'Item Name', 'Style Number', 'SKU', 'Barcode', 'Brand', 'Category', 'Retail Price', 'Supply Price', 'Size', 'Color', 'Quantity', 'Tags', 'Description', 'Notes', 'Verified'];
+                const headers = ['ID', 'Created At', 'Updated At', 'Item Name', 'SKU', 'Barcode', 'Brand', 'Category', 'Retail Price', 'Supply Price', 'Size', 'Color', 'Tags', 'Description', 'Notes', 'Verified'];
                 const rows = data.map(p => [
                     p.id || '',
                     p.created_at || '',
                     p.updated_at || '',
                     p.name || '',
-                    p.style_number || '',
                     p.sku || '',
                     p.barcode || '',
                     p.brand_name || '',
@@ -1008,7 +940,6 @@
                     p.supply_price || '',
                     p.size_or_dimensions || '',
                     p.color || '',
-                    p.quantity || 1,
                     p.tags || '',
                     p.description || '',
                     p.notes || '',
