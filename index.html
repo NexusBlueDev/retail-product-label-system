@@ -752,6 +752,110 @@
             }
         }
 
+        // Auto-generate SKU based on style number, brand, color, size
+        function generateSKU() {
+            const style = document.getElementById('style_number').value.trim();
+            const brand = document.getElementById('brand_name').value.trim();
+            const color = document.getElementById('color').value.trim();
+            const size = document.getElementById('size_or_dimensions').value.trim();
+            
+            if (!style) {
+                return ''; // Can't generate without style number
+            }
+            
+            let sku = '';
+            
+            // 1. Style code (clean and shorten if needed)
+            let styleCode = style.toUpperCase()
+                .replace(/\s+/g, '') // Remove spaces
+                .replace(/[^A-Z0-9\-_.\/]/g, ''); // Remove invalid chars
+            
+            // Shorten if too long (keep first 8 chars if over 10)
+            if (styleCode.length > 10) {
+                styleCode = styleCode.substring(0, 8);
+            }
+            sku += styleCode;
+            
+            // 2. Brand code (2-3 letters)
+            if (brand) {
+                const brandMap = {
+                    'NIKE': 'NK',
+                    'ADIDAS': 'AD',
+                    'UNDER ARMOUR': 'UA',
+                    'PUMA': 'PM',
+                    'REEBOK': 'RB',
+                    'NEW BALANCE': 'NB',
+                    'VANS': 'VN',
+                    'CONVERSE': 'CV',
+                    'JORDAN': 'JD',
+                    'WRANGLER': 'WR',
+                    'LEVI': 'LV',
+                    'LEVIS': 'LV',
+                    'CARHARTT': 'CH',
+                    'DICKIES': 'DK',
+                    'COLE HAAN': 'CH',
+                    'TIMBERLAND': 'TB'
+                };
+                const brandUpper = brand.toUpperCase();
+                const brandCode = brandMap[brandUpper] || brand.substring(0, 2).toUpperCase();
+                sku += '-' + brandCode;
+            }
+            
+            // 3. Color code (3 letters)
+            if (color) {
+                const colorMap = {
+                    'BLACK': 'BLK',
+                    'WHITE': 'WHT',
+                    'RED': 'RED',
+                    'BLUE': 'BLU',
+                    'NAVY': 'NVY',
+                    'GRAY': 'GRY',
+                    'GREY': 'GRY',
+                    'GREEN': 'GRN',
+                    'YELLOW': 'YEL',
+                    'ORANGE': 'ORG',
+                    'PURPLE': 'PUR',
+                    'PINK': 'PNK',
+                    'BROWN': 'BRN',
+                    'TAN': 'TAN',
+                    'KHAKI': 'KHK',
+                    'BEIGE': 'BGE'
+                };
+                const colorUpper = color.toUpperCase();
+                const colorCode = colorMap[colorUpper] || color.substring(0, 3).toUpperCase();
+                sku += '-' + colorCode;
+            }
+            
+            // 4. Size code
+            if (size) {
+                let sizeCode = size.toUpperCase()
+                    .replace(/\s+/g, '') // Remove spaces from "15 x 32" → "15X32"
+                    .replace(/[^A-Z0-9X]/g, ''); // Keep only letters, numbers, and X
+                if (sizeCode.length > 6) {
+                    sizeCode = sizeCode.substring(0, 6);
+                }
+                sku += '-' + sizeCode;
+            }
+            
+            // Ensure total length doesn't exceed 15 characters
+            if (sku.length > 15) {
+                sku = sku.substring(0, 15);
+            }
+            
+            return sku;
+        }
+
+        // Trigger SKU generation when relevant fields change
+        ['style_number', 'brand_name', 'color', 'size_or_dimensions'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('input', () => {
+                    const generatedSKU = generateSKU();
+                    document.getElementById('sku').value = generatedSKU;
+                });
+            }
+        });
+
         // Rescan button handler
         rescanBtn.addEventListener('click', async () => {
             if (currentImages.length > 0) {
@@ -765,8 +869,18 @@
         // Populate form with extracted data
         function populateForm(data) {
             document.getElementById('name').value = data.name || '';
-            document.getElementById('sku').value = data.sku || '';
-            document.getElementById('barcode').value = data.barcode || '';
+            
+            // Map SKU data to style_number if present
+            document.getElementById('style_number').value = data.style_number || data.sku || '';
+            
+            // Don't populate SKU yet - let it auto-generate from other fields
+            
+            // Only populate barcode if NOT scanned (scanned is authoritative)
+            const barcodeField = document.getElementById('barcode');
+            if (barcodeField.getAttribute('data-source') !== 'scanned') {
+                barcodeField.value = data.barcode || '';
+            }
+            
             document.getElementById('brand_name').value = data.brand_name || '';
             document.getElementById('product_category').value = data.product_category || '';
             document.getElementById('retail_price').value = data.retail_price || 0;
@@ -777,9 +891,17 @@
             document.getElementById('description').value = data.description || '';
             document.getElementById('notes').value = data.notes || '';
             
+            // Generate SKU after all fields are populated
+            setTimeout(() => {
+                const generatedSKU = generateSKU();
+                if (generatedSKU) {
+                    document.getElementById('sku').value = generatedSKU;
+                }
+            }, 100);
+            
             // Validate barcode length
-            if (data.barcode && (data.barcode.length !== 12 && data.barcode.length !== 13)) {
-                showStatus(`⚠️ Warning: Barcode has ${data.barcode.length} digits (should be 12 or 13). Please verify!`, 'error');
+            if (barcodeField.value && (barcodeField.value.length !== 12 && barcodeField.value.length !== 13)) {
+                showStatus(`⚠️ Warning: Barcode has ${barcodeField.value.length} digits (should be 12 or 13). Use UPC scanner!`, 'error');
             }
         }
 
