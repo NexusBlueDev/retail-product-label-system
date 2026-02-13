@@ -1017,12 +1017,32 @@
                 }
 
                 // Create CSV with ALL fields
-                const headers = ['ID', 'Created At', 'Updated At', 'Item Name', 'SKU', 'Barcode', 'Brand', 'Category', 'Retail Price', 'Supply Price', 'Size', 'Color', 'Tags', 'Description', 'Notes', 'Verified'];
+                const headers = [
+                    'ID',
+                    'Created At',
+                    'Updated At',
+                    'Item Name',
+                    'Style Number',
+                    'SKU',
+                    'Barcode',
+                    'Brand',
+                    'Category',
+                    'Retail Price',
+                    'Supply Price',
+                    'Size',
+                    'Color',
+                    'Quantity',
+                    'Tags',
+                    'Description',
+                    'Notes',
+                    'Verified'
+                ];
                 const rows = data.map(p => [
                     p.id || '',
                     p.created_at || '',
                     p.updated_at || '',
                     p.name || '',
+                    p.style_number || '',
                     p.sku || '',
                     p.barcode || '',
                     p.brand_name || '',
@@ -1031,6 +1051,7 @@
                     p.supply_price || '',
                     p.size_or_dimensions || '',
                     p.color || '',
+                    p.quantity || 1,
                     p.tags || '',
                     p.description || '',
                     p.notes || '',
