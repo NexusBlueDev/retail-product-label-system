@@ -6,6 +6,7 @@
 import { getDOMElements } from './dom.js';
 import { state } from './state.js';
 import { eventBus } from './events.js';
+import { ensureAuthenticated } from './auth.js';
 import { startBarcodeScanner, stopBarcodeScanner, captureBarcodeAndStop } from './barcode-scanner.js';
 import { handleImageSelection, clearImages } from './image-handler.js';
 import { extractProductData } from './ai-extraction.js';
@@ -199,9 +200,30 @@ function initApp() {
     console.log('✅ App initialized with modular architecture');
 }
 
+/**
+ * Authenticate silently then initialize the app.
+ * Caches the Supabase Auth JWT in state so database.js can use it.
+ */
+async function startApp() {
+    try {
+        const session = await ensureAuthenticated();
+        state.accessToken = session.access_token;
+        state.user = session.user;
+        initApp();
+    } catch (error) {
+        console.error('Authentication failed:', error);
+        const statusEl = document.getElementById('status');
+        if (statusEl) {
+            statusEl.textContent = '❌ Authentication failed. Please reload the page.';
+            statusEl.className = 'status error';
+            statusEl.style.display = 'block';
+        }
+    }
+}
+
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initApp);
+    document.addEventListener('DOMContentLoaded', startApp);
 } else {
-    initApp();
+    startApp();
 }

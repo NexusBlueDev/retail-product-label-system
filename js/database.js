@@ -21,7 +21,7 @@ export async function fetchProductCount() {
         const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=id`, {
             headers: {
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Authorization': `Bearer ${state.accessToken}`,
                 'Prefer': 'count=exact',
                 'Range': '0-0'
             }
@@ -111,7 +111,7 @@ export async function saveProduct() {
             headers: {
                 'Content-Type': 'application/json',
                 'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Authorization': `Bearer ${state.accessToken}`,
                 'Prefer': 'return=representation'
             },
             body: JSON.stringify(formData)

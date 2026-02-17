@@ -10,5 +10,7 @@ export const state = {
     lastDetectedCode: null,  // String from barcode scanner
     editingId: null,         // Product ID currently being edited (null = create mode)
     lastSavedProduct: null,  // Full product object from last successful save
-    duplicateProductId: null // ID of existing product found by barcode precheck
+    duplicateProductId: null, // ID of existing product found by barcode precheck
+    accessToken: null,       // Supabase Auth JWT (set on app init via auth.js)
+    user: null               // Supabase Auth user object
 };
