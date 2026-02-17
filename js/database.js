@@ -201,6 +201,33 @@ export async function saveProduct() {
 }
 
 /**
+ * Fetch a full product record for editing, by barcode or SKU
+ * @param {string} barcode
+ * @param {string} sku
+ * @returns {Object|null} Full product object or null if not found
+ */
+export async function fetchProductForEdit(barcode, sku) {
+    const headers = {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`
+    };
+
+    if (barcode) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/products?barcode=eq.${barcode}&select=*`, { headers });
+        const data = await res.json();
+        if (data && data.length > 0) return data[0];
+    }
+
+    if (sku) {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/products?sku=eq.${sku}&select=*`, { headers });
+        const data = await res.json();
+        if (data && data.length > 0) return data[0];
+    }
+
+    return null;
+}
+
+/**
  * Export all products to CSV
  */
 export async function exportData() {

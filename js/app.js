@@ -10,7 +10,7 @@ import { startBarcodeScanner, stopBarcodeScanner, captureBarcodeAndStop } from '
 import { handleImageSelection, clearImages } from './image-handler.js';
 import { extractProductData } from './ai-extraction.js';
 import { setupSKUAutoGeneration, populateForm } from './form-manager.js';
-import { saveProduct, exportData, fetchProductCount, checkBarcodeExists } from './database.js';
+import { saveProduct, exportData, fetchProductCount, checkBarcodeExists, fetchProductForEdit } from './database.js';
 import { showStatus, closeModal, closeDuplicateModal } from './ui-utils.js';
 
 /**
@@ -122,6 +122,21 @@ function initEventListeners() {
         dom.editModeText.textContent = '';
         dom.saveBtn.textContent = 'Save Product';
         dom.saveBtn.disabled = true;
+    };
+
+    // Edit the existing product that caused a duplicate error
+    window.editDuplicateProduct = async () => {
+        closeDuplicateModal();
+        const barcode = dom.barcodeInput.value.trim();
+        const sku = dom.skuInput.value.trim();
+        showStatus('Loading existing product...', 'info');
+        const product = await fetchProductForEdit(barcode, sku);
+        if (product) {
+            state.lastSavedProduct = product;
+            window.editLastSaved();
+        } else {
+            showStatus('Could not find existing product', 'error');
+        }
     };
 }
 
