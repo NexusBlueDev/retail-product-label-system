@@ -58,7 +58,7 @@ export async function checkBarcodeExists(barcode) {
             {
                 headers: {
                     'apikey': SUPABASE_KEY,
-                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                    'Authorization': `Bearer ${state.accessToken}`
                 }
             }
         );
@@ -217,7 +217,7 @@ export async function saveProduct() {
 export async function fetchProductForEdit(productId, barcode, sku) {
     const headers = {
         'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
+        'Authorization': `Bearer ${state.accessToken}`
     };
 
     const query = (param, value) =>
@@ -261,7 +261,7 @@ export async function exportData() {
                 {
                     headers: {
                         'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                        'Authorization': `Bearer ${state.accessToken}`
                     }
                 }
             );
