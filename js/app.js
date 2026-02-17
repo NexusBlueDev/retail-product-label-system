@@ -130,7 +130,7 @@ function initEventListeners() {
         const barcode = dom.barcodeInput.value.trim();
         const sku = dom.skuInput.value.trim();
         showStatus('Loading existing product...', 'info');
-        const product = await fetchProductForEdit(barcode, sku);
+        const product = await fetchProductForEdit(state.duplicateProductId, barcode, sku);
         if (product) {
             state.lastSavedProduct = product;
             window.editLastSaved();

@@ -64,9 +64,11 @@ export async function checkBarcodeExists(barcode) {
         );
         const data = await response.json();
         if (data && data.length > 0) {
+            state.duplicateProductId = data[0].id;
             barcodeDupWarning.textContent = `⚠️ Already in database: ${data[0].name || 'Unknown product'} (ID: ${data[0].id})`;
             barcodeDupWarning.style.display = 'block';
         } else {
+            state.duplicateProductId = null;
             barcodeDupWarning.style.display = 'none';
             barcodeDupWarning.textContent = '';
         }
@@ -206,22 +208,32 @@ export async function saveProduct() {
  * @param {string} sku
  * @returns {Object|null} Full product object or null if not found
  */
-export async function fetchProductForEdit(barcode, sku) {
+export async function fetchProductForEdit(productId, barcode, sku) {
     const headers = {
         'apikey': SUPABASE_KEY,
         'Authorization': `Bearer ${SUPABASE_KEY}`
     };
 
-    if (barcode) {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/products?barcode=eq.${barcode}&select=*`, { headers });
-        const data = await res.json();
-        if (data && data.length > 0) return data[0];
-    }
+    try {
+        if (productId) {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${productId}&select=*`, { headers });
+            const data = await res.json();
+            if (data && data.length > 0) return data[0];
+        }
 
-    if (sku) {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/products?sku=eq.${sku}&select=*`, { headers });
-        const data = await res.json();
-        if (data && data.length > 0) return data[0];
+        if (barcode) {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/products?barcode=eq.${barcode}&select=*`, { headers });
+            const data = await res.json();
+            if (data && data.length > 0) return data[0];
+        }
+
+        if (sku) {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/products?sku=eq.${sku}&select=*`, { headers });
+            const data = await res.json();
+            if (data && data.length > 0) return data[0];
+        }
+    } catch (e) {
+        console.error('fetchProductForEdit error:', e);
     }
 
     return null;
