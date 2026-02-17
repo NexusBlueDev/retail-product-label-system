@@ -113,8 +113,9 @@ Exports all 18 fields:
 ## 🔧 Technical Details
 
 ### **Technology Stack**
-- **Frontend:** Pure HTML/CSS/JavaScript (no frameworks)
-- **Barcode Scanner:** QuaggaJS 2 (open source)
+- **Frontend:** Pure HTML/CSS/JavaScript (no frameworks, no build tools)
+- **Module System:** ES6 native modules (12 modules, single entry point)
+- **Barcode Scanner:** QuaggaJS 2 v1.12.1 (open source)
 - **AI Vision:** OpenAI GPT-4o
 - **Database:** Supabase (PostgreSQL)
 - **Hosting:** GitHub Pages
@@ -190,13 +191,13 @@ Exports all 18 fields:
 ## 🎨 Customization
 
 ### **Brand Codes**
-Edit the `brandMap` in the HTML to add your brands:
+Edit `js/sku-generator.js` → `BRAND_MAP` to add your brands:
 ```javascript
 'YOUR BRAND': 'YB',
 ```
 
 ### **Color Codes**
-Edit the `colorMap` for your color names:
+Edit `js/sku-generator.js` → `COLOR_MAP` for your color names:
 ```javascript
 'NAVY BLUE': 'NVY',
 ```
@@ -214,13 +215,28 @@ For issues or feature requests:
 
 ## 📝 Version History
 
-- **v3.1 (Current - Feb 2026)** - Production stable release ✅
+- **v3.3 (Current - Feb 2026)** - Modular Architecture ✅
+  - Split monolithic 1100-line index.html into 12 ES6 modules
+  - No build tools required (native browser modules)
+  - index.html reduced to 186 lines (structure only)
+  - CSS split into 3 files (main, components, modals)
+  - Quagga2 upgraded from v1.8.4 to v1.12.1
+  - **Status: Production Ready**
+
+- **v3.2 (Feb 2026)** - Phase 1 Optimizations
+  - 50% AI cost reduction via optimized prompts
+  - WebP image compression (60% size reduction)
+  - Retry logic with exponential backoff
+  - Duplicate detection modal
+  - **Status: Superseded by v3.3**
+
+- **v3.1 (Feb 2026)** - Production stable release ✅
   - Fixed quantity field (was missing from form)
   - Fixed style_number database saving
   - Added comprehensive error logging
   - Enhanced duplicate detection messages
   - All 18 fields confirmed working
-  - **Status: Production Ready**
+  - **Status: Superseded by v3.2**
   
 - **v3.0** - Major feature release
   - Added real-time barcode scanner
@@ -233,6 +249,6 @@ For issues or feature requests:
 
 ---
 
-**Current Status:** ✅ Fully Operational - All Features Working  
-**Last Tested:** February 16, 2026  
+**Current Status:** ✅ Fully Operational - All Features Working
+**Last Tested:** February 17, 2026
 **Developed by:** NexusBlue Development Team
