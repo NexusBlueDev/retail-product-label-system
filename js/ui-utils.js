@@ -35,6 +35,8 @@ export function closeDuplicateModal() {
     const {
         duplicateModal,
         form,
+        barcodeInput,
+        barcodeDupWarning,
         imagePreviewList,
         imagePreviewContainer,
         cameraInput,
@@ -48,6 +50,10 @@ export function closeDuplicateModal() {
 
     // Clear form and reset (same as success flow)
     form.reset();
+    barcodeInput.dispatchEvent(new Event('input')); // cancel pending debounce + clear duplicate warning
+    barcodeInput.removeAttribute('data-source');
+    barcodeDupWarning.style.display = 'none';
+    barcodeDupWarning.textContent = '';
     imagePreviewList.innerHTML = '';
     imagePreviewContainer.style.display = 'none';
     cameraInput.value = '';
@@ -57,6 +63,7 @@ export function closeDuplicateModal() {
     // Reset state
     state.currentImages = [];
     state.extractedData = null;
+    state.duplicateProductId = null;
 
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
