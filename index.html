@@ -426,6 +426,16 @@
         </div>
     </div>
 
+    <!-- Duplicate Warning Modal -->
+    <div class="modal" id="duplicateModal">
+        <div class="modal-content" style="border-color: #FF9500;">
+            <div class="modal-icon" style="color: #FF9500;">⚠️</div>
+            <div class="modal-title" id="duplicateTitle">Duplicate Product!</div>
+            <div class="modal-message" id="duplicateMessage">This product already exists in the database</div>
+            <button class="modal-button" style="background: #FF9500;" onclick="closeDuplicateModal()">Scan Next Product</button>
+        </div>
+    </div>
+
     <script>
         // Configuration
         const SUPABASE_URL = 'https://ayfwyvripnetwrkimxka.supabase.co';
@@ -989,17 +999,27 @@
                 let errorMessage = error.message || '';
                 
                 // Check for duplicate errors (Postgres returns different error formats)
-                if (errorMessage.toLowerCase().includes('duplicate') || 
+                if (errorMessage.toLowerCase().includes('duplicate') ||
                     errorMessage.toLowerCase().includes('unique') ||
                     errorMessage.includes('23505')) {  // Postgres unique violation error code
-                    
+
+                    // Set modal message based on which field is duplicate
+                    let duplicateField = 'This product';
                     if (errorMessage.toLowerCase().includes('sku') || errorMessage.includes('unique_sku')) {
-                        showStatus('⚠️ DUPLICATE: Product with this SKU already exists!', 'error');
+                        duplicateField = 'A product with this SKU';
                     } else if (errorMessage.toLowerCase().includes('barcode') || errorMessage.includes('unique_barcode')) {
-                        showStatus('⚠️ DUPLICATE: Product with this barcode already exists!', 'error');
-                    } else {
-                        showStatus('⚠️ DUPLICATE: This product already exists in the database!', 'error');
+                        duplicateField = 'A product with this barcode';
                     }
+
+                    // Update duplicate modal content
+                    document.getElementById('duplicateTitle').textContent = 'Duplicate Product!';
+                    document.getElementById('duplicateMessage').textContent = `${duplicateField} already exists in the database`;
+
+                    // Show duplicate modal
+                    setTimeout(() => {
+                        document.getElementById('duplicateModal').classList.add('show');
+                    }, 500);
+
                 } else if (errorMessage.includes('violates')) {
                     showStatus(`⚠️ DATABASE ERROR: ${errorMessage}`, 'error');
                 } else {
@@ -1108,6 +1128,28 @@
         // Close success modal
         function closeModal() {
             document.getElementById('successModal').classList.remove('show');
+        }
+
+        // Close duplicate modal and clear form for next product
+        function closeDuplicateModal() {
+            // Close the modal
+            document.getElementById('duplicateModal').classList.remove('show');
+
+            // Clear form and reset (same as success flow)
+            form.reset();
+            imagePreviewList.innerHTML = '';
+            imagePreviewContainer.style.display = 'none';
+            cameraInput.value = '';
+            galleryInput.value = '';
+            saveBtn.disabled = true;
+            currentImages = [];
+            extractedData = null;
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Clear any status messages
+            status.classList.remove('show');
         }
     </script>
 </body>
