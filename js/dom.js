@@ -66,7 +66,11 @@ export function getDOMElements() {
 
             // Informational
             productCount: document.getElementById('productCount'),
-            barcodeDupWarning: document.getElementById('barcodeDupWarning')
+            barcodeDupWarning: document.getElementById('barcodeDupWarning'),
+
+            // Edit mode
+            editModeIndicator: document.getElementById('editModeIndicator'),
+            editModeText: document.getElementById('editModeText')
         };
     }
 

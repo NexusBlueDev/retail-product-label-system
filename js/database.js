@@ -43,6 +43,9 @@ export async function checkBarcodeExists(barcode) {
     const { barcodeDupWarning } = getDOMElements();
     if (!barcodeDupWarning) return;
 
+    // Skip check when editing (own barcode would trigger false positive)
+    if (state.editingId) return;
+
     if (!barcode || (barcode.length !== 12 && barcode.length !== 13)) {
         barcodeDupWarning.style.display = 'none';
         barcodeDupWarning.textContent = '';
@@ -86,13 +89,18 @@ export async function saveProduct() {
     }
 
     saveBtn.disabled = true;
-    showStatus('Saving...', 'info');
+    const isEditing = !!state.editingId;
+    showStatus(isEditing ? 'Updating...' : 'Saving...', 'info');
 
-    console.log('Saving product with data:', formData);
+    console.log(isEditing ? `Updating product ID ${state.editingId}:` : 'Saving product:', formData);
 
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
-            method: 'POST',
+        const url = isEditing
+            ? `${SUPABASE_URL}/rest/v1/products?id=eq.${state.editingId}`
+            : `${SUPABASE_URL}/rest/v1/products`;
+
+        const response = await fetch(url, {
+            method: isEditing ? 'PATCH' : 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'apikey': SUPABASE_KEY,
@@ -114,19 +122,29 @@ export async function saveProduct() {
         }
 
         const savedData = await response.json();
-        console.log('Successfully saved product:', savedData);
+        console.log(isEditing ? 'Successfully updated product:' : 'Successfully saved product:', savedData);
 
-        // Show success status message
-        showStatus(`✅ Product saved successfully! (ID: ${savedData[0]?.id || 'N/A'})`, 'success');
+        const dom = getDOMElements();
 
-        // Show success modal after 500ms
-        setTimeout(() => {
-            successModal.classList.add('show');
-        }, 500);
+        if (isEditing) {
+            // Update mode: show status, clear edit mode, reset form
+            showStatus(`✅ Product updated! (ID: ${state.editingId})`, 'success');
+            state.editingId = null;
+            state.lastSavedProduct = null;
+            dom.editModeIndicator.style.display = 'none';
+            dom.editModeText.textContent = '';
+            saveBtn.textContent = 'Save Product';
+        } else {
+            // Create mode: store saved product, show success modal
+            state.lastSavedProduct = savedData[0];
+            showStatus(`✅ Product saved successfully! (ID: ${savedData[0]?.id || 'N/A'})`, 'success');
+            setTimeout(() => {
+                successModal.classList.add('show');
+            }, 500);
+        }
 
         // Clear form and reset
         form.reset();
-        const dom = getDOMElements();
         dom.barcodeInput.removeAttribute('data-source');
         dom.barcodeDupWarning.style.display = 'none';
         dom.barcodeDupWarning.textContent = '';

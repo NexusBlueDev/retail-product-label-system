@@ -9,7 +9,7 @@ import { eventBus } from './events.js';
 import { startBarcodeScanner, stopBarcodeScanner, captureBarcodeAndStop } from './barcode-scanner.js';
 import { handleImageSelection, clearImages } from './image-handler.js';
 import { extractProductData } from './ai-extraction.js';
-import { setupSKUAutoGeneration } from './form-manager.js';
+import { setupSKUAutoGeneration, populateForm } from './form-manager.js';
 import { saveProduct, exportData, fetchProductCount, checkBarcodeExists } from './database.js';
 import { showStatus, closeModal, closeDuplicateModal } from './ui-utils.js';
 
@@ -80,6 +80,49 @@ function initEventListeners() {
     // Modal close handlers
     window.closeModal = closeModal;
     window.closeDuplicateModal = closeDuplicateModal;
+
+    // Edit last saved product
+    window.editLastSaved = () => {
+        const product = state.lastSavedProduct;
+        if (!product) return;
+
+        // Close success modal
+        closeModal();
+
+        // Populate form fields
+        populateForm(product);
+
+        // Manually set fields populateForm doesn't cover
+        dom.quantityInput.value = product.quantity || 1;
+        dom.barcodeInput.value = product.barcode || '';
+        dom.barcodeInput.removeAttribute('data-source');
+
+        // Set the saved SKU directly (don't let auto-generate overwrite it)
+        setTimeout(() => {
+            if (product.sku) dom.skuInput.value = product.sku;
+        }, 150);
+
+        // Enter edit mode
+        state.editingId = product.id;
+        dom.editModeIndicator.style.display = 'block';
+        dom.editModeText.textContent = product.name || `ID ${product.id}`;
+        dom.saveBtn.textContent = 'Update Product';
+        dom.saveBtn.disabled = false;
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // Cancel edit mode
+    window.cancelEdit = () => {
+        state.editingId = null;
+        state.lastSavedProduct = null;
+        dom.form.reset();
+        dom.barcodeInput.removeAttribute('data-source');
+        dom.editModeIndicator.style.display = 'none';
+        dom.editModeText.textContent = '';
+        dom.saveBtn.textContent = 'Save Product';
+        dom.saveBtn.disabled = true;
+    };
 }
 
 /**

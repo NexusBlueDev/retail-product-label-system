@@ -20,6 +20,8 @@
         <h1>📦 Product Scanner</h1>
 
         <!-- Camera Section -->
+        <!-- Edit Mode Banner -->
+        <div id="editModeIndicator" style="display: none; background: #FF9500; color: white; padding: 10px 16px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; font-size: 14px; text-align: center;">✏️ Editing: <span id="editModeText"></span> &mdash; <button onclick="cancelEdit()" style="background: none; border: none; color: white; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 14px; padding: 0;">Cancel</button></div>
         <div class="camera-section">
             <div style="display: flex; gap: 8px; margin-bottom: 12px;">
                 <button type="button" id="cameraBtn" style="flex: 1; padding: 12px; background: #007AFF; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
@@ -171,6 +173,7 @@
             <div class="modal-title">Product Saved!</div>
             <div class="modal-message">Ready to scan the next product</div>
             <button class="modal-button" onclick="closeModal()">Scan Next</button>
+            <button class="modal-button" style="background: #34C759; margin-top: 8px;" onclick="editLastSaved()">✏️ Edit Product</button>
         </div>
     </div>
 

@@ -7,5 +7,7 @@ export const state = {
     currentImages: [],       // Array of {base64, preview} objects
     extractedData: null,     // Object from AI extraction
     scannedBarcode: null,    // String (currently unused, for future use)
-    lastDetectedCode: null   // String from barcode scanner
+    lastDetectedCode: null,  // String from barcode scanner
+    editingId: null,         // Product ID currently being edited (null = create mode)
+    lastSavedProduct: null   // Full product object from last successful save
 };
