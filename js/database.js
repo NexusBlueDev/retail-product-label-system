@@ -63,6 +63,11 @@ export async function checkBarcodeExists(barcode) {
             }
         );
         const data = await response.json();
+
+        // If the barcode input was cleared while this fetch was in flight (e.g. after save),
+        // discard the result so a stale warning doesn't reappear.
+        if (getDOMElements().barcodeInput.value.trim() !== barcode) return;
+
         if (data && data.length > 0) {
             state.duplicateProductId = data[0].id;
             barcodeDupWarning.textContent = `⚠️ Already in database: ${data[0].name || 'Unknown product'} (ID: ${data[0].id})`;
@@ -147,6 +152,7 @@ export async function saveProduct() {
 
         // Clear form and reset
         form.reset();
+        dom.barcodeInput.dispatchEvent(new Event('input')); // cancel any pending debounce timer
         dom.barcodeInput.removeAttribute('data-source');
         dom.barcodeDupWarning.style.display = 'none';
         dom.barcodeDupWarning.textContent = '';
