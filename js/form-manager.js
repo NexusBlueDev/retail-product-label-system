@@ -25,6 +25,9 @@ export function populateForm(data) {
     // Only populate barcode if NOT scanned (scanned is authoritative)
     if (dom.barcodeInput.getAttribute('data-source') !== 'scanned') {
         dom.barcodeInput.value = data.barcode || '';
+        if (data.barcode) {
+            dom.barcodeInput.dispatchEvent(new Event('input'));
+        }
     }
 
     dom.brandNameInput.value = data.brand_name || '';
