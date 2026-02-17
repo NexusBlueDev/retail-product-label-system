@@ -30,7 +30,7 @@ export function populateForm(data) {
     dom.brandNameInput.value = data.brand_name || '';
     dom.productCategoryInput.value = data.product_category || '';
     dom.retailPriceInput.value = data.retail_price || 0;
-    dom.supplyPriceInput.value = data.supply_price || 0;
+    dom.supplyPriceInput.value = data.supply_price || '';
     dom.sizeInput.value = data.size_or_dimensions || '';
     dom.colorInput.value = data.color || '';
     dom.tagsInput.value = data.tags || '';

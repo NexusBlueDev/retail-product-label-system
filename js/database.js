@@ -64,6 +64,7 @@ export async function saveProduct() {
 
         // Clear form and reset
         form.reset();
+        getDOMElements().barcodeInput.removeAttribute('data-source');
         imagePreviewList.innerHTML = '';
         imagePreviewContainer.style.display = 'none';
         cameraInput.value = '';
