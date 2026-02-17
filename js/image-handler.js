@@ -7,9 +7,11 @@ import { getDOMElements } from './dom.js';
 import { state } from './state.js';
 import { showStatus } from './ui-utils.js';
 import { eventBus } from './events.js';
+import { compressImageToWebP } from './image-compression.js';
 
 /**
- * Handle image selection from camera or gallery
+ * Handle image selection from camera or gallery.
+ * Single-pass pipeline: file → blob → preview URL + base64 (one FileReader total).
  * @param {Event} e - Change event from file input
  */
 export async function handleImageSelection(e) {
@@ -18,20 +20,19 @@ export async function handleImageSelection(e) {
 
     showStatus(`${files.length} image(s) selected ✓`, 'info');
 
-    // Add to current images
     for (const file of files) {
-        const base64 = await compressImage(file);
-        state.currentImages.push({
-            base64: base64,
-            preview: await createPreviewUrl(file)
-        });
+        const blob = await compressImageToWebP(file);
+
+        // Reuse the same blob for both preview and API — no second file read
+        const preview = URL.createObjectURL(blob);
+        const base64 = await blobToBase64(blob);
+
+        state.currentImages.push({ base64, preview });
     }
 
-    // Show preview container and update previews
     updatePreviews();
 
     const { cameraInput, galleryInput } = getDOMElements();
-    // Clear file inputs for next selection
     cameraInput.value = '';
     galleryInput.value = '';
 
@@ -39,15 +40,16 @@ export async function handleImageSelection(e) {
 }
 
 /**
- * Create preview URL from file
- * @param {File} file - Image file
- * @returns {Promise<string>} Data URL
+ * Convert a Blob to a base64 data URL (single FileReader).
+ * @param {Blob} blob
+ * @returns {Promise<string>}
  */
-export function createPreviewUrl(file) {
-    return new Promise((resolve) => {
+function blobToBase64(blob) {
+    return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = (e) => resolve(e.target.result);
-        reader.readAsDataURL(file);
+        reader.onerror = () => reject(new Error('Failed to convert blob to base64'));
+        reader.readAsDataURL(blob);
     });
 }
 
@@ -84,45 +86,14 @@ export function updatePreviews() {
 }
 
 /**
- * Compress image using WebP format
- * @param {File} file - Image file to compress
- * @returns {Promise<string>} Compressed base64 data URL
- */
-export async function compressImage(file) {
-    // Use improved compression from image-compression.js
-    // WebP format (30-50% smaller), 1920px max, 85% quality
-    try {
-        const compressed = await compressImageToWebP(file, 1920, 0.85);
-        console.log(`Image compressed: ${(file.size / 1024 / 1024).toFixed(2)}MB → ${(compressed.length / 1024 / 1024).toFixed(2)}MB`);
-        return compressed;
-    } catch (error) {
-        console.error('Compression error, using fallback:', error);
-        // Fallback to JPEG if WebP fails
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const maxWidth = 1920;
-                    const scale = Math.min(1, maxWidth / img.width);
-                    canvas.width = img.width * scale;
-                    canvas.height = img.height * scale;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.85));
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-}
-
-/**
- * Clear all selected images
+ * Clear all selected images, revoking blob preview URLs to free memory.
  */
 export function clearImages() {
+    state.currentImages.forEach(img => {
+        if (img.preview && img.preview.startsWith('blob:')) {
+            URL.revokeObjectURL(img.preview);
+        }
+    });
     state.currentImages = [];
     updatePreviews();
     showStatus('Images cleared', 'info');

@@ -6,7 +6,6 @@
 import { getDOMElements } from './dom.js';
 import { generateSKUFromForm } from './sku-generator.js';
 import { showStatus } from './ui-utils.js';
-import { eventBus } from './events.js';
 
 /**
  * Populate form with extracted product data
@@ -40,13 +39,11 @@ export function populateForm(data) {
     dom.descriptionInput.value = data.description || '';
     dom.notesInput.value = data.notes || '';
 
-    // Generate SKU after all fields are populated
-    setTimeout(() => {
-        const generatedSKU = generateSKUFromForm();
-        if (generatedSKU) {
-            dom.skuInput.value = generatedSKU;
-        }
-    }, 100);
+    // Generate SKU — all fields are set synchronously above, so this runs immediately
+    const generatedSKU = generateSKUFromForm();
+    if (generatedSKU) {
+        dom.skuInput.value = generatedSKU;
+    }
 
     // Validate barcode length
     if (dom.barcodeInput.value && (dom.barcodeInput.value.length !== 12 && dom.barcodeInput.value.length !== 13)) {

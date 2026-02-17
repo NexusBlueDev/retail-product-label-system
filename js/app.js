@@ -14,6 +14,18 @@ import { saveProduct, exportData, fetchProductCount, checkBarcodeExists, fetchPr
 import { showStatus, closeModal, closeDuplicateModal } from './ui-utils.js';
 
 /**
+ * Returns a function that delays invoking fn until after wait ms have elapsed
+ * since the last time it was called.
+ */
+function debounce(fn, wait) {
+    let timer;
+    return (...args) => {
+        clearTimeout(timer);
+        timer = setTimeout(() => fn(...args), wait);
+    };
+}
+
+/**
  * Initialize all event listeners
  */
 function initEventListeners() {
@@ -72,9 +84,12 @@ function initEventListeners() {
         }
     });
 
-    // Barcode pre-check: warn if barcode already exists in database
+    // Barcode pre-check: only fire after user stops typing, and only for complete barcodes
+    const debouncedBarcodeCheck = debounce((value) => {
+        if (/^\d{12,13}$/.test(value)) checkBarcodeExists(value);
+    }, 500);
     dom.barcodeInput.addEventListener('input', () => {
-        checkBarcodeExists(dom.barcodeInput.value.trim());
+        debouncedBarcodeCheck(dom.barcodeInput.value.trim());
     });
 
     // Modal close handlers
@@ -97,10 +112,8 @@ function initEventListeners() {
         dom.barcodeInput.value = product.barcode || '';
         dom.barcodeInput.removeAttribute('data-source');
 
-        // Set the saved SKU directly (don't let auto-generate overwrite it)
-        setTimeout(() => {
-            if (product.sku) dom.skuInput.value = product.sku;
-        }, 150);
+        // Set the saved SKU directly — populateForm is now synchronous so this is safe
+        if (product.sku) dom.skuInput.value = product.sku;
 
         // Enter edit mode
         state.editingId = product.id;

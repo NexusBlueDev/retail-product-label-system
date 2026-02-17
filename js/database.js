@@ -81,7 +81,7 @@ export async function checkBarcodeExists(barcode) {
  * Save product to Supabase
  */
 export async function saveProduct() {
-    const { saveBtn, form, imagePreviewList, imagePreviewContainer, cameraInput, galleryInput, status, successModal, duplicateModal, duplicateTitle, duplicateMessage } = getDOMElements();
+    const { saveBtn, form, imagePreviewList, imagePreviewContainer, cameraInput, galleryInput, successModal, duplicateModal, duplicateTitle, duplicateMessage } = getDOMElements();
 
     const formData = collectFormData();
 
@@ -214,24 +214,21 @@ export async function fetchProductForEdit(productId, barcode, sku) {
         'Authorization': `Bearer ${SUPABASE_KEY}`
     };
 
+    const query = (param, value) =>
+        fetch(`${SUPABASE_URL}/rest/v1/products?${param}=eq.${value}&select=*`, { headers })
+            .then(r => r.json());
+
     try {
-        if (productId) {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${productId}&select=*`, { headers });
-            const data = await res.json();
-            if (data && data.length > 0) return data[0];
-        }
+        // Fire all available lookups in parallel instead of sequentially
+        const [byId, byBarcode, bySku] = await Promise.all([
+            productId ? query('id', productId) : null,
+            barcode   ? query('barcode', barcode) : null,
+            sku       ? query('sku', sku) : null,
+        ]);
 
-        if (barcode) {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/products?barcode=eq.${barcode}&select=*`, { headers });
-            const data = await res.json();
-            if (data && data.length > 0) return data[0];
-        }
-
-        if (sku) {
-            const res = await fetch(`${SUPABASE_URL}/rest/v1/products?sku=eq.${sku}&select=*`, { headers });
-            const data = await res.json();
-            if (data && data.length > 0) return data[0];
-        }
+        if (byId     && byId.length > 0)     return byId[0];
+        if (byBarcode && byBarcode.length > 0) return byBarcode[0];
+        if (bySku    && bySku.length > 0)    return bySku[0];
     } catch (e) {
         console.error('fetchProductForEdit error:', e);
     }
@@ -246,20 +243,34 @@ export async function exportData() {
     showStatus('Fetching products...', 'info');
 
     try {
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=created_at.desc`, {
-            headers: {
-                'apikey': SUPABASE_KEY,
-                'Authorization': `Bearer ${SUPABASE_KEY}`
-            }
-        });
+        const PAGE_SIZE = 500;
+        let data = [];
+        let page = 0;
+        let hasMore = true;
 
-        if (!response.ok) {
-            throw new Error('Failed to fetch products');
+        while (hasMore) {
+            const offset = page * PAGE_SIZE;
+            const response = await fetch(
+                `${SUPABASE_URL}/rest/v1/products?select=*&order=id&offset=${offset}&limit=${PAGE_SIZE}`,
+                {
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
+                    }
+                }
+            );
+
+            if (!response.ok) throw new Error('Failed to fetch products');
+
+            const batch = await response.json();
+            data = data.concat(batch);
+            hasMore = batch.length === PAGE_SIZE;
+            page++;
+
+            if (hasMore) showStatus(`Fetching products... (${data.length} loaded)`, 'info');
         }
 
-        const data = await response.json();
-
-        if (!data || data.length === 0) {
+        if (data.length === 0) {
             showStatus('No products to export', 'error');
             return;
         }

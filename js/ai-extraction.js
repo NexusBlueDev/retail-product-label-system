@@ -11,7 +11,21 @@ import { populateForm } from './form-manager.js';
 import { eventBus } from './events.js';
 
 /**
- * Extract product data from images using AI
+ * Fetch with a 30-second AbortController timeout.
+ */
+async function fetchWithTimeout(url, options, timeoutMs = 30000) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await fetch(url, { ...options, signal: controller.signal });
+    } finally {
+        clearTimeout(timeoutId);
+    }
+}
+
+/**
+ * Extract product data from images using AI.
+ * All images are sent in parallel; results are merged in order.
  * @param {Array<string>} images - Array of base64 image data URLs
  */
 export async function extractProductData(images) {
@@ -20,60 +34,59 @@ export async function extractProductData(images) {
     loading.style.display = 'block';
 
     try {
-        let mergedData = {};
-
-        // Process each image
-        for (let i = 0; i < images.length; i++) {
-            const response = await fetch(FUNCTION_URL, {
+        // Fire all requests simultaneously instead of sequentially
+        const responses = await Promise.all(
+            images.map((image, i) => fetchWithTimeout(FUNCTION_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${SUPABASE_KEY}`
                 },
                 body: JSON.stringify({
-                    image: images[i],
+                    image,
                     imageNumber: i + 1,
                     totalImages: images.length
                 })
-            });
+            }))
+        );
 
-            if (!response.ok) {
-                throw new Error(`Server error ${response.status}. Please try again.`);
-            }
-
-            let result;
-            try {
+        // Parse all responses
+        const results = await Promise.all(
+            responses.map(async (response, i) => {
+                if (!response.ok) {
+                    throw new Error(`Server error ${response.status}. Please try again.`);
+                }
                 const text = await response.text();
                 if (!text || text.trim() === '') {
                     throw new Error('Empty response from server.');
                 }
-                result = JSON.parse(text);
-            } catch (parseError) {
-                console.error('Parse error:', parseError);
-                throw new Error('Invalid response. Please try again in a moment.');
-            }
+                try {
+                    return JSON.parse(text);
+                } catch {
+                    console.error(`Parse error for image ${i + 1}`);
+                    throw new Error('Invalid response. Please try again in a moment.');
+                }
+            })
+        );
 
-            // Check for rate limit error
+        // Merge strategy: first image (vendor label) has priority for structured data;
+        // subsequent images (handwritten) update price and append notes
+        let mergedData = {};
+        for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+
             if (result.error && result.error.toLowerCase().includes('rate limit')) {
                 throw new Error('⏱️ Rate limit reached. Please wait 60 seconds and try again.');
             }
-
             if (!result.success) {
                 throw new Error(result.error || `Extraction failed for image ${i + 1}`);
             }
 
             const data = result.data;
-
-            // Merge strategy: First image (vendor label) has priority for structured data
-            // Subsequent images (handwritten) update prices and add notes
             if (i === 0) {
-                // First image: use all data (vendor label priority)
                 mergedData = { ...data };
             } else {
-                // Subsequent images: only update price and append notes
-                if (data.retail_price && data.retail_price > 0) {
-                    mergedData.retail_price = data.retail_price;
-                }
+                if (data.retail_price && data.retail_price > 0) mergedData.retail_price = data.retail_price;
                 if (data.notes) {
                     mergedData.notes = mergedData.notes
                         ? `${mergedData.notes}; Additional from image ${i + 1}: ${data.notes}`
