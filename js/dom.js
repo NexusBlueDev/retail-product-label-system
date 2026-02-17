@@ -62,7 +62,11 @@ export function getDOMElements() {
             successModal: document.getElementById('successModal'),
             duplicateModal: document.getElementById('duplicateModal'),
             duplicateTitle: document.getElementById('duplicateTitle'),
-            duplicateMessage: document.getElementById('duplicateMessage')
+            duplicateMessage: document.getElementById('duplicateMessage'),
+
+            // Informational
+            productCount: document.getElementById('productCount'),
+            barcodeDupWarning: document.getElementById('barcodeDupWarning')
         };
     }
 

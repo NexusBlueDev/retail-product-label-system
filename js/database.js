@@ -11,6 +11,68 @@ import { collectFormData } from './form-manager.js';
 import { eventBus } from './events.js';
 
 /**
+ * Fetch total product count from Supabase and update the UI counter
+ */
+export async function fetchProductCount() {
+    const { productCount } = getDOMElements();
+    if (!productCount) return;
+
+    try {
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/products?select=id`, {
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Prefer': 'count=exact',
+                'Range': '0-0'
+            }
+        });
+        const range = response.headers.get('content-range'); // e.g. "0-0/47"
+        const total = range ? parseInt(range.split('/')[1]) : 0;
+        productCount.textContent = total > 0 ? `📦 ${total} products in database` : '';
+    } catch {
+        // Silently fail — count is non-critical
+    }
+}
+
+/**
+ * Check if a barcode already exists in the database
+ * Shows a warning in the UI if found, clears warning if not
+ * @param {string} barcode
+ */
+export async function checkBarcodeExists(barcode) {
+    const { barcodeDupWarning } = getDOMElements();
+    if (!barcodeDupWarning) return;
+
+    if (!barcode || (barcode.length !== 12 && barcode.length !== 13)) {
+        barcodeDupWarning.style.display = 'none';
+        barcodeDupWarning.textContent = '';
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/products?barcode=eq.${barcode}&select=name,id`,
+            {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            }
+        );
+        const data = await response.json();
+        if (data && data.length > 0) {
+            barcodeDupWarning.textContent = `⚠️ Already in database: ${data[0].name || 'Unknown product'} (ID: ${data[0].id})`;
+            barcodeDupWarning.style.display = 'block';
+        } else {
+            barcodeDupWarning.style.display = 'none';
+            barcodeDupWarning.textContent = '';
+        }
+    } catch {
+        // Silently fail — pre-check is non-critical
+    }
+}
+
+/**
  * Save product to Supabase
  */
 export async function saveProduct() {
@@ -64,7 +126,10 @@ export async function saveProduct() {
 
         // Clear form and reset
         form.reset();
-        getDOMElements().barcodeInput.removeAttribute('data-source');
+        const dom = getDOMElements();
+        dom.barcodeInput.removeAttribute('data-source');
+        dom.barcodeDupWarning.style.display = 'none';
+        dom.barcodeDupWarning.textContent = '';
         imagePreviewList.innerHTML = '';
         imagePreviewContainer.style.display = 'none';
         cameraInput.value = '';
@@ -76,6 +141,7 @@ export async function saveProduct() {
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
+        fetchProductCount();
         eventBus.emit('product:saved', { product: savedData[0] });
 
     } catch (error) {

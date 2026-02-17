@@ -10,7 +10,7 @@ import { startBarcodeScanner, stopBarcodeScanner, captureBarcodeAndStop } from '
 import { handleImageSelection, clearImages } from './image-handler.js';
 import { extractProductData } from './ai-extraction.js';
 import { setupSKUAutoGeneration } from './form-manager.js';
-import { saveProduct, exportData } from './database.js';
+import { saveProduct, exportData, fetchProductCount, checkBarcodeExists } from './database.js';
 import { showStatus, closeModal, closeDuplicateModal } from './ui-utils.js';
 
 /**
@@ -72,6 +72,11 @@ function initEventListeners() {
         }
     });
 
+    // Barcode pre-check: warn if barcode already exists in database
+    dom.barcodeInput.addEventListener('input', () => {
+        checkBarcodeExists(dom.barcodeInput.value.trim());
+    });
+
     // Modal close handlers
     window.closeModal = closeModal;
     window.closeDuplicateModal = closeDuplicateModal;
@@ -85,6 +90,7 @@ function initEventBusListeners() {
     // We just listen here for any additional actions needed
     eventBus.on('barcode:scanned', ({ code }) => {
         console.log('Barcode scanned:', code);
+        checkBarcodeExists(code);
     });
 
     eventBus.on('images:selected', ({ count }) => {
@@ -115,6 +121,9 @@ function initApp() {
 
     // Initialize event bus listeners
     initEventBusListeners();
+
+    // Load product count on startup
+    fetchProductCount();
 
     console.log('✅ App initialized with modular architecture');
 }
