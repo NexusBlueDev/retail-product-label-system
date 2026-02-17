@@ -215,13 +215,21 @@ For issues or feature requests:
 
 ## 📝 Version History
 
-- **v3.3 (Current - Feb 2026)** - Modular Architecture ✅
+- **v3.4 (Current - Feb 2026)** - Edit & Duplicate Workflow ✅
+  - Edit saved product from success modal (PATCH instead of POST)
+  - Edit existing product from duplicate modal (loads full record by ID)
+  - Barcode duplicate pre-check warning before save attempt
+  - Product count display (📦 X products in database)
+  - Barcode duplicate check fires on AI extraction, not just scanning
+  - **Status: Production Ready**
+
+- **v3.3 (Feb 2026)** - Modular Architecture ✅
   - Split monolithic 1100-line index.html into 12 ES6 modules
   - No build tools required (native browser modules)
   - index.html reduced to 186 lines (structure only)
   - CSS split into 3 files (main, components, modals)
   - Quagga2 upgraded from v1.8.4 to v1.12.1
-  - **Status: Production Ready**
+  - **Status: Superseded by v3.4**
 
 - **v3.2 (Feb 2026)** - Phase 1 Optimizations
   - 50% AI cost reduction via optimized prompts

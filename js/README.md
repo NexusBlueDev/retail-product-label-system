@@ -74,7 +74,7 @@ app.js (entry point)
 | `image-handler.js` | Image selection, compression, previews | `handleImageSelection()`, `compressImage()`, `clearImages()`, `updatePreviews()` |
 | `ai-extraction.js` | OpenAI Vision API calls | `extractProductData(images)` |
 | `form-manager.js` | Form population and data collection | `populateForm()`, `setupSKUAutoGeneration()`, `collectFormData()` |
-| `database.js` | Supabase save and CSV export | `saveProduct()`, `exportData()` |
+| `database.js` | Supabase save, export, and lookups | `saveProduct()`, `exportData()`, `fetchProductCount()`, `checkBarcodeExists()`, `fetchProductForEdit()` |
 
 ### Entry Point
 
@@ -100,10 +100,13 @@ app.js (entry point)
 ```javascript
 // js/state.js
 {
-  currentImages: [],      // Array of { base64, preview } objects
-  extractedData: null,    // Last AI extraction result
-  scannedBarcode: null,   // Currently scanned barcode (unused, legacy)
-  lastDetectedCode: null  // Barcode detected by Quagga2 (pre-capture)
+  currentImages: [],        // Array of { base64, preview } objects
+  extractedData: null,      // Last AI extraction result
+  scannedBarcode: null,     // Currently scanned barcode (unused, legacy)
+  lastDetectedCode: null,   // Barcode detected by Quagga2 (pre-capture)
+  editingId: null,          // Product ID being edited (null = create mode)
+  lastSavedProduct: null,   // Full product object from last successful save
+  duplicateProductId: null  // ID found by barcode precheck (used for Edit Existing)
 }
 ```
 
@@ -129,3 +132,4 @@ Edit `js/sku-generator.js` → `COLOR_MAP`:
 
 - `image-compression.js` is loaded as a regular `<script>` (not a module) in `index.html`, making `compressImageToWebP()` available as a global function called by `image-handler.js`.
 - Modal close functions (`closeModal`, `closeDuplicateModal`) are exposed to the global `window` scope in `app.js` to support inline `onclick` HTML attributes.
+- Edit functions (`editLastSaved`, `cancelEdit`, `editDuplicateProduct`) are also on `window` for the same reason. `editLastSaved` re-populates the form from `state.lastSavedProduct` and switches to PATCH mode. `editDuplicateProduct` fetches the conflicting product by ID (stored in `state.duplicateProductId` by `checkBarcodeExists`) before calling `editLastSaved`.
