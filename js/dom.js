@@ -70,7 +70,10 @@ export function getDOMElements() {
 
             // Edit mode
             editModeIndicator: document.getElementById('editModeIndicator'),
-            editModeText: document.getElementById('editModeText')
+            editModeText: document.getElementById('editModeText'),
+
+            // User tracking
+            currentUserLabel: document.getElementById('currentUserLabel')
         };
     }
 

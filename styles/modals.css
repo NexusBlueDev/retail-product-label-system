@@ -59,3 +59,103 @@
 .modal-button:hover {
     background: #2DA84A;
 }
+
+/* ── User Login Overlay ────────────────────────────────────────────── */
+
+.user-name-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.user-name-btn {
+    padding: 18px 12px;
+    background: #007AFF;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+}
+
+.user-name-btn:active {
+    background: #0062CC;
+}
+
+.user-add-btn {
+    padding: 12px 24px;
+    background: none;
+    color: #007AFF;
+    border: 2px solid #007AFF;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.pin-input {
+    display: block;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto 12px;
+    padding: 14px;
+    font-size: 28px;
+    letter-spacing: 10px;
+    text-align: center;
+    border: 2px solid #C7C7CC;
+    border-radius: 12px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.pin-input:focus {
+    border-color: #007AFF;
+}
+
+.user-text-input {
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto 12px;
+    padding: 12px 14px;
+    font-size: 17px;
+    text-align: center;
+    border: 2px solid #C7C7CC;
+    border-radius: 12px;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.user-text-input:focus {
+    border-color: #007AFF;
+}
+
+.user-primary-btn {
+    display: block;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    padding: 14px;
+    background: #007AFF;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.user-primary-btn:disabled {
+    opacity: 0.5;
+}
+
+.user-error {
+    color: #FF3B30;
+    font-size: 14px;
+    min-height: 20px;
+    margin-bottom: 12px;
+}

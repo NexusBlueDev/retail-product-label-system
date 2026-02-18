@@ -300,7 +300,8 @@ export async function exportData() {
             'Tags',
             'Description',
             'Notes',
-            'Verified'
+            'Verified',
+            'Entered By'
         ];
 
         const csvRows = [headers.join(',')];
@@ -324,7 +325,8 @@ export async function exportData() {
                 `"${(product.tags || '').replace(/"/g, '""')}"`,
                 `"${(product.description || '').replace(/"/g, '""')}"`,
                 `"${(product.notes || '').replace(/"/g, '""')}"`,
-                product.verified || false
+                product.verified || false,
+                `"${(product.entered_by || '').replace(/"/g, '""')}"`
             ];
             csvRows.push(row.join(','));
         });

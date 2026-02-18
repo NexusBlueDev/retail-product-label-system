@@ -17,6 +17,13 @@
         
         <h1>📦 Product Scanner</h1>
 
+        <!-- Current user bar -->
+        <div style="text-align:right; font-size:12px; color:#8E8E93; padding: 0 4px 8px;">
+            Scanning as: <strong id="currentUserLabel"></strong>
+            &nbsp;·&nbsp;
+            <a href="#" onclick="switchUser(); return false;" style="color:#007AFF;">Switch</a>
+        </div>
+
         <!-- Camera Section -->
         <!-- Edit Mode Banner -->
         <div id="editModeIndicator" style="display: none; background: #FF9500; color: white; padding: 10px 16px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; font-size: 14px; text-align: center;">✏️ Editing: <span id="editModeText"></span> &mdash; <button onclick="cancelEdit()" style="background: none; border: none; color: white; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 14px; padding: 0;">Cancel</button></div>
@@ -162,6 +169,47 @@
         <button type="button" class="btn-secondary" id="rescanBtn" disabled style="flex: 0.5;">🔄 Rescan</button>
         <button type="button" class="btn-primary" id="saveBtn" disabled>Save Product</button>
         <button type="button" class="btn-secondary" id="exportBtn">Export CSV</button>
+    </div>
+
+    <!-- User Login Overlay -->
+    <div id="userLoginOverlay" style="display:none; position:fixed; inset:0; z-index:1001; background:#fff; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
+
+        <!-- Select view: choose name -->
+        <div id="userSelectView">
+            <div style="text-align:center; margin-bottom:24px;">
+                <img src="logo.jpg" alt="NexusBlue Logo" style="max-width:160px; height:auto; margin-bottom:16px;">
+                <h2 style="margin:0; font-size:22px; color:#1c1c1e;">Who's scanning?</h2>
+            </div>
+            <div id="userNameButtons" class="user-name-grid"></div>
+            <div style="text-align:center; margin-top:20px;">
+                <button id="showAddUserBtn" class="user-add-btn">+ Add User</button>
+            </div>
+        </div>
+
+        <!-- PIN view -->
+        <div id="userPinView" style="display:none; text-align:center; max-width:320px; width:100%;">
+            <h2 style="margin:0 0 8px; font-size:22px; color:#1c1c1e;">Hi, <span id="selectedUserName"></span>!</h2>
+            <p style="color:#8E8E93; margin:0 0 20px; font-size:15px;">Enter your PIN to continue</p>
+            <input id="pinInput" type="tel" maxlength="4" placeholder="••••" class="pin-input" autocomplete="off">
+            <div id="pinError" class="user-error"></div>
+            <button id="unlockBtn" class="user-primary-btn">Unlock</button>
+            <div style="margin-top:16px;">
+                <a href="#" id="pinBackBtn" style="color:#007AFF; font-size:14px;">← Back</a>
+            </div>
+        </div>
+
+        <!-- Add user view -->
+        <div id="userAddView" style="display:none; text-align:center; max-width:320px; width:100%;">
+            <h2 style="margin:0 0 20px; font-size:22px; color:#1c1c1e;">New User</h2>
+            <input id="newUserName" type="text" placeholder="Your name" class="user-text-input" autocomplete="off">
+            <input id="newUserPin" type="tel" maxlength="4" placeholder="PIN" class="pin-input" autocomplete="off" value="1234">
+            <div id="addUserError" class="user-error"></div>
+            <button id="createUserBtn" class="user-primary-btn">Create &amp; Sign In</button>
+            <div style="margin-top:16px;">
+                <a href="#" id="addBackBtn" style="color:#007AFF; font-size:14px;">← Back</a>
+            </div>
+        </div>
+
     </div>
 
     <!-- Success Modal -->

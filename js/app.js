@@ -13,6 +13,7 @@ import { extractProductData } from './ai-extraction.js';
 import { setupSKUAutoGeneration, populateForm } from './form-manager.js';
 import { saveProduct, exportData, fetchProductCount, checkBarcodeExists, fetchProductForEdit } from './database.js';
 import { showStatus, closeModal, closeDuplicateModal } from './ui-utils.js';
+import { getCurrentUser, clearCurrentUser, showUserLoginOverlay } from './user-auth.js';
 
 /**
  * Returns a function that delays invoking fn until after wait ms have elapsed
@@ -197,18 +198,35 @@ function initApp() {
     // Load product count on startup
     fetchProductCount();
 
+    // Show current user name in the header
+    const label = document.getElementById('currentUserLabel');
+    if (label) label.textContent = state.currentUser || '';
+
+    // Switch user: clear localStorage and reload to show login screen
+    window.switchUser = () => { clearCurrentUser(); location.reload(); };
+
     console.log('✅ App initialized with modular architecture');
 }
 
 /**
  * Authenticate silently then initialize the app.
  * Caches the Supabase Auth JWT in state so database.js can use it.
+ * Then shows the per-person login overlay if no user is stored.
  */
 async function startApp() {
     try {
         const session = await ensureAuthenticated();
         state.accessToken = session.access_token;
         state.user = session.user;
+
+        // Restore saved front-end user or show login overlay
+        const savedUser = getCurrentUser();
+        if (savedUser) {
+            state.currentUser = savedUser;
+        } else {
+            await showUserLoginOverlay();
+        }
+
         initApp();
 
         // Proactively refresh the JWT every 55 minutes (tokens expire after 1 hour)

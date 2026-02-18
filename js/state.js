@@ -12,5 +12,6 @@ export const state = {
     lastSavedProduct: null,  // Full product object from last successful save
     duplicateProductId: null, // ID of existing product found by barcode precheck
     accessToken: null,       // Supabase Auth JWT (set on app init via auth.js)
-    user: null               // Supabase Auth user object
+    user: null,              // Supabase Auth user object
+    currentUser: null        // Front-end user name (set by user-auth.js)
 };

@@ -6,6 +6,7 @@
 import { getDOMElements } from './dom.js';
 import { generateSKUFromForm } from './sku-generator.js';
 import { showStatus } from './ui-utils.js';
+import { state } from './state.js';
 
 /**
  * Populate form with extracted product data
@@ -92,6 +93,7 @@ export function collectFormData() {
         quantity: parseInt(dom.quantityInput.value) || 1,
         tags: dom.tagsInput.value || null,
         description: dom.descriptionInput.value || null,
-        notes: dom.notesInput.value || null
+        notes: dom.notesInput.value || null,
+        entered_by: state.currentUser || null
     };
 }
