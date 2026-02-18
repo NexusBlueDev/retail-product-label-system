@@ -210,6 +210,17 @@ async function startApp() {
         state.accessToken = session.access_token;
         state.user = session.user;
         initApp();
+
+        // Proactively refresh the JWT every 55 minutes (tokens expire after 1 hour)
+        setInterval(async () => {
+            try {
+                const refreshed = await ensureAuthenticated();
+                state.accessToken = refreshed.access_token;
+                state.user = refreshed.user;
+            } catch (e) {
+                console.error('Background token refresh failed:', e);
+            }
+        }, 55 * 60 * 1000);
     } catch (error) {
         console.error('Authentication failed:', error);
         const statusEl = document.getElementById('status');
