@@ -14,6 +14,11 @@ app.js (entry point)
 ├── state.js
 ├── events.js
 ├── dom.js
+├── auth.js             (Supabase service-account silent login)
+│   └── config.js
+├── user-auth.js        (per-person login overlay)
+│   ├── config.js
+│   └── state.js
 ├── barcode-scanner.js
 │   ├── dom.js
 │   ├── state.js
@@ -33,7 +38,7 @@ app.js (entry point)
 │   └── events.js
 ├── form-manager.js
 │   ├── dom.js
-│   ├── state.js
+│   ├── state.js        (reads state.currentUser for entered_by)
 │   └── sku-generator.js
 ├── database.js
 │   ├── config.js
@@ -54,10 +59,17 @@ app.js (entry point)
 
 | Module | Purpose | Key Exports |
 |--------|---------|-------------|
-| `config.js` | Supabase/API configuration | `SUPABASE_URL`, `SUPABASE_KEY`, `FUNCTION_URL` |
+| `config.js` | Supabase/API configuration | `SUPABASE_URL`, `SUPABASE_KEY`, `FUNCTION_URL`, `AUTH_EMAIL`, `AUTH_PASSWORD` |
 | `state.js` | Shared application state | `state` (mutable object) |
 | `events.js` | Cross-module event bus | `eventBus` |
 | `dom.js` | Cached DOM references | `getDOMElements()` |
+
+### Auth Modules
+
+| Module | Purpose | Key Exports |
+|--------|---------|-------------|
+| `auth.js` | Supabase service-account silent login | `ensureAuthenticated()` |
+| `user-auth.js` | Per-person login overlay (PIN gate) | `loadUsers()`, `validatePin()`, `createUser()`, `getCurrentUser()`, `setCurrentUser()`, `clearCurrentUser()`, `showUserLoginOverlay()` |
 
 ### Utility Modules
 
@@ -80,7 +92,7 @@ app.js (entry point)
 
 | Module | Purpose |
 |--------|---------|
-| `app.js` | Initializes app, wires all event listeners |
+| `app.js` | Initializes app, wires all event listeners, manages startup sequence |
 
 ---
 
@@ -106,7 +118,10 @@ app.js (entry point)
   lastDetectedCode: null,   // Barcode detected by Quagga2 (pre-capture)
   editingId: null,          // Product ID being edited (null = create mode)
   lastSavedProduct: null,   // Full product object from last successful save
-  duplicateProductId: null  // ID found by barcode precheck (used for Edit Existing)
+  duplicateProductId: null, // ID found by barcode precheck (used for Edit Existing)
+  accessToken: null,        // Supabase Auth JWT (set by auth.js on startup)
+  user: null,               // Supabase Auth user object
+  currentUser: null         // Front-end user name (set by user-auth.js after PIN login)
 }
 ```
 
@@ -133,3 +148,6 @@ Edit `js/sku-generator.js` → `COLOR_MAP`:
 - `image-compression.js` is loaded as a regular `<script>` (not a module) in `index.html`, making `compressImageToWebP()` available as a global function called by `image-handler.js`.
 - Modal close functions (`closeModal`, `closeDuplicateModal`) are exposed to the global `window` scope in `app.js` to support inline `onclick` HTML attributes.
 - Edit functions (`editLastSaved`, `cancelEdit`, `editDuplicateProduct`) are also on `window` for the same reason. `editLastSaved` re-populates the form from `state.lastSavedProduct` and switches to PATCH mode. `editDuplicateProduct` fetches the conflicting product by ID (stored in `state.duplicateProductId` by `checkBarcodeExists`) before calling `editLastSaved`.
+- `window.switchUser` is set in `initApp()`. It calls `clearCurrentUser()` (clears `localStorage`) then reloads the page, which triggers `showUserLoginOverlay()` again.
+- **Startup sequence in `app.js`:** `ensureAuthenticated()` (service JWT) → check `getCurrentUser()` from localStorage → if no saved user, `await showUserLoginOverlay()` → `initApp()`. The JWT refresh interval runs independently every 55 minutes.
+- `user-auth.js` uses `state.accessToken` for all Supabase REST calls to `app_users`. The service-account JWT handles everything — no per-user Supabase credentials exist.

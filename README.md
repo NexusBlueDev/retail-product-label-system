@@ -35,6 +35,13 @@ A mobile-first AI-powered product scanner for retail inventory management with r
 - Pre-configured brand codes (NK, AD, UA, WR, LV, etc.)
 - Manual override available
 
+### 👤 **Per-User Login & Tracking**
+- "Who's scanning?" overlay shown before the app loads
+- Tap your name → enter 4-digit PIN → app unlocks
+- Self-service account creation (any user can add a new name + PIN)
+- Session remembered across reloads; "Switch" link in header to hand off
+- Every saved product records who entered it (`entered_by` field)
+
 ### 💾 **Database Features**
 - Real-time sync to Supabase PostgreSQL
 - Duplicate prevention (unique SKU and barcode constraints)
@@ -43,12 +50,12 @@ A mobile-first AI-powered product scanner for retail inventory management with r
 - Full field validation before save
 
 ### 📤 **Complete CSV Export**
-Exports all 18 fields:
+Exports all 19 fields:
 - ID, Created At, Updated At
 - Item Name, Style Number, SKU, Barcode
 - Brand, Category, Retail Price, Supply Price
 - Size, Color, Quantity
-- Tags, Description, Notes, Verified
+- Tags, Description, Notes, Verified, **Entered By**
 
 ---
 
@@ -107,6 +114,7 @@ Exports all 18 fields:
 - **Created At** - Timestamp when added
 - **Updated At** - Last modification timestamp
 - **Verified** - Manual verification flag
+- **Entered By** - Name of person who saved or last edited the record
 
 ---
 
@@ -114,7 +122,7 @@ Exports all 18 fields:
 
 ### **Technology Stack**
 - **Frontend:** Pure HTML/CSS/JavaScript (no frameworks, no build tools)
-- **Module System:** ES6 native modules (12 modules, single entry point)
+- **Module System:** ES6 native modules (13 modules, single entry point)
 - **Barcode Scanner:** QuaggaJS 2 v1.12.1 (open source)
 - **AI Vision:** OpenAI GPT-4o
 - **Database:** Supabase (PostgreSQL)
@@ -147,7 +155,7 @@ Exports all 18 fields:
 4. All fields mapped for direct import
 
 **CSV Format:**
-- 18 columns with headers
+- 19 columns with headers (including Entered By)
 - Quoted fields (handles commas/special chars)
 - Sorted by creation date (newest first)
 
@@ -156,8 +164,8 @@ Exports all 18 fields:
 ## 🔒 Data & Privacy
 
 - All data stored in secure Supabase cloud database
-- Products visible to all users of the scanner
-- No personal information collected
+- Products and user names visible to all users of the scanner
+- User names and PINs stored in Supabase (internal tool, PINs not hashed)
 - Images processed but not stored
 - HTTPS encrypted connections
 
@@ -215,20 +223,21 @@ For issues or feature requests:
 
 ## 📝 Version History
 
-- **v3.4 (Current - Feb 2026)** - Edit & Duplicate Workflow ✅
-  - Edit saved product from success modal (PATCH instead of POST)
-  - Edit existing product from duplicate modal (loads full record by ID)
-  - Barcode duplicate pre-check warning before save attempt
-  - Product count display (📦 X products in database)
-  - Barcode duplicate check fires on AI extraction, not just scanning
+- **v3.4 (Current - Feb 2026)** - Per-User Login & Tracking ✅
+  - "Who's scanning?" login overlay with name buttons + PIN entry
+  - Self-service user creation (Add User from login screen)
+  - `entered_by` field saved on every product create and edit
+  - CSV export includes Entered By column (19 fields total)
+  - Session persists via localStorage; Switch link in header
   - **Status: Production Ready**
 
-- **v3.3 (Feb 2026)** - Modular Architecture ✅
-  - Split monolithic 1100-line index.html into 12 ES6 modules
+- **v3.3 (Feb 2026)** - Modular Architecture + Edit/Duplicate Workflow ✅
+  - Split monolithic 1100-line index.html into 13 ES6 modules
   - No build tools required (native browser modules)
-  - index.html reduced to 186 lines (structure only)
-  - CSS split into 3 files (main, components, modals)
-  - Quagga2 upgraded from v1.8.4 to v1.12.1
+  - Edit saved product from success modal (PATCH instead of POST)
+  - Edit existing product from duplicate modal
+  - Barcode duplicate pre-check warning before save attempt
+  - Supabase Auth (silent auto-login, JWT refresh every 55 min)
   - **Status: Superseded by v3.4**
 
 - **v3.2 (Feb 2026)** - Phase 1 Optimizations
@@ -258,5 +267,5 @@ For issues or feature requests:
 ---
 
 **Current Status:** ✅ Fully Operational - All Features Working
-**Last Tested:** February 17, 2026
+**Last Tested:** February 18, 2026
 **Developed by:** NexusBlue Development Team
