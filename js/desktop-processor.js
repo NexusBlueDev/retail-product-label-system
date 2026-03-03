@@ -8,7 +8,7 @@ import { SUPABASE_URL, SUPABASE_KEY, FUNCTION_URL } from './config.js';
 import { getDOMElements } from './dom.js';
 import { state } from './state.js';
 import { fetchPhotoOnlyProducts } from './database.js';
-import { getSignedUrls, fetchImageAsBase64 } from './storage.js';
+import { getSignedUrl, getSignedUrls, fetchImageAsBase64 } from './storage.js';
 import { eventBus } from './events.js';
 
 // ── Field mapping ────────────────────────────────────────────────────
@@ -30,10 +30,18 @@ const FIELD_MAP = {
     notes:             'p_notes'
 };
 
+const FIELD_LABELS = {
+    name: 'Name', style_number: 'Style #', sku: 'SKU', barcode: 'Barcode',
+    brand_name: 'Brand', product_category: 'Category', retail_price: 'Retail Price',
+    supply_price: 'Supply Price', size_or_dimensions: 'Size', color: 'Color',
+    quantity: 'Quantity', tags: 'Tags', description: 'Description', notes: 'Notes'
+};
+
 // ── Queue Management ─────────────────────────────────────────────────
 
 /**
  * Load the photo-only queue and render it in the sidebar.
+ * Queue items show ID + photo count. Thumbnails load progressively.
  */
 async function loadQueue() {
     const dom = getDOMElements();
@@ -55,24 +63,38 @@ async function loadQueue() {
         el.className = 'queue-item';
         el.dataset.id = item.id;
 
-        const date = new Date(item.created_at).toLocaleDateString();
         const imageCount = Array.isArray(item.image_urls) ? item.image_urls.length : 0;
 
         el.innerHTML = `
-            <div class="queue-item-thumb" style="display:flex;align-items:center;justify-content:center;font-size:20px;">📷</div>
+            <div class="queue-item-thumb">📷</div>
             <div class="queue-item-info">
-                <div class="queue-item-name">${item.name || 'Unnamed'}</div>
-                <div class="queue-item-date">${date} · ${imageCount} photo${imageCount !== 1 ? 's' : ''}</div>
+                <div class="queue-item-name">ID: ${item.id}</div>
+                <div class="queue-item-date">${imageCount} photo${imageCount !== 1 ? 's' : ''}</div>
             </div>
         `;
 
         el.addEventListener('click', () => selectQueueItem(item));
         dom.queueList.appendChild(el);
+
+        // Load thumbnail from first image in background
+        if (imageCount > 0 && item.image_urls[0].path) {
+            getSignedUrl(item.image_urls[0].path).then(url => {
+                const thumbDiv = el.querySelector('.queue-item-thumb');
+                if (thumbDiv) {
+                    thumbDiv.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = `ID ${item.id}`;
+                    img.className = 'queue-thumb-img';
+                    thumbDiv.appendChild(img);
+                }
+            }).catch(() => { /* keep emoji fallback */ });
+        }
     });
 }
 
 /**
- * Select a queue item: fetch signed URLs, display photos, run AI extraction.
+ * Select a queue item: fetch signed URLs, display ALL photos, run AI extraction.
  */
 async function selectQueueItem(item) {
     const dom = getDOMElements();
@@ -92,10 +114,10 @@ async function selectQueueItem(item) {
     dom.processorSaveBtn.disabled = true;
     disableCopyButtons(true);
 
-    // Pre-fill name from the record (Quick Capture already extracted it)
-    dom.pName.value = item.name || '';
+    // Pre-fill name from the record (Quick Capture may have extracted it)
+    dom.pName.value = (item.name && item.name !== 'Processing...') ? item.name : '';
 
-    // Load photos
+    // Load ALL photos for this product
     const paths = (item.image_urls || []).map(u => u.path);
     if (paths.length === 0) {
         dom.processorPhotos.innerHTML = '<p class="processor-placeholder">No images stored for this product</p>';
@@ -106,11 +128,12 @@ async function selectQueueItem(item) {
 
     try {
         const signedUrls = await getSignedUrls(paths);
-        dom.processorPhotos.innerHTML = signedUrls.map(url =>
-            `<img src="${url}" alt="Product photo">`
-        ).join('');
+        dom.processorPhotos.innerHTML = `
+            <div class="processor-photo-count">${paths.length} photo${paths.length !== 1 ? 's' : ''} for ID: ${item.id}</div>
+            ${signedUrls.map(url => `<img src="${url}" alt="Product photo">`).join('')}
+        `;
 
-        // Run AI extraction in background
+        // Run AI extraction on ALL photos
         runAIExtraction(signedUrls);
     } catch (e) {
         dom.processorPhotos.innerHTML = '<p class="processor-placeholder">Failed to load photos</p>';
@@ -122,6 +145,7 @@ async function selectQueueItem(item) {
 
 /**
  * Download images as base64 and send to the Edge Function for full extraction.
+ * Sends ALL photos (same as original scanner) for comprehensive data capture.
  */
 async function runAIExtraction(signedUrls) {
     const dom = getDOMElements();
@@ -178,7 +202,7 @@ async function runAIExtraction(signedUrls) {
         state.processorAIData = merged;
         dom.processorAILoading.style.display = 'none';
 
-        // Display AI results
+        // Display AI results in form-style input fields
         renderAIResults(merged);
         disableCopyButtons(false);
         dom.processorSaveBtn.disabled = false;
@@ -193,27 +217,25 @@ async function runAIExtraction(signedUrls) {
 }
 
 /**
- * Render AI extraction results as read-only key/value rows.
+ * Render AI extraction results as read-only input fields.
+ * These mirror the editable form on the right so the user can see
+ * exactly what AI found and copy individual values.
  */
 function renderAIResults(data) {
     const dom = getDOMElements();
     dom.processorAIResults.style.display = 'block';
 
-    const labels = {
-        name: 'Name', style_number: 'Style #', sku: 'SKU', barcode: 'Barcode',
-        brand_name: 'Brand', product_category: 'Category', retail_price: 'Retail Price',
-        supply_price: 'Supply Price', size_or_dimensions: 'Size', color: 'Color',
-        quantity: 'Quantity', tags: 'Tags', description: 'Description', notes: 'Notes'
-    };
-
-    dom.aiResultFields.innerHTML = Object.entries(labels).map(([key, label]) => {
-        const value = data[key] || '';
-        if (!value && value !== 0) return '';
-        return `<div class="ai-result-row">
-            <span class="ai-result-label">${label}</span>
-            <span class="ai-result-value" data-key="${key}">${value}</span>
+    dom.aiResultFields.innerHTML = Object.entries(FIELD_LABELS).map(([key, label]) => {
+        const value = data[key] ?? '';
+        const isLong = key === 'description' || key === 'notes';
+        const inputHtml = isLong
+            ? `<textarea class="ai-field-input" data-ai-key="${key}" readonly>${value}</textarea>`
+            : `<input type="text" class="ai-field-input" data-ai-key="${key}" value="${String(value).replace(/"/g, '&quot;')}" readonly>`;
+        return `<div class="ai-field-row">
+            <label class="ai-field-label">${label}</label>
+            ${inputHtml}
         </div>`;
-    }).filter(Boolean).join('');
+    }).join('');
 }
 
 // ── Copy Buttons ─────────────────────────────────────────────────────

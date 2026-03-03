@@ -111,9 +111,19 @@
     width: 44px;
     height: 44px;
     border-radius: 6px;
-    object-fit: cover;
     flex-shrink: 0;
     background: #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    overflow: hidden;
+}
+
+.queue-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .queue-item-info {
@@ -169,29 +179,51 @@
 .ai-result-fields {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-}
-
-.ai-result-row {
-    display: flex;
-    align-items: flex-start;
     gap: 8px;
-    padding: 6px 8px;
-    background: #f8f9fa;
-    border-radius: 6px;
-    font-size: 13px;
 }
 
-.ai-result-label {
+.ai-field-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ai-field-label {
+    font-size: 12px;
     font-weight: 600;
     color: #555;
-    min-width: 100px;
-    flex-shrink: 0;
 }
 
-.ai-result-value {
+.ai-field-input {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1.5px solid #b3d4fc;
+    border-radius: 6px;
+    background: #EBF5FF;
     color: #1c1c1e;
-    word-break: break-word;
+    font-size: 13px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.ai-field-input:focus {
+    outline: none;
+    border-color: #007AFF;
+}
+
+textarea.ai-field-input {
+    min-height: 48px;
+    resize: vertical;
+}
+
+.processor-photo-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1976D2;
+    background: #E3F2FD;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
 }
 
 /* ── Form Panel (center-right) ───────────────────────────────────── */
