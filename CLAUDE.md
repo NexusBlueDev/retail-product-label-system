@@ -10,7 +10,7 @@ Staff scan barcodes and photograph product labels; GPT-4o extracts structured da
 products are saved to PostgreSQL and exported as CSV for Lightspeed POS import.
 
 ## Tech Stack
-- **Frontend:** Pure HTML/CSS/ES6 modules (13 modules, no build tools, no framework)
+- **Frontend:** Pure HTML/CSS/ES6 modules (18 modules, no build tools, no framework)
 - **Backend:** Supabase Edge Function (Deno/TypeScript) calling OpenAI GPT-4o Vision
 - **Database:** Supabase PostgreSQL with RLS (project ref: `ayfwyvripnetwrkimxka`)
 - **Hosting:** GitHub Pages (auto-deploys on push to main)
@@ -91,5 +91,10 @@ Migrations in `supabase/migrations/` are reference SQL — they have already bee
 | `js/barcode-scanner.js` | QuaggaJS barcode detection |
 | `js/form-manager.js` | Form population + SKU auto-generation wiring |
 | `js/sku-generator.js` | SKU generation (STYLE-BRAND-COLOR-SIZE, max 15 chars) |
+| `js/navigation.js` | View controller — navigateTo(), [data-nav] click handler |
+| `js/storage.js` | Supabase Storage REST API (upload, signed URLs, fetch as base64) |
+| `js/quick-capture.js` | Quick Capture mode — camera/gallery/drag-drop, parallel upload + AI name |
+| `js/desktop-processor.js` | Desktop Processor — 3-column queue/AI/form workflow |
+| `styles/desktop.css` | Processor 3-column grid layout + responsive breakpoints |
 | `supabase/functions/extract-product/index.ts` | Edge Function (384 lines) |
-| `supabase/migrations/` | 6 SQL migration files (reference) |
+| `supabase/migrations/` | 8 SQL migration files (reference) |
