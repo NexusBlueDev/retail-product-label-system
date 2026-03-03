@@ -318,13 +318,35 @@ function copyAllFields() {
 
 // ── Delete Queue Item ────────────────────────────────────────────────
 
+// Pending delete — set when user clicks delete, resolved when modal confirms/cancels
+let pendingDeleteId = null;
+
 /**
- * Delete a photo-only product from the database and remove from queue.
+ * Show the delete confirmation modal for a queue item.
  */
-async function deleteQueueItem(itemId) {
-    if (!confirm(`Delete product ID ${itemId}? This cannot be undone.`)) return;
+function deleteQueueItem(itemId) {
+    // Find the item to get its photo count for the message
+    const item = state.processorQueue.find(q => q.id === itemId);
+    const imageCount = item && Array.isArray(item.image_urls) ? item.image_urls.length : 0;
+
+    pendingDeleteId = itemId;
+
+    const modal = document.getElementById('deleteConfirmModal');
+    const message = document.getElementById('deleteConfirmMessage');
+    message.textContent = `Delete product ID ${itemId} and its ${imageCount} photo${imageCount !== 1 ? 's' : ''}? This cannot be undone.`;
+    modal.classList.add('show');
+}
+
+/**
+ * Execute the confirmed delete — remove DB record, delete storage images, update queue.
+ */
+async function executeDelete(itemId) {
+    // Find the item to get image paths for storage cleanup
+    const item = state.processorQueue.find(q => q.id === itemId);
+    const imagePaths = (item?.image_urls || []).map(u => u.path).filter(Boolean);
 
     try {
+        // Delete the database record
         const response = await fetch(
             `${SUPABASE_URL}/rest/v1/products?id=eq.${itemId}`,
             {
@@ -338,6 +360,13 @@ async function deleteQueueItem(itemId) {
 
         if (!response.ok) {
             throw new Error(`Delete failed (${response.status})`);
+        }
+
+        // Delete images from storage (fire-and-forget — non-fatal if this fails)
+        if (imagePaths.length > 0) {
+            deleteStorageImages(imagePaths).catch(e =>
+                console.error('Storage cleanup failed (non-fatal):', e)
+            );
         }
 
         // If we're deleting the currently selected item, advance
@@ -358,6 +387,28 @@ async function deleteQueueItem(itemId) {
     } catch (e) {
         alert(`Delete failed: ${e.message}`);
         console.error('Delete queue item error:', e);
+    }
+}
+
+/**
+ * Delete images from Supabase Storage bucket.
+ * @param {string[]} paths - Array of storage paths to delete
+ */
+async function deleteStorageImages(paths) {
+    const response = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/product-images`,
+        {
+            method: 'DELETE',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${state.accessToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ prefixes: paths })
+        }
+    );
+    if (!response.ok) {
+        console.warn('Storage delete returned:', response.status);
     }
 }
 
@@ -529,6 +580,28 @@ export function initDesktopProcessor() {
     // Copy All button
     if (dom.copyAllBtn) {
         dom.copyAllBtn.addEventListener('click', copyAllFields);
+    }
+
+    // Delete confirmation modal buttons
+    const deleteYes = document.getElementById('deleteConfirmYes');
+    const deleteNo = document.getElementById('deleteConfirmNo');
+    const deleteModal = document.getElementById('deleteConfirmModal');
+
+    if (deleteYes) {
+        deleteYes.addEventListener('click', () => {
+            deleteModal.classList.remove('show');
+            if (pendingDeleteId !== null) {
+                executeDelete(pendingDeleteId);
+                pendingDeleteId = null;
+            }
+        });
+    }
+
+    if (deleteNo) {
+        deleteNo.addEventListener('click', () => {
+            deleteModal.classList.remove('show');
+            pendingDeleteId = null;
+        });
     }
 
     // Load queue when processor view is shown

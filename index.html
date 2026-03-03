@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Product Scanner</title>
-    <link rel="stylesheet" href="styles/main.css?v=4.3">
-    <link rel="stylesheet" href="styles/components.css?v=4.3">
-    <link rel="stylesheet" href="styles/modals.css?v=4.3">
-    <link rel="stylesheet" href="styles/desktop.css?v=4.3">
+    <link rel="stylesheet" href="styles/main.css?v=4.4">
+    <link rel="stylesheet" href="styles/components.css?v=4.4">
+    <link rel="stylesheet" href="styles/modals.css?v=4.4">
+    <link rel="stylesheet" href="styles/desktop.css?v=4.4">
 </head>
 <body class="no-bottom-bar">
 
@@ -572,6 +572,17 @@
         </div>
     </div>
 
-    <script type="module" src="js/app.js?v=4.3"></script>
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteConfirmModal">
+        <div class="modal-content modal-content--warning">
+            <div class="modal-icon modal-icon--warning">🗑️</div>
+            <div class="modal-title">Delete Product?</div>
+            <div class="modal-message" id="deleteConfirmMessage">This will permanently remove this product and its photos.</div>
+            <button class="modal-button modal-button--block" id="deleteConfirmYes" style="background:#C62828;">Delete Permanently</button>
+            <button class="modal-button modal-button--block modal-button--gray" id="deleteConfirmNo" style="margin-top:8px;">Cancel</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js?v=4.4"></script>
 </body>
 </html>
