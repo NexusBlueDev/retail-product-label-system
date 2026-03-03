@@ -42,37 +42,85 @@ function blobToBase64(blob) {
 }
 
 /**
- * Extract ONLY the product name from images via the Edge Function.
- * @param {string} base64Image - Base64 data URL
- * @returns {Promise<string>} Product name or "Unnamed Product"
+ * Run full AI extraction on all photos in the background after save.
+ * Extracts all fields, stores the merged result in ai_cache, and updates the product name.
+ * This runs fire-and-forget — user keeps capturing while this processes.
  */
-async function extractNameOnly(base64Image) {
+async function runBackgroundExtraction(savedId, blobs, photoCount) {
     try {
-        const response = await fetch(FUNCTION_URL, {
-            method: 'POST',
+        // Convert all blobs to base64 in parallel
+        const base64Images = await Promise.all(blobs.map(b => blobToBase64(b)));
+
+        // Send all images to Edge Function in parallel (same as desktop processor)
+        const responses = await Promise.all(
+            base64Images.map((image, i) => fetch(FUNCTION_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${state.accessToken}`
+                },
+                body: JSON.stringify({
+                    image,
+                    imageNumber: i + 1,
+                    totalImages: base64Images.length
+                })
+            }))
+        );
+
+        const results = await Promise.all(
+            responses.map(async (r) => {
+                if (!r.ok) return null;
+                const text = await r.text();
+                try { return JSON.parse(text); } catch { return null; }
+            })
+        );
+
+        // Merge results (same strategy as desktop-processor.js and ai-extraction.js)
+        let merged = {};
+        for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            if (!result || !result.success) continue;
+            const data = result.data;
+            if (i === 0) {
+                merged = { ...data };
+            } else {
+                if (data.retail_price && data.retail_price > 0) merged.retail_price = data.retail_price;
+                if (data.notes) {
+                    merged.notes = merged.notes
+                        ? `${merged.notes}; Additional: ${data.notes}`
+                        : data.notes;
+                }
+            }
+        }
+
+        // Build PATCH payload: always set ai_cache, set name if extracted
+        const patchData = { ai_cache: merged };
+        const productName = merged.name || null;
+        if (productName && productName !== 'Unnamed Product') {
+            patchData.name = productName;
+        }
+
+        await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${savedId}`, {
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                'apikey': SUPABASE_KEY,
                 'Authorization': `Bearer ${state.accessToken}`
             },
-            body: JSON.stringify({
-                image: base64Image,
-                imageNumber: 1,
-                totalImages: 1
-            })
+            body: JSON.stringify(patchData)
         });
 
-        if (!response.ok) return 'Unnamed Product';
-
-        const text = await response.text();
-        if (!text || text.trim() === '') return 'Unnamed Product';
-
-        const result = JSON.parse(text);
-        if (result.success && result.data && result.data.name) {
-            return result.data.name;
+        // Update recent captures list with the extracted name
+        if (productName && productName !== 'Unnamed Product') {
+            updateRecentCaptureName(savedId, productName);
+            showCaptureStatus(`Saved: ${productName} — ID: ${savedId} (${photoCount} photos)`, 'success');
         }
-        return 'Unnamed Product';
-    } catch {
-        return 'Unnamed Product';
+
+        console.log(`Background AI extraction complete for ID ${savedId}:`, Object.keys(merged).length, 'fields cached');
+
+    } catch (e) {
+        console.error('Background AI extraction failed:', e);
+        // Non-fatal — product is saved, AI cache just won't be available
     }
 }
 
@@ -192,6 +240,9 @@ async function saveProduct() {
         const photoCount = stagedBlobs.length;
         const firstBlob = stagedBlobs[0];
 
+        // Copy blobs before clearing staging (needed for background AI extraction)
+        const blobsForAI = [...stagedBlobs];
+
         // Update session counter
         state.captureCount++;
         dom.captureSessionCount.textContent = `${state.captureCount} product${state.captureCount !== 1 ? 's' : ''} captured this session`;
@@ -205,30 +256,15 @@ async function saveProduct() {
         dom.captureLoading.style.display = 'none';
         dom.captureSaveBtn.style.display = 'none';
         dom.captureSaveBtn.disabled = false;
-        showCaptureStatus(`Saved! ID: ${savedId} (${photoCount} photos) — extracting name...`, 'success');
+        showCaptureStatus(`Saved! ID: ${savedId} (${photoCount} photos) — AI processing...`, 'success');
 
         // Show "Next Product" button
         dom.captureNextBtn.style.display = 'block';
 
         eventBus.emit('capture:saved', { id: savedId, name: 'Processing...' });
 
-        // ── Background: extract name and update the record ──
-        blobToBase64(firstBlob).then(b64 => extractNameOnly(b64)).then(productName => {
-            if (productName && productName !== 'Unnamed Product') {
-                fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${savedId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${state.accessToken}`
-                    },
-                    body: JSON.stringify({ name: productName })
-                }).then(() => {
-                    updateRecentCaptureName(savedId, productName);
-                    showCaptureStatus(`Saved: ${productName} — ID: ${savedId} (${photoCount} photos)`, 'success');
-                }).catch(e => console.error('Name PATCH failed:', e));
-            }
-        }).catch(e => console.error('Background name extraction failed:', e));
+        // ── Background: full AI extraction → name + ai_cache ──
+        runBackgroundExtraction(savedId, blobsForAI, photoCount);
 
     } catch (error) {
         dom.captureLoading.style.display = 'none';

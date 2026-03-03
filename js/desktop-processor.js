@@ -131,6 +131,16 @@ async function selectQueueItem(item) {
 
     dom.processorPhotos.innerHTML = '<p class="processor-placeholder">Loading photos...</p>';
 
+    // Check for cached AI extraction first — instant if available
+    const hasCache = item.ai_cache && Object.keys(item.ai_cache).length > 0;
+    if (hasCache) {
+        state.processorAIData = item.ai_cache;
+        populateAIFields(item.ai_cache);
+        dom.processorAIResults.style.display = 'block';
+        disableCopyButtons(false);
+        dom.processorSaveBtn.disabled = false;
+    }
+
     try {
         const signedUrls = await getSignedUrls(paths);
         dom.processorPhotos.innerHTML = `
@@ -138,8 +148,10 @@ async function selectQueueItem(item) {
             ${signedUrls.map(url => `<img src="${url}" alt="Product photo">`).join('')}
         `;
 
-        // Run AI extraction on ALL photos
-        runAIExtraction(signedUrls);
+        // Only run live AI extraction if no cache available
+        if (!hasCache) {
+            runAIExtraction(signedUrls);
+        }
     } catch (e) {
         dom.processorPhotos.innerHTML = '<p class="processor-placeholder">Failed to load photos</p>';
         console.error('selectQueueItem photo load error:', e);
@@ -384,7 +396,8 @@ async function saveAndComplete() {
         description: dom.pDescription.value || null,
         notes: dom.pNotes.value || null,
         entered_by: state.currentUser || item.entered_by || null,
-        status: 'complete'
+        status: 'complete',
+        ai_cache: null
     };
 
     try {

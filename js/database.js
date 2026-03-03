@@ -267,7 +267,7 @@ export async function fetchProductForEdit(productId, barcode, sku) {
 export async function fetchPhotoOnlyProducts() {
     try {
         const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/products?status=eq.photo_only&order=created_at&limit=50&select=id,name,image_urls,created_at,entered_by`,
+            `${SUPABASE_URL}/rest/v1/products?status=eq.photo_only&order=created_at&limit=50&select=id,name,image_urls,created_at,entered_by,ai_cache`,
             {
                 headers: {
                     'apikey': SUPABASE_KEY,
