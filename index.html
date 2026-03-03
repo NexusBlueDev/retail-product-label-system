@@ -7,169 +7,422 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/components.css">
     <link rel="stylesheet" href="styles/modals.css">
+    <link rel="stylesheet" href="styles/desktop.css">
 </head>
-<body>
-    <div class="container">
-        <!-- Logo Section -->
-        <div class="logo-section">
-            <img src="logo.jpg" alt="NexusBlue Logo" class="logo-img">
-        </div>
+<body class="no-bottom-bar">
 
-        <h1>📦 Product Scanner</h1>
-
-        <!-- Current user bar -->
-        <div class="user-bar">
-            Scanning as: <strong id="currentUserLabel"></strong>
-            &nbsp;·&nbsp;
-            <a href="#" onclick="switchUser(); return false;">Switch</a>
-        </div>
-
-        <!-- Edit Mode Banner -->
-        <div id="editModeIndicator">✏️ Editing: <span id="editModeText"></span> &mdash; <button onclick="cancelEdit()" class="edit-cancel-btn">Cancel</button></div>
-
-        <!-- Camera Section -->
-        <div class="camera-section">
-            <div class="action-row">
-                <button type="button" id="cameraBtn" class="btn-action btn-camera">
-                    📷 Take Photo
+    <!-- ═══════════════════════════════════════════════════════════════
+         MENU VIEW (shown after login)
+         ═══════════════════════════════════════════════════════════════ -->
+    <div id="menuView" style="display:none;">
+        <div class="container">
+            <div class="logo-section">
+                <img src="logo.jpg" alt="NexusBlue Logo" class="logo-img">
+            </div>
+            <h1>Product Scanner</h1>
+            <div class="user-bar">
+                Logged in as: <strong id="menuUserLabel"></strong>
+                &nbsp;&middot;&nbsp;
+                <a href="#" onclick="switchUser(); return false;">Switch</a>
+            </div>
+            <div class="menu-grid">
+                <button type="button" class="menu-card" data-nav="scanner">
+                    <div class="menu-card-icon">📷</div>
+                    <div class="menu-card-title">Product Scanner</div>
+                    <div class="menu-card-desc">Scan barcodes and photograph labels for full AI extraction</div>
                 </button>
-                <button type="button" id="galleryBtn" class="btn-action btn-gallery">
-                    🖼️ Photos
+                <button type="button" class="menu-card" data-nav="quickCapture">
+                    <div class="menu-card-icon">⚡</div>
+                    <div class="menu-card-title">Quick Capture</div>
+                    <div class="menu-card-desc">Snap photos quickly — save names and images for later processing</div>
                 </button>
-                <button type="button" id="scanBarcodeBtn" class="btn-action btn-scan">
-                    📊 Scan Barcode
+                <button type="button" class="menu-card" data-nav="processor">
+                    <div class="menu-card-icon">🖥️</div>
+                    <div class="menu-card-title">Process Photos</div>
+                    <div class="menu-card-desc">Review and complete photo-only products from desktop</div>
+                    <div class="menu-card-badge" id="menuProcessBadge"></div>
                 </button>
             </div>
+        </div>
+    </div>
 
-            <!-- Barcode Scanner View -->
-            <div id="barcodeScannerContainer">
-                <div id="interactive" class="viewport scanner-viewport"></div>
-                <div class="scanner-controls">
-                    <div id="scanResult">Position barcode in view, then click Capture</div>
-                    <div class="scanner-btn-row">
-                        <button type="button" id="captureBarcodeBtn" class="btn-capture">
-                            📸 Capture Barcode
-                        </button>
-                        <button type="button" id="stopScanBtn" class="btn-cancel-scan">
-                            ❌ Cancel
-                        </button>
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCANNER VIEW (existing Product Scanner — wrapped)
+         ═══════════════════════════════════════════════════════════════ -->
+    <div id="scannerView" style="display:none;">
+        <div class="container">
+            <div class="view-nav">
+                <a href="#" class="back-to-menu" data-nav="menu">← Menu</a>
+            </div>
+
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <img src="logo.jpg" alt="NexusBlue Logo" class="logo-img">
+            </div>
+
+            <h1>📦 Product Scanner</h1>
+
+            <!-- Current user bar -->
+            <div class="user-bar">
+                Scanning as: <strong id="currentUserLabel"></strong>
+                &nbsp;&middot;&nbsp;
+                <a href="#" onclick="switchUser(); return false;">Switch</a>
+            </div>
+
+            <!-- Edit Mode Banner -->
+            <div id="editModeIndicator">✏️ Editing: <span id="editModeText"></span> &mdash; <button onclick="cancelEdit()" class="edit-cancel-btn">Cancel</button></div>
+
+            <!-- Camera Section -->
+            <div class="camera-section">
+                <div class="action-row">
+                    <button type="button" id="cameraBtn" class="btn-action btn-camera">
+                        📷 Take Photo
+                    </button>
+                    <button type="button" id="galleryBtn" class="btn-action btn-gallery">
+                        🖼️ Photos
+                    </button>
+                    <button type="button" id="scanBarcodeBtn" class="btn-action btn-scan">
+                        📊 Scan Barcode
+                    </button>
+                </div>
+
+                <!-- Barcode Scanner View -->
+                <div id="barcodeScannerContainer">
+                    <div id="interactive" class="viewport scanner-viewport"></div>
+                    <div class="scanner-controls">
+                        <div id="scanResult">Position barcode in view, then click Capture</div>
+                        <div class="scanner-btn-row">
+                            <button type="button" id="captureBarcodeBtn" class="btn-capture">
+                                📸 Capture Barcode
+                            </button>
+                            <button type="button" id="stopScanBtn" class="btn-cancel-scan">
+                                ❌ Cancel
+                            </button>
+                        </div>
                     </div>
+                </div>
+
+                <input type="file" id="cameraInput" accept="image/*" capture="environment" class="file-input-hidden" multiple>
+                <input type="file" id="galleryInput" accept="image/*" class="file-input-hidden" multiple>
+
+                <div id="imagePreviewContainer">
+                    <div class="preview-header">Selected Images:</div>
+                    <div id="imagePreviewList"></div>
+                    <button type="button" id="processBtn" class="btn-process">
+                        🔍 Process Images with AI
+                    </button>
+                    <button type="button" id="clearBtn" class="btn-clear">
+                        ❌ Clear All
+                    </button>
                 </div>
             </div>
 
-            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="file-input-hidden" multiple>
-            <input type="file" id="galleryInput" accept="image/*" class="file-input-hidden" multiple>
+            <!-- Status Messages -->
+            <div id="status" class="status"></div>
 
-            <div id="imagePreviewContainer">
-                <div class="preview-header">Selected Images:</div>
-                <div id="imagePreviewList"></div>
-                <button type="button" id="processBtn" class="btn-process">
-                    🔍 Process Images with AI
-                </button>
-                <button type="button" id="clearBtn" class="btn-clear">
-                    ❌ Clear All
-                </button>
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p class="loading-text">Processing image...</p>
             </div>
+
+            <!-- Product Form -->
+            <form id="productForm">
+                <div class="form-group">
+                    <label>Product Name *</label>
+                    <input type="text" id="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Style Number (Manufacturer)</label>
+                    <input type="text" id="style_number" placeholder="e.g., DD1383-100">
+                </div>
+
+                <div class="form-group">
+                    <label>SKU (Auto-generated or Edit)</label>
+                    <input type="text" id="sku">
+                    <div class="field-hint">Auto-generates from Style + Brand + Color + Size, or type manually</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Barcode</label>
+                    <input type="text" id="barcode" maxlength="13">
+                    <div class="field-hint">Use "📊 Scan UPC" button for 99% accuracy, or type manually</div>
+                    <div id="barcodeDupWarning"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <input type="number" id="quantity" min="1" value="1" class="qty-narrow">
+                </div>
+
+                <div class="form-group">
+                    <label>Brand</label>
+                    <input type="text" id="brand_name">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <input type="text" id="product_category">
+                </div>
+
+                <div class="form-group">
+                    <label>Retail Price</label>
+                    <input type="number" id="retail_price" step="0.01" min="0" placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label>Supply Price</label>
+                    <input type="number" id="supply_price" step="0.01" min="0" placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label>Size/Dimensions</label>
+                    <input type="text" id="size_or_dimensions">
+                </div>
+
+                <div class="form-group">
+                    <label>Color</label>
+                    <input type="text" id="color">
+                </div>
+
+                <div class="form-group">
+                    <label>Tags</label>
+                    <input type="text" id="tags">
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="notes"></textarea>
+                </div>
+            </form>
         </div>
 
-        <!-- Status Messages -->
-        <div id="status" class="status"></div>
+        <!-- Fixed Bottom Buttons (scanner only) -->
+        <div id="productCount"></div>
 
-        <!-- Loading Indicator -->
-        <div id="loading" class="loading">
-            <div class="spinner"></div>
-            <p class="loading-text">Processing image...</p>
+        <div class="button-group">
+            <button type="button" class="btn-secondary btn-rescan" id="rescanBtn" disabled>🔄 Rescan</button>
+            <button type="button" class="btn-primary" id="saveBtn" disabled>Save Product</button>
+            <button type="button" class="btn-secondary" id="exportBtn">Export CSV</button>
         </div>
-
-        <!-- Product Form -->
-        <form id="productForm">
-            <div class="form-group">
-                <label>Product Name *</label>
-                <input type="text" id="name" required>
-            </div>
-
-            <div class="form-group">
-                <label>Style Number (Manufacturer)</label>
-                <input type="text" id="style_number" placeholder="e.g., DD1383-100">
-            </div>
-
-            <div class="form-group">
-                <label>SKU (Auto-generated or Edit)</label>
-                <input type="text" id="sku">
-                <div class="field-hint">Auto-generates from Style + Brand + Color + Size, or type manually</div>
-            </div>
-
-            <div class="form-group">
-                <label>Barcode</label>
-                <input type="text" id="barcode" maxlength="13">
-                <div class="field-hint">Use "📊 Scan UPC" button for 99% accuracy, or type manually</div>
-                <div id="barcodeDupWarning"></div>
-            </div>
-
-            <div class="form-group">
-                <label>Quantity</label>
-                <input type="number" id="quantity" min="1" value="1" class="qty-narrow">
-            </div>
-
-            <div class="form-group">
-                <label>Brand</label>
-                <input type="text" id="brand_name">
-            </div>
-
-            <div class="form-group">
-                <label>Category</label>
-                <input type="text" id="product_category">
-            </div>
-
-            <div class="form-group">
-                <label>Retail Price</label>
-                <input type="number" id="retail_price" step="0.01" min="0" placeholder="0.00">
-            </div>
-
-            <div class="form-group">
-                <label>Supply Price</label>
-                <input type="number" id="supply_price" step="0.01" min="0" placeholder="0.00">
-            </div>
-
-            <div class="form-group">
-                <label>Size/Dimensions</label>
-                <input type="text" id="size_or_dimensions">
-            </div>
-
-            <div class="form-group">
-                <label>Color</label>
-                <input type="text" id="color">
-            </div>
-
-            <div class="form-group">
-                <label>Tags</label>
-                <input type="text" id="tags">
-            </div>
-
-            <div class="form-group">
-                <label>Description</label>
-                <textarea id="description"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label>Notes</label>
-                <textarea id="notes"></textarea>
-            </div>
-        </form>
     </div>
 
-    <!-- Fixed Bottom Buttons -->
-    <div id="productCount"></div>
+    <!-- ═══════════════════════════════════════════════════════════════
+         QUICK CAPTURE VIEW
+         ═══════════════════════════════════════════════════════════════ -->
+    <div id="quickCaptureView" style="display:none;">
+        <div class="container">
+            <div class="view-nav">
+                <a href="#" class="back-to-menu" data-nav="menu">← Menu</a>
+            </div>
+            <h1>⚡ Quick Capture</h1>
+            <div class="user-bar">
+                Capturing as: <strong id="captureUserLabel"></strong>
+            </div>
 
-    <div class="button-group">
-        <button type="button" class="btn-secondary btn-rescan" id="rescanBtn" disabled>🔄 Rescan</button>
-        <button type="button" class="btn-primary" id="saveBtn" disabled>Save Product</button>
-        <button type="button" class="btn-secondary" id="exportBtn">Export CSV</button>
+            <!-- Session counter -->
+            <div id="captureSessionCount" class="capture-counter">
+                0 products captured this session
+            </div>
+
+            <!-- Drag & drop zone (desktop only) -->
+            <div id="captureDropZone" class="capture-drop-zone">
+                <div class="drop-zone-content">
+                    <div class="drop-zone-icon">📂</div>
+                    <div class="drop-zone-text">Drag & drop photos here</div>
+                    <div class="drop-zone-hint">or use the buttons below</div>
+                </div>
+            </div>
+
+            <!-- Camera/gallery buttons -->
+            <div class="action-row">
+                <button type="button" id="captureCameraBtn" class="btn-action btn-camera">
+                    📷 Take Photo
+                </button>
+                <button type="button" id="captureGalleryBtn" class="btn-action btn-gallery">
+                    🖼️ Upload Photos
+                </button>
+            </div>
+
+            <input type="file" id="captureCameraInput" accept="image/*" capture="environment" class="file-input-hidden" multiple>
+            <input type="file" id="captureGalleryInput" accept="image/*" class="file-input-hidden" multiple>
+
+            <!-- Processing indicator -->
+            <div id="captureLoading" class="loading">
+                <div class="spinner"></div>
+                <p class="loading-text">Uploading and extracting name...</p>
+            </div>
+
+            <!-- Status -->
+            <div id="captureStatus" class="status"></div>
+
+            <!-- Recent captures -->
+            <div id="recentCaptures" style="display:none;">
+                <h3 class="recent-captures-title">Recent Captures</h3>
+                <div id="recentCapturesList" class="recent-captures-list"></div>
+            </div>
+        </div>
     </div>
 
-    <!-- User Login Overlay -->
+    <!-- ═══════════════════════════════════════════════════════════════
+         DESKTOP PROCESSOR VIEW
+         ═══════════════════════════════════════════════════════════════ -->
+    <div id="processorView" style="display:none;">
+        <div class="processor-layout">
+            <!-- Top bar -->
+            <div class="processor-topbar">
+                <a href="#" class="back-to-menu" data-nav="menu">← Menu</a>
+                <h2>Process Photos</h2>
+                <span id="processorQueueCount">0 items in queue</span>
+            </div>
+
+            <div class="processor-columns">
+                <!-- LEFT: Queue sidebar -->
+                <div class="processor-queue">
+                    <div class="queue-header">
+                        <h3>Photo Queue</h3>
+                        <button type="button" id="refreshQueueBtn" class="btn-queue-refresh">↻ Refresh</button>
+                    </div>
+                    <div id="queueList" class="queue-list"></div>
+                </div>
+
+                <!-- CENTER-LEFT: Photos + AI Results -->
+                <div class="processor-ai-panel">
+                    <div id="processorPhotos" class="processor-photos">
+                        <p class="processor-placeholder">Select an item from the queue</p>
+                    </div>
+                    <div id="processorAIResults" style="display:none;">
+                        <h3>AI Extracted Data</h3>
+                        <div id="aiResultFields" class="ai-result-fields"></div>
+                    </div>
+                    <div id="processorAILoading" class="loading">
+                        <div class="spinner"></div>
+                        <p class="loading-text">Running AI extraction...</p>
+                    </div>
+                </div>
+
+                <!-- CENTER-RIGHT: Editable form -->
+                <div class="processor-form-panel">
+                    <h3>Product Details</h3>
+                    <form id="processorForm">
+                        <div class="processor-field">
+                            <label>Product Name *</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_name" title="Copy from AI">←</button>
+                                <input type="text" id="p_name" required>
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Style Number</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_style_number" title="Copy from AI">←</button>
+                                <input type="text" id="p_style_number">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>SKU</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_sku" title="Copy from AI">←</button>
+                                <input type="text" id="p_sku">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Barcode</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_barcode" title="Copy from AI">←</button>
+                                <input type="text" id="p_barcode" maxlength="13">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Brand</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_brand_name" title="Copy from AI">←</button>
+                                <input type="text" id="p_brand_name">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Category</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_product_category" title="Copy from AI">←</button>
+                                <input type="text" id="p_product_category">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Retail Price</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_retail_price" title="Copy from AI">←</button>
+                                <input type="number" id="p_retail_price" step="0.01" min="0">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Supply Price</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_supply_price" title="Copy from AI">←</button>
+                                <input type="number" id="p_supply_price" step="0.01" min="0">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Size/Dimensions</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_size_or_dimensions" title="Copy from AI">←</button>
+                                <input type="text" id="p_size_or_dimensions">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Color</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_color" title="Copy from AI">←</button>
+                                <input type="text" id="p_color">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Quantity</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_quantity" title="Copy from AI">←</button>
+                                <input type="number" id="p_quantity" min="1" value="1">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Tags</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_tags" title="Copy from AI">←</button>
+                                <input type="text" id="p_tags">
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Description</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_description" title="Copy from AI">←</button>
+                                <textarea id="p_description"></textarea>
+                            </div>
+                        </div>
+                        <div class="processor-field">
+                            <label>Notes</label>
+                            <div class="field-with-copy">
+                                <button type="button" class="btn-copy-field" data-field="p_notes" title="Copy from AI">←</button>
+                                <textarea id="p_notes"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="processor-actions">
+                        <button type="button" id="processorSaveBtn" class="btn-primary" disabled>Save & Complete</button>
+                        <button type="button" id="processorSkipBtn" class="btn-skip">Skip</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         USER LOGIN OVERLAY (unchanged — covers everything)
+         ═══════════════════════════════════════════════════════════════ -->
     <div id="userLoginOverlay">
-
         <!-- Select view: choose name -->
         <div id="userSelectView">
             <div class="overlay-header">
@@ -205,7 +458,6 @@
                 <a href="#" id="addBackBtn" class="overlay-back">← Back</a>
             </div>
         </div>
-
     </div>
 
     <!-- Success Modal -->

@@ -1,0 +1,335 @@
+/* Desktop Processor Layout — 3-column grid for photo processing workflow */
+
+/* ── Processor Layout ────────────────────────────────────────────── */
+
+.processor-layout {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 16px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.processor-topbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+}
+
+.processor-topbar h2 {
+    margin: 0;
+    font-size: 18px;
+    flex: 1;
+}
+
+#processorQueueCount {
+    font-size: 13px;
+    color: #8E8E93;
+    white-space: nowrap;
+}
+
+/* ── Three-Column Grid ───────────────────────────────────────────── */
+
+.processor-columns {
+    display: grid;
+    grid-template-columns: 260px 1fr 1fr;
+    gap: 16px;
+    flex: 1;
+    min-height: 0;
+    padding: 16px 0;
+}
+
+/* ── Queue Sidebar (left) ────────────────────────────────────────── */
+
+.processor-queue {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.queue-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    flex-shrink: 0;
+}
+
+.queue-header h3 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.btn-queue-refresh {
+    padding: 4px 10px;
+    font-size: 13px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #333;
+}
+
+.btn-queue-refresh:hover {
+    background: #e5e7eb;
+}
+
+.queue-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.queue-item:hover {
+    border-color: #007AFF;
+}
+
+.queue-item.active {
+    border-color: #007AFF;
+    background: #E3F2FD;
+}
+
+.queue-item-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: #e5e7eb;
+}
+
+.queue-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.queue-item-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.queue-item-date {
+    font-size: 11px;
+    color: #8E8E93;
+}
+
+.queue-empty {
+    text-align: center;
+    color: #8E8E93;
+    font-size: 14px;
+    padding: 32px 16px;
+}
+
+/* ── AI Panel (center-left) ──────────────────────────────────────── */
+
+.processor-ai-panel {
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.processor-photos {
+    margin-bottom: 16px;
+}
+
+.processor-photos img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.processor-placeholder {
+    text-align: center;
+    color: #8E8E93;
+    font-size: 15px;
+    padding: 48px 16px;
+}
+
+.ai-result-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ai-result-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.ai-result-label {
+    font-weight: 600;
+    color: #555;
+    min-width: 100px;
+    flex-shrink: 0;
+}
+
+.ai-result-value {
+    color: #1c1c1e;
+    word-break: break-word;
+}
+
+/* ── Form Panel (center-right) ───────────────────────────────────── */
+
+.processor-form-panel {
+    overflow-y: auto;
+    min-height: 0;
+}
+
+.processor-form-panel h3 {
+    margin: 0 0 12px;
+    font-size: 15px;
+}
+
+.processor-field {
+    margin-bottom: 10px;
+}
+
+.processor-field label {
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.field-with-copy {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+}
+
+.field-with-copy input,
+.field-with-copy textarea {
+    flex: 1;
+    min-width: 0;
+}
+
+.btn-copy-field {
+    flex-shrink: 0;
+    width: 32px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid #007AFF;
+    background: #ffffff;
+    color: #007AFF;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-copy-field:hover {
+    background: #007AFF;
+    color: #ffffff;
+}
+
+.btn-copy-field.copied {
+    background: #34C759;
+    border-color: #34C759;
+    color: #ffffff;
+}
+
+.btn-copy-field:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.processor-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+    padding-bottom: 24px;
+}
+
+.processor-actions .btn-primary {
+    flex: 2;
+}
+
+.btn-skip {
+    flex: 1;
+    padding: 12px;
+    background: #8E8E93;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-skip:hover {
+    background: #636366;
+}
+
+.btn-copy-all {
+    width: 100%;
+    padding: 10px;
+    background: #5856D6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 12px;
+}
+
+.btn-copy-all:hover {
+    background: #4845B4;
+}
+
+/* ── Responsive: stack columns on smaller screens ────────────────── */
+
+@media (max-width: 1024px) {
+    .processor-layout {
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .processor-columns {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .processor-queue {
+        max-height: 300px;
+    }
+
+    .queue-list {
+        flex-direction: row;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .queue-item {
+        min-width: 180px;
+        flex-shrink: 0;
+    }
+}

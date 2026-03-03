@@ -73,7 +73,52 @@ export function getDOMElements() {
             editModeText: document.getElementById('editModeText'),
 
             // User tracking
-            currentUserLabel: document.getElementById('currentUserLabel')
+            currentUserLabel: document.getElementById('currentUserLabel'),
+
+            // Menu view
+            menuUserLabel: document.getElementById('menuUserLabel'),
+            menuProcessBadge: document.getElementById('menuProcessBadge'),
+
+            // Quick Capture view
+            captureUserLabel: document.getElementById('captureUserLabel'),
+            captureCameraBtn: document.getElementById('captureCameraBtn'),
+            captureGalleryBtn: document.getElementById('captureGalleryBtn'),
+            captureCameraInput: document.getElementById('captureCameraInput'),
+            captureGalleryInput: document.getElementById('captureGalleryInput'),
+            captureDropZone: document.getElementById('captureDropZone'),
+            captureLoading: document.getElementById('captureLoading'),
+            captureStatus: document.getElementById('captureStatus'),
+            captureSessionCount: document.getElementById('captureSessionCount'),
+            recentCaptures: document.getElementById('recentCaptures'),
+            recentCapturesList: document.getElementById('recentCapturesList'),
+
+            // Desktop Processor view
+            processorQueueCount: document.getElementById('processorQueueCount'),
+            refreshQueueBtn: document.getElementById('refreshQueueBtn'),
+            queueList: document.getElementById('queueList'),
+            processorPhotos: document.getElementById('processorPhotos'),
+            processorAIResults: document.getElementById('processorAIResults'),
+            aiResultFields: document.getElementById('aiResultFields'),
+            processorAILoading: document.getElementById('processorAILoading'),
+            processorForm: document.getElementById('processorForm'),
+            processorSaveBtn: document.getElementById('processorSaveBtn'),
+            processorSkipBtn: document.getElementById('processorSkipBtn'),
+
+            // Processor form fields (p_ prefixed)
+            pName: document.getElementById('p_name'),
+            pStyleNumber: document.getElementById('p_style_number'),
+            pSku: document.getElementById('p_sku'),
+            pBarcode: document.getElementById('p_barcode'),
+            pBrandName: document.getElementById('p_brand_name'),
+            pProductCategory: document.getElementById('p_product_category'),
+            pRetailPrice: document.getElementById('p_retail_price'),
+            pSupplyPrice: document.getElementById('p_supply_price'),
+            pSizeOrDimensions: document.getElementById('p_size_or_dimensions'),
+            pColor: document.getElementById('p_color'),
+            pQuantity: document.getElementById('p_quantity'),
+            pTags: document.getElementById('p_tags'),
+            pDescription: document.getElementById('p_description'),
+            pNotes: document.getElementById('p_notes')
         };
     }
 

@@ -473,3 +473,186 @@ button:disabled {
 .modal-icon--warning {
     color: #FF9500;
 }
+
+/* ── View Navigation ─────────────────────────────────────────────── */
+
+.view-nav {
+    padding: 8px 0 4px;
+}
+
+.back-to-menu {
+    color: #007AFF;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.back-to-menu:hover {
+    text-decoration: underline;
+}
+
+.no-bottom-bar {
+    padding-bottom: 0 !important;
+}
+
+/* ── Menu Grid ───────────────────────────────────────────────────── */
+
+.menu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.menu-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    background: #ffffff;
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.menu-card:hover {
+    border-color: #007AFF;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.menu-card-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.menu-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1c1c1e;
+    margin-bottom: 6px;
+}
+
+.menu-card-desc {
+    font-size: 13px;
+    color: #8E8E93;
+    line-height: 1.4;
+}
+
+.menu-card-badge {
+    display: none;
+    margin-top: 8px;
+    background: #FF3B30;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+}
+
+.menu-card-badge.has-items {
+    display: inline-block;
+}
+
+/* ── Quick Capture Styles ────────────────────────────────────────── */
+
+.capture-counter {
+    background: #E3F2FD;
+    color: #1976D2;
+    text-align: center;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.capture-drop-zone {
+    display: none;
+    border: 2px dashed #007AFF;
+    border-radius: 12px;
+    padding: 32px 16px;
+    text-align: center;
+    margin-bottom: 16px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+    .capture-drop-zone {
+        display: block;
+    }
+}
+
+.capture-drop-zone.drag-over {
+    background: #E3F2FD;
+    border-color: #0051D5;
+}
+
+.drop-zone-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.drop-zone-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.drop-zone-hint {
+    font-size: 13px;
+    color: #8E8E93;
+    margin-top: 4px;
+}
+
+.recent-captures-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.recent-captures-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recent-capture-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.recent-capture-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.recent-capture-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.recent-capture-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-capture-time {
+    font-size: 12px;
+    color: #8E8E93;
+}

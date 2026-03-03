@@ -14,6 +14,7 @@ import { setupSKUAutoGeneration, populateForm } from './form-manager.js';
 import { saveProduct, exportData, fetchProductCount, checkBarcodeExists, fetchProductForEdit } from './database.js';
 import { showStatus, closeModal, closeDuplicateModal } from './ui-utils.js';
 import { getCurrentUser, clearCurrentUser, showUserLoginOverlay } from './user-auth.js';
+import { navigateTo, initNavigation } from './navigation.js';
 
 /**
  * Returns a function that delays invoking fn until after wait ms have elapsed
@@ -186,6 +187,9 @@ function initApp() {
     // Pre-cache DOM elements
     getDOMElements();
 
+    // Setup navigation (delegated [data-nav] click handler)
+    initNavigation();
+
     // Setup SKU auto-generation
     setupSKUAutoGeneration();
 
@@ -198,12 +202,19 @@ function initApp() {
     // Load product count on startup
     fetchProductCount();
 
-    // Show current user name in the header
-    const label = document.getElementById('currentUserLabel');
-    if (label) label.textContent = state.currentUser || '';
+    // Set user labels on all views
+    const userName = state.currentUser || '';
+    const labels = ['currentUserLabel', 'menuUserLabel', 'captureUserLabel'];
+    labels.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = userName;
+    });
 
     // Switch user: clear localStorage and reload to show login screen
     window.switchUser = () => { clearCurrentUser(); location.reload(); };
+
+    // Navigate to the menu (post-login landing)
+    navigateTo('menu');
 
     console.log('✅ App initialized with modular architecture');
 }

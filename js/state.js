@@ -13,5 +13,16 @@ export const state = {
     duplicateProductId: null, // ID of existing product found by barcode precheck
     accessToken: null,       // Supabase Auth JWT (set on app init via auth.js)
     user: null,              // Supabase Auth user object
-    currentUser: null        // Front-end user name (set by user-auth.js)
+    currentUser: null,       // Front-end user name (set by user-auth.js)
+
+    // Navigation
+    currentView: 'menu',    // Active view: 'menu', 'scanner', 'quickCapture', 'processor'
+
+    // Quick Capture
+    captureCount: 0,         // Products captured this session
+
+    // Desktop Processor
+    processorQueue: [],      // Array of photo_only product records
+    processorCurrentItem: null, // Currently selected queue item
+    processorAIData: null    // AI extraction result for current item
 };

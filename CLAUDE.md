@@ -61,8 +61,23 @@ The `OPENAI_API_KEY` must be set in Supabase secrets:
 npx supabase secrets set OPENAI_API_KEY=sk-...
 ```
 
+## Database Access (SQL via Management API)
+The Droplet cannot connect directly to Supabase PostgreSQL (IPv6-only). All SQL runs via the Supabase Management API using `SUPABASE_ACCESS_TOKEN` from `.env.local`. This runs as the `postgres` superuser (bypasses RLS).
+
+```bash
+ACCESS_TOKEN=$(grep '^SUPABASE_ACCESS_TOKEN=' .env.local | cut -d= -f2-)
+curl -s -X POST "https://api.supabase.com/v1/projects/ayfwyvripnetwrkimxka/database/query" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "YOUR SQL HERE"}'
+```
+
+Full CRUD verified: SELECT, INSERT, UPDATE, DELETE, DDL (CREATE/ALTER), and pg_cron scheduling all work.
+
+**Tables:** `products` (1,514 rows), `app_users` (6 rows), `rate_limits` (transient)
+
 ## Database Migrations
-Migrations in `supabase/migrations/` are reference SQL — they have already been applied to the production database. To run new migrations, use the Supabase Management API (Droplet is IPv4, Supabase DB is IPv6-only). See global CLAUDE.md Supabase deployment section for the curl pattern.
+Migrations in `supabase/migrations/` are reference SQL — they have already been applied to the production database. New migrations use the same Management API pattern above.
 
 ## Key Files
 | File | Purpose |
