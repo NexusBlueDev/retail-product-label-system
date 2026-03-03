@@ -94,6 +94,7 @@ export function collectFormData() {
         tags: dom.tagsInput.value || null,
         description: dom.descriptionInput.value || null,
         notes: dom.notesInput.value || null,
-        entered_by: state.currentUser || null
+        entered_by: state.currentUser || null,
+        status: 'complete'
     };
 }

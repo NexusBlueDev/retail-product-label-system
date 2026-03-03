@@ -27,7 +27,7 @@ export async function handleImageSelection(e) {
         const preview = URL.createObjectURL(blob);
         const base64 = await blobToBase64(blob);
 
-        state.currentImages.push({ base64, preview });
+        state.currentImages.push({ base64, preview, blob });
     }
 
     updatePreviews();

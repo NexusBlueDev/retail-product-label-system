@@ -9,6 +9,7 @@ import { state } from './state.js';
 import { showStatus } from './ui-utils.js';
 import { collectFormData } from './form-manager.js';
 import { eventBus } from './events.js';
+import { uploadImage } from './storage.js';
 
 /**
  * Fetch total product count from Supabase and update the UI counter
@@ -102,9 +103,26 @@ export async function saveProduct() {
     console.log(isEditing ? `Updating product ID ${state.editingId}:` : 'Saving product:', formData);
 
     try {
+        // Upload images to Supabase Storage if we have blobs (new product only)
+        if (!isEditing && state.currentImages.length > 0 && state.currentImages[0].blob) {
+            const productId = crypto.randomUUID();
+            formData.id = productId;
+
+            showStatus('Uploading images...', 'info');
+            const storagePaths = await Promise.all(
+                state.currentImages.map((img, i) => uploadImage(img.blob, productId, i))
+            );
+            formData.image_urls = storagePaths.map(path => ({
+                path,
+                uploaded_at: new Date().toISOString()
+            }));
+        }
+
         const url = isEditing
             ? `${SUPABASE_URL}/rest/v1/products?id=eq.${state.editingId}`
             : `${SUPABASE_URL}/rest/v1/products`;
+
+        showStatus(isEditing ? 'Updating...' : 'Saving...', 'info');
 
         const response = await fetch(url, {
             method: isEditing ? 'PATCH' : 'POST',
@@ -243,6 +261,29 @@ export async function fetchProductForEdit(productId, barcode, sku) {
 }
 
 /**
+ * Fetch products with status='photo_only' for the desktop processor queue.
+ * @returns {Promise<Array>} Array of photo-only product records
+ */
+export async function fetchPhotoOnlyProducts() {
+    try {
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/products?status=eq.photo_only&order=created_at&limit=50&select=id,name,image_urls,created_at,entered_by`,
+            {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${state.accessToken}`
+                }
+            }
+        );
+        if (!response.ok) throw new Error(`Fetch failed (${response.status})`);
+        return await response.json();
+    } catch (e) {
+        console.error('fetchPhotoOnlyProducts error:', e);
+        return [];
+    }
+}
+
+/**
  * Export all products to CSV
  */
 export async function exportData() {
@@ -301,12 +342,15 @@ export async function exportData() {
             'Description',
             'Notes',
             'Verified',
-            'Entered By'
+            'Entered By',
+            'Status',
+            'Image Count'
         ];
 
         const csvRows = [headers.join(',')];
 
         data.forEach(product => {
+            const imageCount = Array.isArray(product.image_urls) ? product.image_urls.length : 0;
             const row = [
                 product.id,
                 product.created_at,
@@ -326,7 +370,9 @@ export async function exportData() {
                 `"${(product.description || '').replace(/"/g, '""')}"`,
                 `"${(product.notes || '').replace(/"/g, '""')}"`,
                 product.verified || false,
-                `"${(product.entered_by || '').replace(/"/g, '""')}"`
+                `"${(product.entered_by || '').replace(/"/g, '""')}"`,
+                product.status || 'complete',
+                imageCount
             ];
             csvRows.push(row.join(','));
         });

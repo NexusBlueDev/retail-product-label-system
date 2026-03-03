@@ -15,6 +15,7 @@ import { saveProduct, exportData, fetchProductCount, checkBarcodeExists, fetchPr
 import { showStatus, closeModal, closeDuplicateModal } from './ui-utils.js';
 import { getCurrentUser, clearCurrentUser, showUserLoginOverlay } from './user-auth.js';
 import { navigateTo, initNavigation } from './navigation.js';
+import { initQuickCapture } from './quick-capture.js';
 
 /**
  * Returns a function that delays invoking fn until after wait ms have elapsed
@@ -198,6 +199,9 @@ function initApp() {
 
     // Initialize event bus listeners
     initEventBusListeners();
+
+    // Initialize Quick Capture
+    initQuickCapture();
 
     // Load product count on startup
     fetchProductCount();
