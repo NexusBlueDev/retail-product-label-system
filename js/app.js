@@ -16,6 +16,7 @@ import { showStatus, closeModal, closeDuplicateModal } from './ui-utils.js';
 import { getCurrentUser, clearCurrentUser, showUserLoginOverlay } from './user-auth.js';
 import { navigateTo, initNavigation } from './navigation.js';
 import { initQuickCapture } from './quick-capture.js';
+import { initDesktopProcessor, getPhotoOnlyCount } from './desktop-processor.js';
 
 /**
  * Returns a function that delays invoking fn until after wait ms have elapsed
@@ -203,8 +204,14 @@ function initApp() {
     // Initialize Quick Capture
     initQuickCapture();
 
+    // Initialize Desktop Processor
+    initDesktopProcessor();
+
     // Load product count on startup
     fetchProductCount();
+
+    // Update menu badge with photo-only queue count
+    updateMenuBadge();
 
     // Set user labels on all views
     const userName = state.currentUser || '';
@@ -220,7 +227,31 @@ function initApp() {
     // Navigate to the menu (post-login landing)
     navigateTo('menu');
 
+    // Refresh menu badge when returning to menu or after captures/processing
+    eventBus.on('view:changed', ({ view }) => {
+        if (view === 'menu') updateMenuBadge();
+    });
+    eventBus.on('capture:saved', () => updateMenuBadge());
+    eventBus.on('processor:saved', () => updateMenuBadge());
+
     console.log('✅ App initialized with modular architecture');
+}
+
+/**
+ * Update the Process Photos menu card badge with the current queue count.
+ */
+async function updateMenuBadge() {
+    const badge = document.getElementById('menuProcessBadge');
+    if (!badge) return;
+
+    const count = await getPhotoOnlyCount();
+    if (count > 0) {
+        badge.textContent = `${count} to process`;
+        badge.classList.add('has-items');
+    } else {
+        badge.textContent = '';
+        badge.classList.remove('has-items');
+    }
 }
 
 /**

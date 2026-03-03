@@ -103,6 +103,7 @@ export function getDOMElements() {
             processorForm: document.getElementById('processorForm'),
             processorSaveBtn: document.getElementById('processorSaveBtn'),
             processorSkipBtn: document.getElementById('processorSkipBtn'),
+            copyAllBtn: document.getElementById('copyAllBtn'),
 
             // Processor form fields (p_ prefixed)
             pName: document.getElementById('p_name'),
