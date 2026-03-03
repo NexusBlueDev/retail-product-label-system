@@ -75,8 +75,8 @@ function initEventListeners() {
     // Save product
     dom.saveBtn.addEventListener('click', saveProduct);
 
-    // Export to CSV
-    dom.exportBtn.addEventListener('click', exportData);
+    // Export to CSV (on menu view)
+    dom.menuExportBtn.addEventListener('click', exportData);
 
     // Rescan images
     dom.rescanBtn.addEventListener('click', async () => {

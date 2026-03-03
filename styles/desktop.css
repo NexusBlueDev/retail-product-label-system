@@ -187,17 +187,23 @@
     min-height: 0;
 }
 
-/* ── Photos (top of main area) ───────────────────────────────────── */
+/* ── Photos (top of main area — sticky while scrolling) ──────────── */
 
 .processor-photos {
-    margin-bottom: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #ffffff;
+    padding-bottom: 12px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 .processor-photos img {
     max-width: 100%;
-    max-height: 300px;
+    max-height: 260px;
     border-radius: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     margin-right: 8px;
 }
 

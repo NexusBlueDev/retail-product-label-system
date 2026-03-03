@@ -556,6 +556,27 @@ button:disabled {
     display: inline-block;
 }
 
+.btn-menu-export {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    margin: 24px auto 0;
+    padding: 14px 20px;
+    background: none;
+    color: #007AFF;
+    border: 2px solid #007AFF;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+}
+
+.btn-menu-export:hover {
+    background: #007AFF;
+    color: #fff;
+}
+
 /* ── Quick Capture Styles ────────────────────────────────────────── */
 
 .capture-counter {

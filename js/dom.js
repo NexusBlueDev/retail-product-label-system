@@ -32,7 +32,7 @@ export function getDOMElements() {
             processBtn: document.getElementById('processBtn'),
             clearBtn: document.getElementById('clearBtn'),
             saveBtn: document.getElementById('saveBtn'),
-            exportBtn: document.getElementById('exportBtn'),
+            menuExportBtn: document.getElementById('menuExportBtn'),
             rescanBtn: document.getElementById('rescanBtn'),
 
             // Status and loading
