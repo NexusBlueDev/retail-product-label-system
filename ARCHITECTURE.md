@@ -3,18 +3,28 @@
 ## System Overview
 
 ```
-Mobile Browser → GitHub Pages (static HTML/ES6)
+Mobile/Desktop Browser → GitHub Pages (static HTML/ES6)
     ├── Supabase REST API (products, app_users tables)
     │   └── PostgreSQL with RLS (scoped to UID 10cfa0fe-...)
+    ├── Supabase Storage (product-images bucket, UID-scoped RLS)
     └── Supabase Edge Function (extract-product)
         └── OpenAI GPT-4o Vision API
 ```
 
 All code runs client-side in the browser. No server-side rendering, no build tools, no bundler. The only server-side component is the Supabase Edge Function that proxies calls to OpenAI.
 
+## Three-Mode Workflow
+
+```
+Login → PIN → Menu
+  ├── Product Scanner  → Camera/Gallery → AI Extract All → Review Form → Save (status='complete')
+  ├── Quick Capture    → Camera/Gallery/Drag → Upload Storage → AI Extract Name → Save (status='photo_only')
+  └── Process Photos   → Queue → Load Photos → AI Extract All → Copy to Form → Save (status='complete')
+```
+
 ## Frontend Architecture
 
-13 ES6 native modules loaded via `<script type="module" src="js/app.js">` from `index.html`.
+18 ES6 native modules loaded via `<script type="module" src="js/app.js">` from `index.html`.
 
 ### Module Layers
 
@@ -22,20 +32,36 @@ All code runs client-side in the browser. No server-side rendering, no build too
 |-------|---------|----------------|
 | **Foundation** | config.js, state.js, events.js, dom.js | Config constants, shared state object, event bus, DOM element cache |
 | **Auth** | auth.js, user-auth.js | Silent Supabase JWT login + per-person PIN gate overlay |
+| **Navigation** | navigation.js | View controller — shows/hides 4 top-level views (menu, scanner, quickCapture, processor) |
 | **Features** | barcode-scanner.js, image-handler.js, image-compression.js, ai-extraction.js | Camera/barcode scanning, image capture/compression, AI extraction |
+| **Storage** | storage.js | Supabase Storage REST API — upload, signed URLs, fetch as base64 |
+| **Capture** | quick-capture.js | Quick Capture mode — parallel upload + name extraction, session counter |
+| **Processor** | desktop-processor.js | Desktop 3-column processor — queue, AI panel, copy-field form |
 | **Data** | form-manager.js, sku-generator.js, database.js | Form I/O, SKU generation logic, Supabase REST CRUD + CSV export |
 | **UI** | ui-utils.js | Status messages, modal helpers |
-| **Entry** | app.js | Init sequence, event wiring, orchestration |
+| **Entry** | app.js | Init sequence, event wiring, orchestration, menu badge updates |
+
+### View Navigation
+
+Four top-level views, controlled by `navigation.js`:
+- **menuView** — Post-login landing with three cards (Product Scanner, Quick Capture, Process Photos)
+- **scannerView** — Original product scanner (wraps all existing scanner UI + fixed bottom bar)
+- **quickCaptureView** — Speed capture with camera/gallery/drag-drop, session counter, recent captures
+- **processorView** — 3-column desktop layout (260px queue | 1fr AI panel | 1fr editable form)
+
+Navigation uses `display:none/block` toggling. The fixed bottom bar (Save/Export/Rescan) only shows on scanner view. Body padding class (`no-bottom-bar`) toggles accordingly.
 
 ### Startup Sequence
 1. `ensureAuthenticated()` — get Supabase JWT (or refresh from localStorage)
 2. `getCurrentUser()` — check localStorage for saved front-end user
 3. If no saved user → `showUserLoginOverlay()` (blocks until PIN validated)
-4. `initApp()` — wire DOM events, load product count, start 55-min JWT refresh interval
+4. `initApp()` — wire DOM events, init navigation, init Quick Capture, init Desktop Processor
+5. `navigateTo('menu')` — show menu as first view
+6. `updateMenuBadge()` — fetch photo-only count for Process Photos badge
 
 ### Cross-Module Communication
-- **state.js** — single mutable state object shared by all modules
-- **events.js** — simple pub/sub event bus (`barcode:scanned`, `images:selected`, `extraction:complete`, `product:saved`)
+- **state.js** — single mutable state object shared by all modules (17 properties)
+- **events.js** — pub/sub event bus: `barcode:scanned`, `images:selected`, `extraction:complete`, `product:saved`, `view:changed`, `capture:saved`, `processor:saved`
 - No framework, no reactive bindings — modules import what they need directly
 
 ## Backend Architecture
@@ -50,20 +76,26 @@ All code runs client-side in the browser. No server-side rendering, no build too
 - **Retry:** Exponential backoff (1s, 2s), 2 max retries, 30s timeout per OpenAI call
 - **Logging:** Structured JSON (timestamp, duration, fields extracted, barcode presence, token usage)
 
+### Supabase Storage: product-images
+- **Bucket:** `product-images` (private, not public)
+- **RLS:** UID-scoped — same `auth.uid() = 10cfa0fe-...` pattern as products table
+- **Path convention:** `products/{productId}/{index}.webp`
+- **Access:** Signed URLs (1-hour expiry), fetched fresh per queue item selection
+
 ### Database Tables
 
 | Table | Purpose | RLS Policy |
 |-------|---------|------------|
-| `products` | Product records (19 fields) | Owner-scoped: `auth.uid() = 10cfa0fe-...` |
+| `products` | Product records (21 fields) | Owner-scoped: `auth.uid() = 10cfa0fe-...` |
 | `app_users` | Front-end user names + PINs | Owner-scoped: `auth.uid() = 10cfa0fe-...` |
 | `rate_limits` | Edge Function per-IP rate limiting | Deny anon; service_role bypasses |
 
 ### Products Schema
 ```
-id, created_at, updated_at, name (required), style_number, sku (unique),
+id (UUID), created_at, updated_at, name (required), style_number, sku (unique),
 barcode (unique), brand_name, product_category, retail_price, supply_price,
 size_or_dimensions, color, quantity (default 1), tags, description, notes,
-verified, entered_by
+verified, entered_by, image_urls (JSONB, default []), status (TEXT, 'photo_only'|'complete')
 ```
 
 ### RLS Evolution
@@ -73,27 +105,59 @@ The migrations tell the security hardening story:
 3. `rls_products_scoped_to_uid.sql` — Scoped to specific UID (current state)
 4. `rls_rate_limits_deny_anon.sql` — Explicit deny for anon on rate_limits
 5. `add_user_tracking.sql` — app_users table + entered_by column on products
+6. `add_image_storage_columns.sql` — image_urls JSONB + status column + partial index
+7. `create_storage_bucket.sql` — product-images bucket + owner RLS policy
 
-## Data Flow: Product Scan
+## Data Flow: Product Scanner (Mode 1)
 
 ```
 1. User takes photo(s) → camera/gallery file input
 2. image-compression.js → WebP blob (max 1920px, 0.85 quality, JPEG fallback)
 3. ai-extraction.js → parallel POST to Edge Function (one per image)
-4. Edge Function → validate image → check rate limit → call GPT-4o Vision
-5. GPT-4o returns structured JSON → Edge Function validates barcode → returns to client
-6. Client merges multi-image results (Image 1 = primary, Image 2+ = price override only)
-7. form-manager.js → populate form fields → auto-generate SKU
-8. User reviews/edits → clicks Save
-9. database.js → POST /rest/v1/products (with Bearer JWT)
-10. Supabase RLS check → INSERT → return saved row
-11. Success modal → "Scan Next" or "Edit Product"
+4. Edge Function → validate → rate limit → GPT-4o Vision
+5. Client merges multi-image results → populate form → auto-generate SKU
+6. User reviews/edits → clicks Save
+7. database.js → upload blobs to Storage → POST /rest/v1/products (with image_urls + status='complete')
+8. Success modal → "Scan Next" or "Edit Product"
+```
+
+## Data Flow: Quick Capture (Mode 2)
+
+```
+1. User takes/uploads/drags photo(s)
+2. image-compression.js → WebP blobs
+3. Generate UUID (crypto.randomUUID()) → storage path known before DB insert
+4. PARALLEL: upload all blobs to Storage + extract name from first image via Edge Function
+5. POST /rest/v1/products → { id, name, image_urls, status: 'photo_only', entered_by }
+6. Session counter increments → recent captures list updates
+```
+
+## Data Flow: Desktop Processor (Mode 3)
+
+```
+1. View entered → GET products?status=eq.photo_only → render queue sidebar
+2. User clicks queue item → getSignedUrls() → display photos
+3. fetchImageAsBase64() for each → POST to Edge Function → merge results
+4. AI results displayed as read-only rows → copy buttons enabled
+5. User clicks ← buttons to copy fields (or Copy All)
+6. User edits/verifies → clicks Save & Complete
+7. PATCH /rest/v1/products?id=eq.{id} → { ...formData, status: 'complete' }
+8. Removed from queue → next item selected
 ```
 
 ### Multi-Image Merge Strategy
 - Image 1 (vendor label): primary source for ALL fields
 - Image 2+ (handwritten notes): only overrides `retail_price`, appends to `notes`
 - Scanned barcodes (`data-source="scanned"`) are never overwritten by AI extraction
+
+## CSS Architecture
+
+| Stylesheet | Purpose |
+|-----------|---------|
+| `styles/main.css` | Base reset, body layout, container, typography |
+| `styles/components.css` | Forms, buttons, camera, status, modals, menu cards, quick capture, view nav |
+| `styles/modals.css` | Success and duplicate warning modals |
+| `styles/desktop.css` | Processor 3-column grid, queue sidebar, AI panel, copy buttons, responsive stacking |
 
 ## Integrations
 
@@ -102,6 +166,7 @@ The migrations tell the security hardening story:
 | OpenAI GPT-4o | Product data extraction from images | Integration (via Edge Function) |
 | Supabase Auth | Single-account silent authentication | Infrastructure |
 | Supabase PostgreSQL | Product and user data storage | Infrastructure |
+| Supabase Storage | Product image persistence | Infrastructure |
 | QuaggaJS 2 | Browser-based barcode scanning | Library (CDN) |
 | GitHub Pages | Static hosting | Infrastructure |
 
@@ -109,12 +174,16 @@ The migrations tell the security hardening story:
 
 | Decision | Rationale |
 |----------|-----------|
-| Static app with hardcoded credentials | RLS scopes all data to one UID; internal tool; no server to hide secrets (see CLAUDE.md) |
-| Single Supabase auth account for all users | Per-person PIN is identification, not authentication; simplifies auth for internal tool |
-| No build tools | ES6 modules natively supported in all target browsers; trivial deploy (push = live) |
-| Edge Function for AI, REST API for CRUD | Edge Function handles expensive OpenAI call with rate limiting and retry; CRUD uses Supabase's auto-generated REST |
+| Static app with hardcoded credentials | RLS scopes all data to one UID; internal tool; no server to hide secrets |
+| Single Supabase auth account for all users | Per-person PIN is identification, not authentication; simplifies auth |
+| No build tools | ES6 modules natively supported in all target browsers; trivial deploy |
+| Edge Function for AI, REST API for CRUD | Edge Function handles expensive OpenAI call with rate limiting and retry |
 | 15-char SKU limit | Matches Lightspeed POS field constraint |
 | WebP compression with JPEG fallback | ~60% image size reduction; Safari fallback for older iOS |
+| Supabase Storage over base64 in DB | Scalable image persistence; private bucket with signed URLs |
+| Client-side UUID for product ID | Storage path known before DB insert; enables parallel upload + name extraction |
+| `p_` prefix on processor form IDs | Avoids DOM ID collisions with scanner form (same field names) |
+| CSS Grid for processor layout | Native 3-column responsive layout; stacks vertically below 1024px |
 
 ## Known Tech Debt
 

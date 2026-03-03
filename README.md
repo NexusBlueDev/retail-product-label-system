@@ -10,6 +10,12 @@ A mobile-first AI-powered product scanner for retail inventory management with r
 
 ## ✨ Features
 
+### 🏠 **Three-Mode Workflow (v4.0)**
+After login, a menu lets you choose how to work:
+- **Product Scanner** — Full scan/photo/AI/review/save flow (original mode)
+- **Quick Capture** — Speed-snap photos, AI extracts name only, images stored for later desktop processing
+- **Process Photos** — Desktop 3-column view: queue of photo-only products, AI extraction results, editable form with copy buttons
+
 ### 📊 **Real-Time Barcode Scanner**
 - Hardware barcode scanning using device camera
 - UPC-A (12 digits) and EAN-13 (13 digits) support
@@ -122,17 +128,24 @@ Exports all 19 fields:
 
 ```
 retail-product-label-system/
-├── index.html                  # Single-page app entry point
-├── js/                         # 13 ES6 modules (see js/README.md)
-├── styles/                     # CSS (main, components, modals)
+├── index.html                  # Single-page app (4 view containers)
+├── js/                         # 18 ES6 modules
+│   ├── app.js                  # Entry point, init + orchestration
+│   ├── navigation.js           # View controller (menu/scanner/capture/processor)
+│   ├── storage.js              # Supabase Storage REST API
+│   ├── quick-capture.js        # Quick Capture mode
+│   ├── desktop-processor.js    # Desktop Processor mode
+│   └── ...                     # 13 other modules (see ARCHITECTURE.md)
+├── styles/
+│   ├── main.css                # Base reset and layout
+│   ├── components.css          # Forms, buttons, menu, capture styles
+│   ├── modals.css              # Success/duplicate modals
+│   └── desktop.css             # Processor 3-column grid layout
 ├── supabase/
 │   ├── config.toml             # Edge Function configuration
 │   ├── functions/
-│   │   └── extract-product/
-│   │       ├── index.ts        # AI extraction Edge Function (Deno)
-│   │       ├── deno.json       # Deno config
-│   │       └── prompt-optimized.txt  # Reference prompt
-│   └── migrations/             # 6 SQL migration files (reference)
+│   │   └── extract-product/    # AI extraction Edge Function (Deno)
+│   └── migrations/             # 8 SQL migration files (reference)
 ├── docs/                       # Project concept and planning docs
 ├── CLAUDE.md                   # Claude Code execution rules
 ├── HANDOFF.md                  # Project state and session log
@@ -147,7 +160,7 @@ retail-product-label-system/
 
 ### **Technology Stack**
 - **Frontend:** Pure HTML/CSS/JavaScript (no frameworks, no build tools)
-- **Module System:** ES6 native modules (13 modules, single entry point)
+- **Module System:** ES6 native modules (18 modules, single entry point)
 - **Barcode Scanner:** QuaggaJS 2 v1.12.1 (open source)
 - **AI Vision:** OpenAI GPT-4o (via Supabase Edge Function)
 - **Database:** Supabase (PostgreSQL with Row Level Security)
@@ -192,7 +205,7 @@ npx supabase secrets set OPENAI_API_KEY=sk-...
 4. All fields mapped for direct import
 
 **CSV Format:**
-- 19 columns with headers (including Entered By)
+- 21 columns with headers (including Entered By, Status, Image Count)
 - Quoted fields (handles commas/special chars)
 - Sorted by creation date (newest first)
 
@@ -203,7 +216,7 @@ npx supabase secrets set OPENAI_API_KEY=sk-...
 - All data stored in secure Supabase cloud database
 - Products and user names visible to all users of the scanner
 - User names and PINs stored in Supabase (internal tool, PINs not hashed)
-- Images processed but not stored
+- Product images stored in private Supabase Storage bucket (UID-scoped access)
 - HTTPS encrypted connections
 
 ---
@@ -260,7 +273,16 @@ For issues or feature requests:
 
 ## 📝 Version History
 
-- **v3.4 (Current - Feb 2026)** - Per-User Login & Tracking ✅
+- **v4.0 (Current - Mar 2026)** - Three-Mode Workflow ✅
+  - Post-login menu with Product Scanner, Quick Capture, Process Photos
+  - Quick Capture: speed-snap photos, AI name only, Supabase Storage persistence
+  - Desktop Processor: 3-column queue/AI/form view with copy buttons
+  - All modes persist images to Supabase Storage
+  - Products track status (photo_only / complete)
+  - CSV export includes Status and Image Count (21 fields)
+  - **Status: Production Ready**
+
+- **v3.4 (Feb 2026)** - Per-User Login & Tracking ✅
   - "Who's scanning?" login overlay with name buttons + PIN entry
   - Self-service user creation (Add User from login screen)
   - `entered_by` field saved on every product create and edit
@@ -304,5 +326,5 @@ For issues or feature requests:
 ---
 
 **Current Status:** ✅ Fully Operational - All Features Working
-**Last Tested:** February 18, 2026
+**Last Tested:** March 3, 2026
 **Developed by:** NexusBlue Development Team
