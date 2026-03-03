@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+*.env
+.env.local
+
+# Supabase local
+.supabase/
+
+# NexusBlue docs gate
+.docs-verified
+
+# OS / editor artifacts
+NUL
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Legacy credentials (if ever recreated)
+credentials.md
