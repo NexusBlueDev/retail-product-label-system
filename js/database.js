@@ -105,12 +105,12 @@ export async function saveProduct() {
     try {
         // Upload images to Supabase Storage if we have blobs (new product only)
         if (!isEditing && state.currentImages.length > 0 && state.currentImages[0].blob) {
-            const productId = crypto.randomUUID();
-            formData.id = productId;
+            // UUID for storage folder path only — DB auto-generates the bigint ID
+            const storageKey = crypto.randomUUID();
 
             showStatus('Uploading images...', 'info');
             const storagePaths = await Promise.all(
-                state.currentImages.map((img, i) => uploadImage(img.blob, productId, i))
+                state.currentImages.map((img, i) => uploadImage(img.blob, storageKey, i))
             );
             formData.image_urls = storagePaths.map(path => ({
                 path,

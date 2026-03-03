@@ -84,18 +84,18 @@ async function processCapture(files) {
     showCaptureStatus('Uploading and extracting name...', 'info');
 
     try {
-        // Generate product ID up front so storage path is known
-        const productId = crypto.randomUUID();
+        // UUID for storage folder path only — DB auto-generates the bigint ID
+        const storageKey = crypto.randomUUID();
 
-        // Compress all images to WebP blobs
+        // Compress all images to WebP at 1200px (smaller = faster upload + AI)
         const blobs = await Promise.all(
-            Array.from(files).map(f => compressImageToWebP(f))
+            Array.from(files).map(f => compressImageToWebP(f, 1200))
         );
 
         // Run uploads + name extraction in parallel for speed
         const [storagePaths, productName] = await Promise.all([
             // Upload all blobs
-            Promise.all(blobs.map((blob, i) => uploadImage(blob, productId, i))),
+            Promise.all(blobs.map((blob, i) => uploadImage(blob, storageKey, i))),
             // Extract name from first image only
             blobToBase64(blobs[0]).then(b64 => extractNameOnly(b64))
         ]);
@@ -106,7 +106,7 @@ async function processCapture(files) {
             uploaded_at: new Date().toISOString()
         }));
 
-        // Save product record with status='photo_only'
+        // Save product record with status='photo_only' (DB auto-generates ID)
         const response = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
             method: 'POST',
             headers: {
@@ -116,7 +116,6 @@ async function processCapture(files) {
                 'Prefer': 'return=representation'
             },
             body: JSON.stringify({
-                id: productId,
                 name: productName,
                 image_urls: imageUrls,
                 status: 'photo_only',
@@ -130,22 +129,23 @@ async function processCapture(files) {
         }
 
         const saved = await response.json();
+        const savedId = saved[0]?.id || '?';
 
         // Update session counter
         state.captureCount++;
         dom.captureSessionCount.textContent = `${state.captureCount} product${state.captureCount !== 1 ? 's' : ''} captured this session`;
 
         // Add to recent captures list
-        addRecentCapture(productName, blobs[0], saved[0]?.created_at);
+        addRecentCapture(productName, savedId, blobs[0], saved[0]?.created_at);
 
         dom.captureLoading.style.display = 'none';
-        showCaptureStatus(`Captured: ${productName}`, 'success');
+        showCaptureStatus(`Captured: ${productName} (ID: ${savedId})`, 'success');
 
         // Reset file inputs
         dom.captureCameraInput.value = '';
         dom.captureGalleryInput.value = '';
 
-        eventBus.emit('capture:saved', { id: productId, name: productName });
+        eventBus.emit('capture:saved', { id: savedId, name: productName });
 
     } catch (error) {
         dom.captureLoading.style.display = 'none';
@@ -157,7 +157,7 @@ async function processCapture(files) {
 /**
  * Add an item to the recent captures list (max 5 shown)
  */
-function addRecentCapture(name, thumbnailBlob, timestamp) {
+function addRecentCapture(name, id, thumbnailBlob, timestamp) {
     const dom = getDOMElements();
     dom.recentCaptures.style.display = 'block';
 
@@ -170,7 +170,7 @@ function addRecentCapture(name, thumbnailBlob, timestamp) {
         <img src="${thumbUrl}" class="recent-capture-thumb" alt="">
         <div class="recent-capture-info">
             <div class="recent-capture-name">${name}</div>
-            <div class="recent-capture-time">${time}</div>
+            <div class="recent-capture-time">ID: ${id} · ${time}</div>
         </div>
     `;
 
