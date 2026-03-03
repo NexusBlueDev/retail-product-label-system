@@ -118,6 +118,4 @@ The migrations tell the security hardening story:
 
 ## Known Tech Debt
 
-- `ai-extraction.js` uses `SUPABASE_KEY` as Bearer token instead of `state.accessToken` (works but inconsistent with other modules)
-- Extraction prompt duplicated: inline in `index.ts` (lines 101-215) AND in `prompt-optimized.txt`
 - User PINs stored in plaintext (accepted — internal tool, identification not security)
