@@ -89,6 +89,7 @@ export function getDOMElements() {
             captureLoading: document.getElementById('captureLoading'),
             captureStatus: document.getElementById('captureStatus'),
             captureSessionCount: document.getElementById('captureSessionCount'),
+            captureNextBtn: document.getElementById('captureNextBtn'),
             recentCaptures: document.getElementById('recentCaptures'),
             recentCapturesList: document.getElementById('recentCapturesList'),
 

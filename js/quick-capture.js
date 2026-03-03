@@ -73,7 +73,8 @@ async function extractNameOnly(base64Image) {
 }
 
 /**
- * Process captured files: compress, upload to storage, extract name, save record.
+ * Process captured files: compress, upload to storage, save record immediately,
+ * then update name in background when AI finishes.
  * @param {FileList|File[]} files - Image files from input or drag/drop
  */
 async function processCapture(files) {
@@ -81,7 +82,8 @@ async function processCapture(files) {
 
     const dom = getDOMElements();
     dom.captureLoading.style.display = 'block';
-    showCaptureStatus('Uploading and extracting name...', 'info');
+    dom.captureNextBtn.style.display = 'none';
+    showCaptureStatus('Compressing and uploading...', 'info');
 
     try {
         // UUID for storage folder path only — DB auto-generates the bigint ID
@@ -92,13 +94,10 @@ async function processCapture(files) {
             Array.from(files).map(f => compressImageToWebP(f, 1200))
         );
 
-        // Run uploads + name extraction in parallel for speed
-        const [storagePaths, productName] = await Promise.all([
-            // Upload all blobs
-            Promise.all(blobs.map((blob, i) => uploadImage(blob, storageKey, i))),
-            // Extract name from first image only
-            blobToBase64(blobs[0]).then(b64 => extractNameOnly(b64))
-        ]);
+        // Upload images to Storage (don't wait for AI — that's slow)
+        const storagePaths = await Promise.all(
+            blobs.map((blob, i) => uploadImage(blob, storageKey, i))
+        );
 
         // Build image_urls array
         const imageUrls = storagePaths.map(path => ({
@@ -106,7 +105,7 @@ async function processCapture(files) {
             uploaded_at: new Date().toISOString()
         }));
 
-        // Save product record with status='photo_only' (DB auto-generates ID)
+        // Save product record IMMEDIATELY with placeholder name
         const response = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
             method: 'POST',
             headers: {
@@ -116,7 +115,7 @@ async function processCapture(files) {
                 'Prefer': 'return=representation'
             },
             body: JSON.stringify({
-                name: productName,
+                name: 'Processing...',
                 image_urls: imageUrls,
                 status: 'photo_only',
                 entered_by: state.currentUser || null
@@ -135,17 +134,40 @@ async function processCapture(files) {
         state.captureCount++;
         dom.captureSessionCount.textContent = `${state.captureCount} product${state.captureCount !== 1 ? 's' : ''} captured this session`;
 
-        // Add to recent captures list
-        addRecentCapture(productName, savedId, blobs[0], saved[0]?.created_at);
+        // Add to recent captures list (will update name when AI finishes)
+        addRecentCapture('Processing...', savedId, blobs[0], saved[0]?.created_at);
 
         dom.captureLoading.style.display = 'none';
-        showCaptureStatus(`Captured: ${productName} (ID: ${savedId})`, 'success');
+        showCaptureStatus(`Saved! (ID: ${savedId}) — extracting name...`, 'success');
+
+        // Show "Capture Next" button so user can keep going
+        dom.captureNextBtn.style.display = 'block';
 
         // Reset file inputs
         dom.captureCameraInput.value = '';
         dom.captureGalleryInput.value = '';
 
-        eventBus.emit('capture:saved', { id: savedId, name: productName });
+        eventBus.emit('capture:saved', { id: savedId, name: 'Processing...' });
+
+        // ── Background: extract name and update the record ──
+        blobToBase64(blobs[0]).then(b64 => extractNameOnly(b64)).then(productName => {
+            if (productName && productName !== 'Unnamed Product') {
+                // PATCH the name on the DB record
+                fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${savedId}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${state.accessToken}`
+                    },
+                    body: JSON.stringify({ name: productName })
+                }).then(() => {
+                    // Update the recent capture entry with the real name
+                    updateRecentCaptureName(savedId, productName);
+                    showCaptureStatus(`Saved: ${productName} (ID: ${savedId})`, 'success');
+                }).catch(e => console.error('Name PATCH failed:', e));
+            }
+        }).catch(e => console.error('Background name extraction failed:', e));
 
     } catch (error) {
         dom.captureLoading.style.display = 'none';
@@ -186,6 +208,22 @@ function addRecentCapture(name, id, thumbnailBlob, timestamp) {
 }
 
 /**
+ * Update the name in the recent captures list after AI extraction completes.
+ */
+function updateRecentCaptureName(id, name) {
+    const dom = getDOMElements();
+    const items = dom.recentCapturesList.querySelectorAll('.recent-capture-item');
+    for (const item of items) {
+        const timeEl = item.querySelector('.recent-capture-time');
+        if (timeEl && timeEl.textContent.includes(`ID: ${id}`)) {
+            const nameEl = item.querySelector('.recent-capture-name');
+            if (nameEl) nameEl.textContent = name;
+            break;
+        }
+    }
+}
+
+/**
  * Initialize Quick Capture event listeners.
  * Called once from app.js initApp().
  */
@@ -200,6 +238,12 @@ export function initQuickCapture() {
     // Gallery / upload button
     dom.captureGalleryBtn.addEventListener('click', () => {
         dom.captureGalleryInput.click();
+    });
+
+    // "Capture Next" button — opens camera for the next product
+    dom.captureNextBtn.addEventListener('click', () => {
+        dom.captureNextBtn.style.display = 'none';
+        dom.captureCameraInput.click();
     });
 
     // File input change handlers

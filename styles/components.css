@@ -569,6 +569,24 @@ button:disabled {
     margin-bottom: 16px;
 }
 
+.btn-capture-next {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    margin: 16px 0;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.btn-capture-next:hover {
+    background: #388E3C;
+}
+
 .capture-drop-zone {
     display: none;
     border: 2px dashed #007AFF;
