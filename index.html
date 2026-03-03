@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Product Scanner</title>
-    <link rel="stylesheet" href="styles/main.css?v=4.5">
-    <link rel="stylesheet" href="styles/components.css?v=4.5">
-    <link rel="stylesheet" href="styles/modals.css?v=4.5">
-    <link rel="stylesheet" href="styles/desktop.css?v=4.5">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#007AFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Product Scanner">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+    <link rel="stylesheet" href="styles/main.css?v=4.6">
+    <link rel="stylesheet" href="styles/components.css?v=4.6">
+    <link rel="stylesheet" href="styles/modals.css?v=4.6">
+    <link rel="stylesheet" href="styles/desktop.css?v=4.6">
 </head>
 <body class="no-bottom-bar">
 
@@ -583,6 +592,14 @@
         </div>
     </div>
 
-    <script type="module" src="js/app.js?v=4.5"></script>
+    <script type="module" src="js/app.js?v=4.6"></script>
+    <script>
+        // Register service worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('SW registered:', reg.scope))
+                .catch(err => console.warn('SW registration failed:', err));
+        }
+    </script>
 </body>
 </html>

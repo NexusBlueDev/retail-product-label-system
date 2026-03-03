@@ -1,15 +1,15 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-03-03 — Added three-mode workflow: Menu, Quick Capture, Desktop Processor
+2026-03-03 — Vercel hosting + PWA + module documentation
 
 ## Project State
-Production app (v4.0) with three operational modes. Post-login menu leads to:
-1. **Product Scanner** — original mobile flow (scan, AI extract, review, save) + images now persisted
-2. **Quick Capture** — speed mode: snap photos, AI extracts name only, images stored for later
-3. **Process Photos** — desktop 3-column view: queue sidebar, AI results, editable form with copy buttons
+Production app (v4.6) with three operational modes, now PWA-enabled and hosted on Vercel. Post-login menu leads to:
+1. **Product Scanner** — mobile flow (scan, AI extract, review, save)
+2. **Quick Capture** — speed mode: stage photos, save, background AI extracts all fields into ai_cache
+3. **Process Photos** — desktop view: queue sidebar, sticky photos, side-by-side AI vs form fields with copy buttons
 
-All images persisted in Supabase Storage (`product-images` bucket). Products have a `status` field: `photo_only` (Quick Capture) or `complete` (Scanner/Processor saves).
+All images in Supabase Storage (`product-images` bucket). Products have `status` (`photo_only`/`complete`) and `ai_cache` (JSONB, pre-computed AI extraction). PWA installable on mobile home screens.
 
 ## Completed
 - Per-user login overlay with PIN gate (v3.4) — commit 6ebc952
@@ -35,9 +35,11 @@ All images persisted in Supabase Storage (`product-images` bucket). Products hav
 - Nothing currently in progress
 
 ## Next Up
-1. Test full workflow: Quick Capture on mobile → Process Photos on desktop
-2. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
-3. Monitor pg_cron job is running correctly
+1. Verify Vercel deployment at `retail-scanner-nii.nexusblue.ai` (DNS propagation may take a few minutes)
+2. Test PWA install on mobile (Add to Home Screen)
+3. Test full workflow: Quick Capture on mobile → Process Photos on desktop
+4. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
+5. Monitor pg_cron job is running correctly
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 18 modules
@@ -45,7 +47,8 @@ All images persisted in Supabase Storage (`product-images` bucket). Products hav
 - Storage: Supabase Storage (`product-images` bucket, private, UID-scoped RLS)
 - AI: OpenAI GPT-4o Vision (via Edge Function)
 - Barcode: QuaggaJS 2 v1.12.1 (CDN)
-- Hosting: GitHub Pages
+- Hosting: Vercel (primary, `retail-scanner-nii.nexusblue.ai`) + GitHub Pages (legacy)
+- PWA: manifest.json + sw.js (cache-first app shell, network-only API)
 - Supabase project ref: ayfwyvripnetwrkimxka
 
 ## Known Issues / Tech Debt
@@ -53,6 +56,22 @@ All images persisted in Supabase Storage (`product-images` bucket). Products hav
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-03-03 (Session 3) — Vercel + PWA + Module Documentation
+- Set up Vercel project (prj_TEL3Y3lwVVdYvUWkBl90Jug61ojk) linked to GitHub repo
+- Added custom domain `retail-scanner-nii.nexusblue.ai` (wildcard CNAME on `*.nexusblue.ai`)
+- Created PWA: `manifest.json`, `sw.js` (cache-first app shell, network-only Supabase), icons (192, 512, apple-touch)
+- Added PWA meta tags to index.html, service worker registration script
+- Moved Export CSV button from scanner bottom bar to menu view
+- Made processor photos sticky at top when scrolling fields
+- Added `ai_cache` JSONB column for pre-computed AI extraction
+- Background AI extraction in Quick Capture (full extraction, not just name)
+- Delete confirmation modal with Supabase Storage cleanup
+- Side-by-side processor field grid (AI extract left, form right, arrow between)
+- Created `scripts/deploy.sh` (manual Vercel fallback)
+- Updated `.env.local` with Vercel credentials
+- Updated ARCHITECTURE.md with module classification, PWA, Vercel, ai_cache
+- Documented as NexusBlue Standalone App module
 
 ### 2026-03-03 (Session 2) — Three-Mode Workflow Implementation
 - **Phase 1: Menu + Navigation Foundation**
@@ -88,9 +107,11 @@ All images persisted in Supabase Storage (`product-images` bucket). Products hav
 - Verified OPENAI_API_KEY, set up pg_cron, fixed auth tokens, removed duplicates, extracted inline styles
 
 ## How to Resume
-> Project: Retail Product Label System
-> Live: https://nexusbluedev.github.io/retail-product-label-system/
+> Project: Retail Product Label System (NexusBlue Module — Standalone App)
+> Live: https://retail-scanner-nii.nexusblue.ai (Vercel)
+> Legacy: https://nexusbluedev.github.io/retail-product-label-system/ (GitHub Pages)
 > Repo: https://github.com/NexusBlueDev/retail-product-label-system
-> State: v4.0 — three-mode workflow (menu, quick capture, desktop processor) fully implemented
-> Next action: Test full Quick Capture → Process Photos workflow end-to-end
+> Vercel: https://vercel.com/nexus-blue-dev/retail-product-label-system
+> State: v4.6 — three-mode workflow, PWA, Vercel hosted, ai_cache
+> Next action: Verify Vercel deployment + test PWA install on mobile
 > Start by reading: HANDOFF.md → CLAUDE.md → ARCHITECTURE.md
