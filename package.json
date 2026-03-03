@@ -1,0 +1,15 @@
+{
+  "name": "retail-product-label-system",
+  "version": "3.4.0",
+  "private": true,
+  "description": "Mobile-first AI-powered product scanner for retail inventory",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "deploy:function": "supabase functions deploy extract-product --no-verify-jwt --project-ref ayfwyvripnetwrkimxka"
+  },
+  "devDependencies": {
+    "supabase": "^2.76.9"
+  }
+}
