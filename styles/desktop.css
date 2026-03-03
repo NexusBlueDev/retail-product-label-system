@@ -1,4 +1,4 @@
-/* Desktop Processor Layout — 3-column grid for photo processing workflow */
+/* Desktop Processor Layout — Queue sidebar + photos on top + side-by-side fields */
 
 /* ── Processor Layout ────────────────────────────────────────────── */
 
@@ -32,11 +32,11 @@
     white-space: nowrap;
 }
 
-/* ── Three-Column Grid ───────────────────────────────────────────── */
+/* ── Two-Column: Queue Sidebar + Main Area ───────────────────────── */
 
 .processor-columns {
     display: grid;
-    grid-template-columns: 260px 1fr 1fr;
+    grid-template-columns: 240px 1fr;
     gap: 16px;
     flex: 1;
     min-height: 0;
@@ -126,6 +126,34 @@
     object-fit: cover;
 }
 
+.btn-queue-delete {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #C62828;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.queue-item:hover .btn-queue-delete {
+    opacity: 0.6;
+}
+
+.btn-queue-delete:hover {
+    opacity: 1 !important;
+    background: #FFEBEE;
+}
+
 .queue-item-info {
     flex: 1;
     min-width: 0;
@@ -152,12 +180,14 @@
     padding: 32px 16px;
 }
 
-/* ── AI Panel (center-left) ──────────────────────────────────────── */
+/* ── Main Content Area (right of queue) ──────────────────────────── */
 
-.processor-ai-panel {
+.processor-main {
     overflow-y: auto;
     min-height: 0;
 }
+
+/* ── Photos (top of main area) ───────────────────────────────────── */
 
 .processor-photos {
     margin-bottom: 16px;
@@ -165,8 +195,10 @@
 
 .processor-photos img {
     max-width: 100%;
+    max-height: 300px;
     border-radius: 8px;
     margin-bottom: 8px;
+    margin-right: 8px;
 }
 
 .processor-placeholder {
@@ -176,24 +208,72 @@
     padding: 48px 16px;
 }
 
-.ai-result-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.processor-photo-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1976D2;
+    background: #E3F2FD;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
 }
 
-.ai-field-row {
+/* ── Side-by-Side Field Grid: AI Extract | Arrow | Editable Form ── */
+
+.processor-field-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.field-grid-header {
+    display: grid;
+    grid-template-columns: 1fr 36px 1fr;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 4px;
+}
+
+.field-grid-header span {
+    font-size: 13px;
+    font-weight: 700;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.field-grid-header span:first-child {
+    color: #1976D2;
+}
+
+.field-grid-header span:last-child {
+    color: #333;
+}
+
+.field-grid-row {
+    display: grid;
+    grid-template-columns: 1fr 36px 1fr;
+    gap: 8px;
+    align-items: start;
+    padding: 4px 0;
+}
+
+.field-grid-ai,
+.field-grid-form {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
 
-.ai-field-label {
-    font-size: 12px;
+.field-grid-label {
+    font-size: 11px;
     font-weight: 600;
-    color: #555;
+    color: #888;
+    margin-bottom: 0;
 }
 
+/* AI extracted field (left side — readonly, blue background) */
 .ai-field-input {
     width: 100%;
     padding: 7px 10px;
@@ -216,55 +296,13 @@ textarea.ai-field-input {
     resize: vertical;
 }
 
-.processor-photo-count {
-    font-size: 13px;
-    font-weight: 600;
-    color: #1976D2;
-    background: #E3F2FD;
-    padding: 6px 12px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-}
-
-/* ── Form Panel (center-right) ───────────────────────────────────── */
-
-.processor-form-panel {
-    overflow-y: auto;
-    min-height: 0;
-}
-
-.processor-form-panel h3 {
-    margin: 0 0 12px;
-    font-size: 15px;
-}
-
-.processor-field {
-    margin-bottom: 10px;
-}
-
-.processor-field label {
-    font-size: 13px;
-    margin-bottom: 4px;
-}
-
-.field-with-copy {
-    display: flex;
-    gap: 6px;
-    align-items: flex-start;
-}
-
-.field-with-copy input,
-.field-with-copy textarea {
-    flex: 1;
-    min-width: 0;
-}
-
+/* Copy arrow button (center column) */
 .btn-copy-field {
     flex-shrink: 0;
-    width: 32px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     padding: 0;
-    border: 1px solid #007AFF;
+    border: 1.5px solid #007AFF;
     background: #ffffff;
     color: #007AFF;
     border-radius: 6px;
@@ -275,6 +313,8 @@ textarea.ai-field-input {
     display: flex;
     align-items: center;
     justify-content: center;
+    align-self: center;
+    margin-top: 16px;
 }
 
 .btn-copy-field:hover {
@@ -292,6 +332,34 @@ textarea.ai-field-input {
     opacity: 0.3;
     cursor: not-allowed;
 }
+
+/* Editable form field (right side) */
+.field-grid-form input,
+.field-grid-form textarea {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #1c1c1e;
+    font-size: 13px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.field-grid-form input:focus,
+.field-grid-form textarea:focus {
+    outline: none;
+    border-color: #007AFF;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.15);
+}
+
+.field-grid-form textarea {
+    min-height: 48px;
+    resize: vertical;
+}
+
+/* ── Actions ─────────────────────────────────────────────────────── */
 
 .processor-actions {
     display: flex;
@@ -337,7 +405,12 @@ textarea.ai-field-input {
     background: #4845B4;
 }
 
-/* ── Responsive: stack columns on smaller screens ────────────────── */
+.btn-copy-all:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ── Responsive: stack on smaller screens ─────────────────────────── */
 
 @media (max-width: 1024px) {
     .processor-layout {
@@ -351,7 +424,7 @@ textarea.ai-field-input {
     }
 
     .processor-queue {
-        max-height: 300px;
+        max-height: 200px;
     }
 
     .queue-list {
@@ -363,5 +436,27 @@ textarea.ai-field-input {
     .queue-item {
         min-width: 180px;
         flex-shrink: 0;
+    }
+
+    .field-grid-row {
+        grid-template-columns: 1fr 30px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .field-grid-header {
+        display: none;
+    }
+
+    .field-grid-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
+    }
+
+    .field-grid-row .btn-copy-field {
+        width: 100%;
+        height: 28px;
+        margin-top: 0;
+        font-size: 12px;
     }
 }

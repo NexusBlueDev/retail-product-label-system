@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Product Scanner</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/components.css">
-    <link rel="stylesheet" href="styles/modals.css">
-    <link rel="stylesheet" href="styles/desktop.css">
+    <link rel="stylesheet" href="styles/main.css?v=4.2">
+    <link rel="stylesheet" href="styles/components.css?v=4.2">
+    <link rel="stylesheet" href="styles/modals.css?v=4.2">
+    <link rel="stylesheet" href="styles/desktop.css?v=4.2">
 </head>
 <body class="no-bottom-bar">
 
@@ -253,6 +253,14 @@
             <input type="file" id="captureCameraInput" accept="image/*" capture="environment" class="file-input-hidden" multiple>
             <input type="file" id="captureGalleryInput" accept="image/*" class="file-input-hidden" multiple>
 
+            <!-- Staged photo previews -->
+            <div id="capturePreviews" class="staged-previews" style="display:none;"></div>
+
+            <!-- Save Product button (appears when photos are staged) -->
+            <button type="button" id="captureSaveBtn" class="btn-capture-save" style="display:none;">
+                💾 Save Product
+            </button>
+
             <!-- Processing indicator -->
             <div id="captureLoading" class="loading">
                 <div class="spinner"></div>
@@ -297,122 +305,198 @@
                     <div id="queueList" class="queue-list"></div>
                 </div>
 
-                <!-- CENTER-LEFT: Photos + AI Results -->
-                <div class="processor-ai-panel">
+                <!-- RIGHT: Main content area -->
+                <div class="processor-main">
+                    <!-- Photos at the top -->
                     <div id="processorPhotos" class="processor-photos">
                         <p class="processor-placeholder">Select an item from the queue</p>
                     </div>
-                    <div id="processorAIResults" style="display:none;">
-                        <h3>AI Extracted Fields <span style="font-weight:400;font-size:12px;color:#8E8E93;">— use ← buttons to copy to form</span></h3>
-                        <div id="aiResultFields" class="ai-result-fields"></div>
-                    </div>
+
+                    <!-- AI loading indicator -->
                     <div id="processorAILoading" class="loading">
                         <div class="spinner"></div>
                         <p class="loading-text">Running AI extraction...</p>
                     </div>
-                </div>
 
-                <!-- CENTER-RIGHT: Editable form -->
-                <div class="processor-form-panel">
-                    <h3>Product Details</h3>
-                    <button type="button" id="copyAllBtn" class="btn-copy-all" disabled>← Copy All from AI</button>
+                    <!-- Side-by-side: AI Extract (left) | Arrow | Editable Form (right) -->
+                    <div id="processorAIResults" style="display:none;">
+                        <button type="button" id="copyAllBtn" class="btn-copy-all" disabled>← Copy All from AI to Form</button>
+                    </div>
                     <form id="processorForm">
-                        <div class="processor-field">
-                            <label>Product Name *</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_name" title="Copy from AI">←</button>
-                                <input type="text" id="p_name" required>
+                        <div class="processor-field-grid" id="processorFieldGrid">
+                            <!-- Row header -->
+                            <div class="field-grid-header">
+                                <span>AI Extracted</span>
+                                <span></span>
+                                <span>Editable Form</span>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Style Number</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_style_number" title="Copy from AI">←</button>
-                                <input type="text" id="p_style_number">
+                            <!-- Name -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Name *</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="name" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_name" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Name *</label>
+                                    <input type="text" id="p_name" required>
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>SKU</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_sku" title="Copy from AI">←</button>
-                                <input type="text" id="p_sku">
+                            <!-- Style Number -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Style #</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="style_number" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_style_number" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Style #</label>
+                                    <input type="text" id="p_style_number">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Barcode</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_barcode" title="Copy from AI">←</button>
-                                <input type="text" id="p_barcode" maxlength="13">
+                            <!-- SKU -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">SKU</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="sku" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_sku" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">SKU</label>
+                                    <input type="text" id="p_sku">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Brand</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_brand_name" title="Copy from AI">←</button>
-                                <input type="text" id="p_brand_name">
+                            <!-- Barcode -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Barcode</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="barcode" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_barcode" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Barcode</label>
+                                    <input type="text" id="p_barcode" maxlength="13">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Category</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_product_category" title="Copy from AI">←</button>
-                                <input type="text" id="p_product_category">
+                            <!-- Brand -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Brand</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="brand_name" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_brand_name" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Brand</label>
+                                    <input type="text" id="p_brand_name">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Retail Price</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_retail_price" title="Copy from AI">←</button>
-                                <input type="number" id="p_retail_price" step="0.01" min="0">
+                            <!-- Category -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Category</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="product_category" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_product_category" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Category</label>
+                                    <input type="text" id="p_product_category">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Supply Price</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_supply_price" title="Copy from AI">←</button>
-                                <input type="number" id="p_supply_price" step="0.01" min="0">
+                            <!-- Retail Price -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Retail Price</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="retail_price" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_retail_price" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Retail Price</label>
+                                    <input type="number" id="p_retail_price" step="0.01" min="0">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Size/Dimensions</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_size_or_dimensions" title="Copy from AI">←</button>
-                                <input type="text" id="p_size_or_dimensions">
+                            <!-- Supply Price -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Supply Price</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="supply_price" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_supply_price" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Supply Price</label>
+                                    <input type="number" id="p_supply_price" step="0.01" min="0">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Color</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_color" title="Copy from AI">←</button>
-                                <input type="text" id="p_color">
+                            <!-- Size -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Size</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="size_or_dimensions" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_size_or_dimensions" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Size</label>
+                                    <input type="text" id="p_size_or_dimensions">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Quantity</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_quantity" title="Copy from AI">←</button>
-                                <input type="number" id="p_quantity" min="1" value="1">
+                            <!-- Color -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Color</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="color" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_color" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Color</label>
+                                    <input type="text" id="p_color">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Tags</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_tags" title="Copy from AI">←</button>
-                                <input type="text" id="p_tags">
+                            <!-- Quantity -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Qty</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="quantity" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_quantity" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Qty</label>
+                                    <input type="number" id="p_quantity" min="1" value="1">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Description</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_description" title="Copy from AI">←</button>
-                                <textarea id="p_description"></textarea>
+                            <!-- Tags -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Tags</label>
+                                    <input type="text" class="ai-field-input" data-ai-key="tags" readonly tabindex="-1">
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_tags" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Tags</label>
+                                    <input type="text" id="p_tags">
+                                </div>
                             </div>
-                        </div>
-                        <div class="processor-field">
-                            <label>Notes</label>
-                            <div class="field-with-copy">
-                                <button type="button" class="btn-copy-field" data-field="p_notes" title="Copy from AI">←</button>
-                                <textarea id="p_notes"></textarea>
+                            <!-- Description -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Description</label>
+                                    <textarea class="ai-field-input" data-ai-key="description" readonly tabindex="-1"></textarea>
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_description" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Description</label>
+                                    <textarea id="p_description"></textarea>
+                                </div>
+                            </div>
+                            <!-- Notes -->
+                            <div class="field-grid-row">
+                                <div class="field-grid-ai">
+                                    <label class="field-grid-label">Notes</label>
+                                    <textarea class="ai-field-input" data-ai-key="notes" readonly tabindex="-1"></textarea>
+                                </div>
+                                <button type="button" class="btn-copy-field" data-field="p_notes" title="Copy from AI" tabindex="-1">→</button>
+                                <div class="field-grid-form">
+                                    <label class="field-grid-label">Notes</label>
+                                    <textarea id="p_notes"></textarea>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -488,6 +572,6 @@
         </div>
     </div>
 
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/app.js?v=4.2"></script>
 </body>
 </html>

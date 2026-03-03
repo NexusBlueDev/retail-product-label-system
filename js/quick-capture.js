@@ -1,7 +1,9 @@
 /**
  * Quick Capture Module
- * Speed-focused photo capture: snap images, AI extracts name only,
- * images stored to Supabase Storage for later desktop processing.
+ * Speed-focused photo capture: stage multiple photos for one product,
+ * then save all at once. AI extracts name in background after save.
+ *
+ * Flow: Add photos → see previews → Save Product → Next Product
  */
 
 import { SUPABASE_URL, SUPABASE_KEY, FUNCTION_URL } from './config.js';
@@ -10,6 +12,9 @@ import { state } from './state.js';
 import { compressImageToWebP } from './image-compression.js';
 import { uploadImage } from './storage.js';
 import { eventBus } from './events.js';
+
+// Staged blobs for the current product (not yet saved)
+let stagedBlobs = [];
 
 /**
  * Show a status message in the capture view
@@ -38,7 +43,6 @@ function blobToBase64(blob) {
 
 /**
  * Extract ONLY the product name from images via the Edge Function.
- * Sends the first image only (sufficient for name detection).
  * @param {string} base64Image - Base64 data URL
  * @returns {Promise<string>} Product name or "Unnamed Product"
  */
@@ -72,40 +76,96 @@ async function extractNameOnly(base64Image) {
     }
 }
 
+// ── Staging ──────────────────────────────────────────────────────────
+
 /**
- * Process captured files: compress, upload to storage, save record immediately,
- * then update name in background when AI finishes.
- * @param {FileList|File[]} files - Image files from input or drag/drop
+ * Add photos to the staging area (compress first, show previews).
+ * Does NOT save — user clicks "Save Product" when ready.
  */
-async function processCapture(files) {
+async function stagePhotos(files) {
     if (!files || files.length === 0) return;
 
     const dom = getDOMElements();
-    dom.captureLoading.style.display = 'block';
+    showCaptureStatus(`Compressing ${files.length} photo${files.length !== 1 ? 's' : ''}...`, 'info');
+
+    // Compress each file to WebP at 1200px
+    const newBlobs = await Promise.all(
+        Array.from(files).map(f => compressImageToWebP(f, 1200))
+    );
+
+    stagedBlobs.push(...newBlobs);
+
+    // Update previews
+    renderStagedPreviews();
+
+    // Reset file inputs
+    dom.captureCameraInput.value = '';
+    dom.captureGalleryInput.value = '';
+
+    // Show save button, update photo count
+    dom.captureSaveBtn.style.display = 'block';
     dom.captureNextBtn.style.display = 'none';
-    showCaptureStatus('Compressing and uploading...', 'info');
+    showCaptureStatus(`${stagedBlobs.length} photo${stagedBlobs.length !== 1 ? 's' : ''} staged — add more or save`, 'info');
+}
+
+/**
+ * Render thumbnail previews of all staged photos.
+ */
+function renderStagedPreviews() {
+    const dom = getDOMElements();
+    const container = dom.capturePreviews;
+    if (!container) return;
+
+    // Revoke old preview URLs
+    container.querySelectorAll('img').forEach(img => {
+        if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+    });
+
+    if (stagedBlobs.length === 0) {
+        container.style.display = 'none';
+        container.innerHTML = '';
+        return;
+    }
+
+    container.style.display = 'flex';
+    container.innerHTML = stagedBlobs.map((blob, i) => {
+        const url = URL.createObjectURL(blob);
+        return `<div class="staged-thumb">
+            <img src="${url}" alt="Photo ${i + 1}">
+            <span class="staged-thumb-num">${i + 1}</span>
+        </div>`;
+    }).join('');
+}
+
+// ── Save ─────────────────────────────────────────────────────────────
+
+/**
+ * Save all staged photos as ONE product.
+ * Uploads to Storage, creates DB record, then extracts name in background.
+ */
+async function saveProduct() {
+    if (stagedBlobs.length === 0) return;
+
+    const dom = getDOMElements();
+    dom.captureLoading.style.display = 'block';
+    dom.captureSaveBtn.disabled = true;
+    showCaptureStatus('Uploading photos...', 'info');
 
     try {
-        // UUID for storage folder path only — DB auto-generates the bigint ID
+        // UUID for storage folder path — all photos go under one folder
         const storageKey = crypto.randomUUID();
 
-        // Compress all images to WebP at 1200px (smaller = faster upload + AI)
-        const blobs = await Promise.all(
-            Array.from(files).map(f => compressImageToWebP(f, 1200))
-        );
-
-        // Upload images to Storage (don't wait for AI — that's slow)
+        // Upload all staged blobs to Storage under the same storageKey
         const storagePaths = await Promise.all(
-            blobs.map((blob, i) => uploadImage(blob, storageKey, i))
+            stagedBlobs.map((blob, i) => uploadImage(blob, storageKey, i))
         );
 
-        // Build image_urls array
         const imageUrls = storagePaths.map(path => ({
             path,
             uploaded_at: new Date().toISOString()
         }));
 
-        // Save product record IMMEDIATELY with placeholder name
+        // Save product record with all photos (DB auto-generates bigint ID)
         const response = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
             method: 'POST',
             headers: {
@@ -129,30 +189,32 @@ async function processCapture(files) {
 
         const saved = await response.json();
         const savedId = saved[0]?.id || '?';
+        const photoCount = stagedBlobs.length;
+        const firstBlob = stagedBlobs[0];
 
         // Update session counter
         state.captureCount++;
         dom.captureSessionCount.textContent = `${state.captureCount} product${state.captureCount !== 1 ? 's' : ''} captured this session`;
 
-        // Add to recent captures list (will update name when AI finishes)
-        addRecentCapture('Processing...', savedId, blobs[0], saved[0]?.created_at);
+        // Add to recent captures
+        addRecentCapture('Processing...', savedId, photoCount, firstBlob, saved[0]?.created_at);
+
+        // Clear staging
+        clearStaging();
 
         dom.captureLoading.style.display = 'none';
-        showCaptureStatus(`Saved! (ID: ${savedId}) — extracting name...`, 'success');
+        dom.captureSaveBtn.style.display = 'none';
+        dom.captureSaveBtn.disabled = false;
+        showCaptureStatus(`Saved! ID: ${savedId} (${photoCount} photos) — extracting name...`, 'success');
 
-        // Show "Capture Next" button so user can keep going
+        // Show "Next Product" button
         dom.captureNextBtn.style.display = 'block';
-
-        // Reset file inputs
-        dom.captureCameraInput.value = '';
-        dom.captureGalleryInput.value = '';
 
         eventBus.emit('capture:saved', { id: savedId, name: 'Processing...' });
 
         // ── Background: extract name and update the record ──
-        blobToBase64(blobs[0]).then(b64 => extractNameOnly(b64)).then(productName => {
+        blobToBase64(firstBlob).then(b64 => extractNameOnly(b64)).then(productName => {
             if (productName && productName !== 'Unnamed Product') {
-                // PATCH the name on the DB record
                 fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${savedId}`, {
                     method: 'PATCH',
                     headers: {
@@ -162,24 +224,41 @@ async function processCapture(files) {
                     },
                     body: JSON.stringify({ name: productName })
                 }).then(() => {
-                    // Update the recent capture entry with the real name
                     updateRecentCaptureName(savedId, productName);
-                    showCaptureStatus(`Saved: ${productName} (ID: ${savedId})`, 'success');
+                    showCaptureStatus(`Saved: ${productName} — ID: ${savedId} (${photoCount} photos)`, 'success');
                 }).catch(e => console.error('Name PATCH failed:', e));
             }
         }).catch(e => console.error('Background name extraction failed:', e));
 
     } catch (error) {
         dom.captureLoading.style.display = 'none';
+        dom.captureSaveBtn.disabled = false;
         showCaptureStatus(`Error: ${error.message}`, 'error');
         console.error('Quick capture error:', error);
     }
 }
 
 /**
+ * Clear all staged photos (without saving).
+ */
+function clearStaging() {
+    // Revoke preview URLs
+    const dom = getDOMElements();
+    if (dom.capturePreviews) {
+        dom.capturePreviews.querySelectorAll('img').forEach(img => {
+            if (img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+        });
+    }
+    stagedBlobs = [];
+    renderStagedPreviews();
+}
+
+// ── Recent Captures ──────────────────────────────────────────────────
+
+/**
  * Add an item to the recent captures list (max 5 shown)
  */
-function addRecentCapture(name, id, thumbnailBlob, timestamp) {
+function addRecentCapture(name, id, photoCount, thumbnailBlob, timestamp) {
     const dom = getDOMElements();
     dom.recentCaptures.style.display = 'block';
 
@@ -192,15 +271,13 @@ function addRecentCapture(name, id, thumbnailBlob, timestamp) {
         <img src="${thumbUrl}" class="recent-capture-thumb" alt="">
         <div class="recent-capture-info">
             <div class="recent-capture-name">${name}</div>
-            <div class="recent-capture-time">ID: ${id} · ${time}</div>
+            <div class="recent-capture-time">ID: ${id} · ${photoCount} photo${photoCount !== 1 ? 's' : ''} · ${time}</div>
         </div>
     `;
 
-    // Prepend (newest first) and cap at 5
     dom.recentCapturesList.prepend(item);
     while (dom.recentCapturesList.children.length > 5) {
         const removed = dom.recentCapturesList.lastChild;
-        // Revoke blob URL to free memory
         const img = removed.querySelector('img');
         if (img) URL.revokeObjectURL(img.src);
         dom.recentCapturesList.removeChild(removed);
@@ -223,6 +300,8 @@ function updateRecentCaptureName(id, name) {
     }
 }
 
+// ── Initialization ───────────────────────────────────────────────────
+
 /**
  * Initialize Quick Capture event listeners.
  * Called once from app.js initApp().
@@ -230,7 +309,7 @@ function updateRecentCaptureName(id, name) {
 export function initQuickCapture() {
     const dom = getDOMElements();
 
-    // Camera button
+    // Camera button — stages photos (doesn't save yet)
     dom.captureCameraBtn.addEventListener('click', () => {
         dom.captureCameraInput.click();
     });
@@ -240,19 +319,23 @@ export function initQuickCapture() {
         dom.captureGalleryInput.click();
     });
 
-    // "Capture Next" button — opens camera for the next product
+    // Save Product button — saves all staged photos as one product
+    dom.captureSaveBtn.addEventListener('click', saveProduct);
+
+    // "Next Product" button — clears staging, opens camera
     dom.captureNextBtn.addEventListener('click', () => {
         dom.captureNextBtn.style.display = 'none';
+        clearStaging();
         dom.captureCameraInput.click();
     });
 
-    // File input change handlers
+    // File input change handlers — stage photos, not save
     dom.captureCameraInput.addEventListener('change', (e) => {
-        processCapture(e.target.files);
+        stagePhotos(e.target.files);
     });
 
     dom.captureGalleryInput.addEventListener('change', (e) => {
-        processCapture(e.target.files);
+        stagePhotos(e.target.files);
     });
 
     // Drag & drop zone
@@ -271,10 +354,9 @@ export function initQuickCapture() {
             e.preventDefault();
             dropZone.classList.remove('drag-over');
             const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-            if (files.length > 0) processCapture(files);
+            if (files.length > 0) stagePhotos(files);
         });
 
-        // Click to open file picker
         dropZone.addEventListener('click', () => {
             dom.captureGalleryInput.click();
         });

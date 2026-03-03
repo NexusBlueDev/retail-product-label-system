@@ -1,6 +1,6 @@
 /**
  * Desktop Processor Module
- * Three-column workflow: queue sidebar → AI extraction → editable form
+ * Queue sidebar + photos on top + side-by-side AI extract / editable form.
  * Processes photo_only products into fully completed records.
  */
 
@@ -30,18 +30,11 @@ const FIELD_MAP = {
     notes:             'p_notes'
 };
 
-const FIELD_LABELS = {
-    name: 'Name', style_number: 'Style #', sku: 'SKU', barcode: 'Barcode',
-    brand_name: 'Brand', product_category: 'Category', retail_price: 'Retail Price',
-    supply_price: 'Supply Price', size_or_dimensions: 'Size', color: 'Color',
-    quantity: 'Quantity', tags: 'Tags', description: 'Description', notes: 'Notes'
-};
-
 // ── Queue Management ─────────────────────────────────────────────────
 
 /**
  * Load the photo-only queue and render it in the sidebar.
- * Queue items show ID + photo count. Thumbnails load progressively.
+ * Queue items show ID + photo count + delete button. Thumbnails load progressively.
  */
 async function loadQueue() {
     const dom = getDOMElements();
@@ -71,9 +64,21 @@ async function loadQueue() {
                 <div class="queue-item-name">ID: ${item.id}</div>
                 <div class="queue-item-date">${imageCount} photo${imageCount !== 1 ? 's' : ''}</div>
             </div>
+            <button type="button" class="btn-queue-delete" title="Delete product" tabindex="-1">✕</button>
         `;
 
-        el.addEventListener('click', () => selectQueueItem(item));
+        // Click on item (but not the delete button) → select it
+        el.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-queue-delete')) return;
+            selectQueueItem(item);
+        });
+
+        // Delete button
+        el.querySelector('.btn-queue-delete').addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteQueueItem(item.id);
+        });
+
         dom.queueList.appendChild(el);
 
         // Load thumbnail from first image in background
@@ -107,10 +112,10 @@ async function selectQueueItem(item) {
     state.processorCurrentItem = item;
     state.processorAIData = null;
 
-    // Reset form + AI panel
+    // Reset form + AI fields
     dom.processorForm.reset();
+    clearAIFields();
     dom.processorAIResults.style.display = 'none';
-    dom.aiResultFields.innerHTML = '';
     dom.processorSaveBtn.disabled = true;
     disableCopyButtons(true);
 
@@ -202,40 +207,47 @@ async function runAIExtraction(signedUrls) {
         state.processorAIData = merged;
         dom.processorAILoading.style.display = 'none';
 
-        // Display AI results in form-style input fields
-        renderAIResults(merged);
+        // Populate the inline AI fields in the grid
+        populateAIFields(merged);
+        dom.processorAIResults.style.display = 'block';
         disableCopyButtons(false);
         dom.processorSaveBtn.disabled = false;
 
     } catch (e) {
         dom.processorAILoading.style.display = 'none';
         dom.processorAIResults.style.display = 'block';
-        dom.aiResultFields.innerHTML = '<p style="color:#C62828;">AI extraction failed. You can enter data manually.</p>';
         dom.processorSaveBtn.disabled = false;
         console.error('AI extraction error:', e);
     }
 }
 
 /**
- * Render AI extraction results as read-only input fields.
- * These mirror the editable form on the right so the user can see
- * exactly what AI found and copy individual values.
+ * Populate the AI extract fields (left side of the grid) with extracted data.
+ * These are the readonly [data-ai-key] inputs already in the HTML.
  */
-function renderAIResults(data) {
-    const dom = getDOMElements();
-    dom.processorAIResults.style.display = 'block';
-
-    dom.aiResultFields.innerHTML = Object.entries(FIELD_LABELS).map(([key, label]) => {
+function populateAIFields(data) {
+    document.querySelectorAll('.ai-field-input[data-ai-key]').forEach(input => {
+        const key = input.dataset.aiKey;
         const value = data[key] ?? '';
-        const isLong = key === 'description' || key === 'notes';
-        const inputHtml = isLong
-            ? `<textarea class="ai-field-input" data-ai-key="${key}" readonly>${value}</textarea>`
-            : `<input type="text" class="ai-field-input" data-ai-key="${key}" value="${String(value).replace(/"/g, '&quot;')}" readonly>`;
-        return `<div class="ai-field-row">
-            <label class="ai-field-label">${label}</label>
-            ${inputHtml}
-        </div>`;
-    }).join('');
+        if (input.tagName === 'TEXTAREA') {
+            input.textContent = value;
+        } else {
+            input.value = value;
+        }
+    });
+}
+
+/**
+ * Clear all AI extract fields back to empty.
+ */
+function clearAIFields() {
+    document.querySelectorAll('.ai-field-input[data-ai-key]').forEach(input => {
+        if (input.tagName === 'TEXTAREA') {
+            input.textContent = '';
+        } else {
+            input.value = '';
+        }
+    });
 }
 
 // ── Copy Buttons ─────────────────────────────────────────────────────
@@ -244,7 +256,7 @@ function renderAIResults(data) {
  * Enable/disable all copy buttons.
  */
 function disableCopyButtons(disabled) {
-    document.querySelectorAll('#processorForm .btn-copy-field').forEach(btn => {
+    document.querySelectorAll('.processor-field-grid .btn-copy-field').forEach(btn => {
         btn.disabled = disabled;
     });
     const copyAll = document.getElementById('copyAllBtn');
@@ -253,7 +265,7 @@ function disableCopyButtons(disabled) {
 
 /**
  * Handle a single copy-field button click.
- * Reads from state.processorAIData, writes to the matching input.
+ * Reads from state.processorAIData, writes to the matching form input.
  */
 function handleCopyField(btn) {
     const fieldId = btn.dataset.field;
@@ -286,10 +298,55 @@ function copyAllFields() {
     });
 
     // Flash all copy buttons briefly
-    document.querySelectorAll('#processorForm .btn-copy-field').forEach(btn => {
+    document.querySelectorAll('.processor-field-grid .btn-copy-field').forEach(btn => {
         btn.classList.add('copied');
         setTimeout(() => btn.classList.remove('copied'), 600);
     });
+}
+
+// ── Delete Queue Item ────────────────────────────────────────────────
+
+/**
+ * Delete a photo-only product from the database and remove from queue.
+ */
+async function deleteQueueItem(itemId) {
+    if (!confirm(`Delete product ID ${itemId}? This cannot be undone.`)) return;
+
+    try {
+        const response = await fetch(
+            `${SUPABASE_URL}/rest/v1/products?id=eq.${itemId}`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${state.accessToken}`
+                }
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Delete failed (${response.status})`);
+        }
+
+        // If we're deleting the currently selected item, advance
+        if (state.processorCurrentItem && state.processorCurrentItem.id === itemId) {
+            removeFromQueueAndAdvance(itemId);
+        } else {
+            // Just remove from queue state and DOM
+            state.processorQueue = state.processorQueue.filter(q => q.id !== itemId);
+            const dom = getDOMElements();
+            const queueEl = dom.queueList.querySelector(`[data-id="${itemId}"]`);
+            if (queueEl) queueEl.remove();
+            dom.processorQueueCount.textContent = `${state.processorQueue.length} item${state.processorQueue.length !== 1 ? 's' : ''} in queue`;
+
+            if (state.processorQueue.length === 0) {
+                dom.queueList.innerHTML = '<div class="queue-empty">All items processed!</div>';
+            }
+        }
+    } catch (e) {
+        alert(`Delete failed: ${e.message}`);
+        console.error('Delete queue item error:', e);
+    }
 }
 
 // ── Save & Skip ──────────────────────────────────────────────────────
@@ -419,7 +476,7 @@ function resetProcessorView() {
 
     dom.processorPhotos.innerHTML = '<p class="processor-placeholder">Select an item from the queue</p>';
     dom.processorAIResults.style.display = 'none';
-    dom.aiResultFields.innerHTML = '';
+    clearAIFields();
     dom.processorForm.reset();
     dom.processorSaveBtn.disabled = true;
     disableCopyButtons(true);
@@ -447,11 +504,14 @@ export function initDesktopProcessor() {
     // Skip button
     dom.processorSkipBtn.addEventListener('click', skipItem);
 
-    // Delegated click handler for copy buttons
-    dom.processorForm.addEventListener('click', (e) => {
-        const btn = e.target.closest('.btn-copy-field');
-        if (btn) handleCopyField(btn);
-    });
+    // Delegated click handler for copy buttons in the field grid
+    const fieldGrid = document.getElementById('processorFieldGrid');
+    if (fieldGrid) {
+        fieldGrid.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-copy-field');
+            if (btn) handleCopyField(btn);
+        });
+    }
 
     // Copy All button
     if (dom.copyAllBtn) {
