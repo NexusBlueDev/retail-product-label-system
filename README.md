@@ -118,15 +118,40 @@ Exports all 19 fields:
 
 ---
 
+## 📁 Repository Structure
+
+```
+retail-product-label-system/
+├── index.html                  # Single-page app entry point
+├── js/                         # 13 ES6 modules (see js/README.md)
+├── styles/                     # CSS (main, components, modals)
+├── supabase/
+│   ├── config.toml             # Edge Function configuration
+│   ├── functions/
+│   │   └── extract-product/
+│   │       ├── index.ts        # AI extraction Edge Function (Deno)
+│   │       ├── deno.json       # Deno config
+│   │       └── prompt-optimized.txt  # Reference prompt
+│   └── migrations/             # 6 SQL migration files (reference)
+├── docs/                       # Project concept and planning docs
+├── CLAUDE.md                   # Claude Code execution rules
+├── HANDOFF.md                  # Project state and session log
+├── TODO.md                     # Human action items
+├── ARCHITECTURE.md             # System design and data flow
+└── package.json                # Supabase CLI devDependency
+```
+
+---
+
 ## 🔧 Technical Details
 
 ### **Technology Stack**
 - **Frontend:** Pure HTML/CSS/JavaScript (no frameworks, no build tools)
 - **Module System:** ES6 native modules (13 modules, single entry point)
 - **Barcode Scanner:** QuaggaJS 2 v1.12.1 (open source)
-- **AI Vision:** OpenAI GPT-4o
-- **Database:** Supabase (PostgreSQL)
-- **Hosting:** GitHub Pages
+- **AI Vision:** OpenAI GPT-4o (via Supabase Edge Function)
+- **Database:** Supabase (PostgreSQL with Row Level Security)
+- **Hosting:** GitHub Pages (auto-deploys on push to main)
 
 ### **Browser Support**
 - ✅ Safari (iOS) - Full camera and scanner support
@@ -138,12 +163,24 @@ Exports all 19 fields:
 - **EAN-13** (13 digits) - International products
 - Code 128, Code 39 (disabled to prevent misreads)
 
-### **AI Processing**
+### **AI Processing (Edge Function)**
+- **Source:** `supabase/functions/extract-product/index.ts`
 - Model: GPT-4o (vision)
 - Temperature: 0.1 (low for consistency)
 - Validates barcode proximity to scannable bars
 - Prioritizes printed labels over handwritten
 - USA retail standards (sizes, formats)
+- Rate limiting: 10 requests/min per IP (DB-backed)
+- Retry: Exponential backoff, 2 max retries, 30s timeout
+
+### **Edge Function Deployment**
+```bash
+# Deploy the extract-product Edge Function
+npm run deploy:function
+
+# Set OpenAI API key (required once, stored in Supabase secrets)
+npx supabase secrets set OPENAI_API_KEY=sk-...
+```
 
 ---
 
