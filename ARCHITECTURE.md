@@ -96,6 +96,7 @@ Navigation uses `display:none/block` toggling. The fixed bottom bar (Save/Export
 | `products` | Product records (22 fields incl. ai_cache) | Owner-scoped: `auth.uid() = 10cfa0fe-...` |
 | `app_users` | Front-end user names + PINs | Owner-scoped: `auth.uid() = 10cfa0fe-...` |
 | `rate_limits` | Edge Function per-IP rate limiting | Deny anon; service_role bypasses |
+| `project_library` | Command Center library entries (features, architecture, integrations) | Authenticated read; service_role full access |
 
 ### Products Schema
 ```

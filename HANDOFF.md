@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-03-03 — Vercel hosting + PWA + module documentation
+2026-03-03 — Vercel hosting + PWA + module documentation + Command Center library
 
 ## Project State
 Production app (v4.6) with three operational modes, now PWA-enabled and hosted on Vercel. Post-login menu leads to:
@@ -56,6 +56,12 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-03-03 (Session 4) — Command Center Library Population
+- Created `project_library` table in Supabase (portable schema from cross-project template)
+- Populated 15 library entries: 9 features, 2 architecture, 2 integrations, 1 infrastructure, 1 tool
+- Saved migration to `supabase/migrations/create_project_library.sql`
+- Strengthened global CLAUDE.md Session End Protocol step 4 to enforce library updates (create table if missing, all 8 categories documented)
 
 ### 2026-03-03 (Session 3) — Vercel + PWA + Module Documentation
 - Set up Vercel project (prj_TEL3Y3lwVVdYvUWkBl90Jug61ojk) linked to GitHub repo
