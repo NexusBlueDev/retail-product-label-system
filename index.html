@@ -11,61 +11,62 @@
 <body>
     <div class="container">
         <!-- Logo Section -->
-        <div style="text-align: center; margin-bottom: 16px;">
-            <img src="logo.jpg" alt="NexusBlue Logo" style="max-width: 200px; height: auto;">
+        <div class="logo-section">
+            <img src="logo.jpg" alt="NexusBlue Logo" class="logo-img">
         </div>
-        
+
         <h1>📦 Product Scanner</h1>
 
         <!-- Current user bar -->
-        <div style="text-align:right; font-size:12px; color:#8E8E93; padding: 0 4px 8px;">
+        <div class="user-bar">
             Scanning as: <strong id="currentUserLabel"></strong>
             &nbsp;·&nbsp;
-            <a href="#" onclick="switchUser(); return false;" style="color:#007AFF;">Switch</a>
+            <a href="#" onclick="switchUser(); return false;">Switch</a>
         </div>
 
-        <!-- Camera Section -->
         <!-- Edit Mode Banner -->
-        <div id="editModeIndicator" style="display: none; background: #FF9500; color: white; padding: 10px 16px; border-radius: 8px; margin-bottom: 12px; font-weight: 600; font-size: 14px; text-align: center;">✏️ Editing: <span id="editModeText"></span> &mdash; <button onclick="cancelEdit()" style="background: none; border: none; color: white; font-weight: 700; cursor: pointer; text-decoration: underline; font-size: 14px; padding: 0;">Cancel</button></div>
+        <div id="editModeIndicator">✏️ Editing: <span id="editModeText"></span> &mdash; <button onclick="cancelEdit()" class="edit-cancel-btn">Cancel</button></div>
+
+        <!-- Camera Section -->
         <div class="camera-section">
-            <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                <button type="button" id="cameraBtn" style="flex: 1; padding: 12px; background: #007AFF; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
+            <div class="action-row">
+                <button type="button" id="cameraBtn" class="btn-action btn-camera">
                     📷 Take Photo
                 </button>
-                <button type="button" id="galleryBtn" style="flex: 1; padding: 12px; background: #5856D6; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer;">
+                <button type="button" id="galleryBtn" class="btn-action btn-gallery">
                     🖼️ Photos
                 </button>
-                <button type="button" id="scanBarcodeBtn" style="flex: 1; padding: 12px; background: #FF9500; color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;">
+                <button type="button" id="scanBarcodeBtn" class="btn-action btn-scan">
                     📊 Scan Barcode
                 </button>
             </div>
-            
+
             <!-- Barcode Scanner View -->
-            <div id="barcodeScannerContainer" style="display: none; margin-bottom: 12px;">
-                <div id="interactive" class="viewport" style="position: relative; width: 100%; height: 300px; overflow: hidden; border: 2px solid #FF9500; border-radius: 12px; background: #000;"></div>
-                <div style="text-align: center; margin-top: 8px;">
-                    <div id="scanResult" style="font-weight: 600; color: #666; margin-bottom: 8px;">Position barcode in view, then click Capture</div>
-                    <div style="display: flex; gap: 8px; justify-content: center;">
-                        <button type="button" id="captureBarcodeBtn" style="padding: 12px 24px; background: #34C759; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+            <div id="barcodeScannerContainer">
+                <div id="interactive" class="viewport scanner-viewport"></div>
+                <div class="scanner-controls">
+                    <div id="scanResult">Position barcode in view, then click Capture</div>
+                    <div class="scanner-btn-row">
+                        <button type="button" id="captureBarcodeBtn" class="btn-capture">
                             📸 Capture Barcode
                         </button>
-                        <button type="button" id="stopScanBtn" style="padding: 12px 24px; background: #FF3B30; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                        <button type="button" id="stopScanBtn" class="btn-cancel-scan">
                             ❌ Cancel
                         </button>
                     </div>
                 </div>
             </div>
-            
-            <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" multiple>
-            <input type="file" id="galleryInput" accept="image/*" style="display: none;" multiple>
-            
-            <div id="imagePreviewContainer" style="display: none; background: #f8f9fa; border: 2px solid #007AFF; border-radius: 12px; padding: 16px; margin-bottom: 12px;">
-                <div style="font-weight: 600; margin-bottom: 8px; color: #333;">Selected Images:</div>
-                <div id="imagePreviewList" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;"></div>
-                <button type="button" id="processBtn" style="width: 100%; padding: 12px; background: #34C759; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+
+            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="file-input-hidden" multiple>
+            <input type="file" id="galleryInput" accept="image/*" class="file-input-hidden" multiple>
+
+            <div id="imagePreviewContainer">
+                <div class="preview-header">Selected Images:</div>
+                <div id="imagePreviewList"></div>
+                <button type="button" id="processBtn" class="btn-process">
                     🔍 Process Images with AI
                 </button>
-                <button type="button" id="clearBtn" style="width: 100%; padding: 8px; background: #FF3B30; color: white; border: none; border-radius: 8px; font-size: 14px; margin-top: 8px; cursor: pointer;">
+                <button type="button" id="clearBtn" class="btn-clear">
                     ❌ Clear All
                 </button>
             </div>
@@ -77,7 +78,7 @@
         <!-- Loading Indicator -->
         <div id="loading" class="loading">
             <div class="spinner"></div>
-            <p style="margin-top: 12px;">Processing image...</p>
+            <p class="loading-text">Processing image...</p>
         </div>
 
         <!-- Product Form -->
@@ -88,11 +89,6 @@
             </div>
 
             <div class="form-group">
-                <label>Quantity</label>
-                <input type="number" id="qty" value="1" min="1">
-            </div>
-
-            <div class="form-group">
                 <label>Style Number (Manufacturer)</label>
                 <input type="text" id="style_number" placeholder="e.g., DD1383-100">
             </div>
@@ -100,19 +96,19 @@
             <div class="form-group">
                 <label>SKU (Auto-generated or Edit)</label>
                 <input type="text" id="sku">
-                <div style="font-size: 11px; color: #666; margin-top: 4px;">Auto-generates from Style + Brand + Color + Size, or type manually</div>
+                <div class="field-hint">Auto-generates from Style + Brand + Color + Size, or type manually</div>
             </div>
 
             <div class="form-group">
                 <label>Barcode</label>
                 <input type="text" id="barcode" maxlength="13">
-                <div style="font-size: 11px; color: #666; margin-top: 4px;">Use "📊 Scan UPC" button for 99% accuracy, or type manually</div>
-                <div id="barcodeDupWarning" style="display: none; font-size: 12px; color: #FF9500; margin-top: 4px; font-weight: 600;"></div>
+                <div class="field-hint">Use "📊 Scan UPC" button for 99% accuracy, or type manually</div>
+                <div id="barcodeDupWarning"></div>
             </div>
 
             <div class="form-group">
                 <label>Quantity</label>
-                <input type="number" id="quantity" min="1" value="1" style="width: 100px;">
+                <input type="number" id="quantity" min="1" value="1" class="qty-narrow">
             </div>
 
             <div class="form-group">
@@ -163,50 +159,50 @@
     </div>
 
     <!-- Fixed Bottom Buttons -->
-    <div id="productCount" style="text-align: center; font-size: 13px; color: #666; margin-bottom: 6px;"></div>
+    <div id="productCount"></div>
 
     <div class="button-group">
-        <button type="button" class="btn-secondary" id="rescanBtn" disabled style="flex: 0.5;">🔄 Rescan</button>
+        <button type="button" class="btn-secondary btn-rescan" id="rescanBtn" disabled>🔄 Rescan</button>
         <button type="button" class="btn-primary" id="saveBtn" disabled>Save Product</button>
         <button type="button" class="btn-secondary" id="exportBtn">Export CSV</button>
     </div>
 
     <!-- User Login Overlay -->
-    <div id="userLoginOverlay" style="display:none; position:fixed; inset:0; z-index:1001; background:#fff; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
+    <div id="userLoginOverlay">
 
         <!-- Select view: choose name -->
         <div id="userSelectView">
-            <div style="text-align:center; margin-bottom:24px;">
-                <img src="logo.jpg" alt="NexusBlue Logo" style="max-width:160px; height:auto; margin-bottom:16px;">
-                <h2 style="margin:0; font-size:22px; color:#1c1c1e;">Who's scanning?</h2>
+            <div class="overlay-header">
+                <img src="logo.jpg" alt="NexusBlue Logo" class="overlay-logo">
+                <h2 class="overlay-title">Who's scanning?</h2>
             </div>
             <div id="userNameButtons" class="user-name-grid"></div>
-            <div style="text-align:center; margin-top:20px;">
+            <div class="overlay-add-wrapper">
                 <button id="showAddUserBtn" class="user-add-btn">+ Add User</button>
             </div>
         </div>
 
         <!-- PIN view -->
-        <div id="userPinView" style="display:none; text-align:center; max-width:320px; width:100%;">
-            <h2 style="margin:0 0 8px; font-size:22px; color:#1c1c1e;">Hi, <span id="selectedUserName"></span>!</h2>
-            <p style="color:#8E8E93; margin:0 0 20px; font-size:15px;">Enter your PIN to continue</p>
+        <div id="userPinView" class="overlay-section" style="display:none;">
+            <h2 class="overlay-title">Hi, <span id="selectedUserName"></span>!</h2>
+            <p class="overlay-subtitle">Enter your PIN to continue</p>
             <input id="pinInput" type="tel" maxlength="4" placeholder="••••" class="pin-input" autocomplete="off">
             <div id="pinError" class="user-error"></div>
             <button id="unlockBtn" class="user-primary-btn">Unlock</button>
-            <div style="margin-top:16px;">
-                <a href="#" id="pinBackBtn" style="color:#007AFF; font-size:14px;">← Back</a>
+            <div class="overlay-back-wrapper">
+                <a href="#" id="pinBackBtn" class="overlay-back">← Back</a>
             </div>
         </div>
 
         <!-- Add user view -->
-        <div id="userAddView" style="display:none; text-align:center; max-width:320px; width:100%;">
-            <h2 style="margin:0 0 20px; font-size:22px; color:#1c1c1e;">New User</h2>
+        <div id="userAddView" class="overlay-section" style="display:none;">
+            <h2 class="overlay-title">New User</h2>
             <input id="newUserName" type="text" placeholder="Your name" class="user-text-input" autocomplete="off">
             <input id="newUserPin" type="tel" maxlength="4" placeholder="PIN" class="pin-input" autocomplete="off" value="1234">
             <div id="addUserError" class="user-error"></div>
             <button id="createUserBtn" class="user-primary-btn">Create &amp; Sign In</button>
-            <div style="margin-top:16px;">
-                <a href="#" id="addBackBtn" style="color:#007AFF; font-size:14px;">← Back</a>
+            <div class="overlay-back-wrapper">
+                <a href="#" id="addBackBtn" class="overlay-back">← Back</a>
             </div>
         </div>
 
@@ -218,19 +214,19 @@
             <div class="modal-icon">✅</div>
             <div class="modal-title">Product Saved!</div>
             <div class="modal-message">Ready to scan the next product</div>
-            <button class="modal-button" style="background: #8E8E93; display: block; width: 100%;" onclick="closeModal()">Scan Next</button>
-            <button class="modal-button" style="background: #34C759; display: block; width: 100%; margin-top: 8px;" onclick="editLastSaved()">✏️ Edit Product</button>
+            <button class="modal-button modal-button--block modal-button--gray" onclick="closeModal()">Scan Next</button>
+            <button class="modal-button modal-button--block modal-button--green" onclick="editLastSaved()">✏️ Edit Product</button>
         </div>
     </div>
 
     <!-- Duplicate Warning Modal -->
     <div class="modal" id="duplicateModal">
-        <div class="modal-content" style="border-color: #FF9500;">
-            <div class="modal-icon" style="color: #FF9500;">⚠️</div>
+        <div class="modal-content modal-content--warning">
+            <div class="modal-icon modal-icon--warning">⚠️</div>
             <div class="modal-title" id="duplicateTitle">Duplicate Product!</div>
             <div class="modal-message" id="duplicateMessage">This product already exists in the database</div>
-            <button class="modal-button" style="background: #FF9500; display: block; width: 100%;" onclick="closeDuplicateModal()">Scan Next Product</button>
-            <button class="modal-button" style="background: #007AFF; display: block; width: 100%; margin-top: 8px;" onclick="editDuplicateProduct()">✏️ Edit Existing Product</button>
+            <button class="modal-button modal-button--block modal-button--orange" onclick="closeDuplicateModal()">Scan Next Product</button>
+            <button class="modal-button modal-button--block modal-button--blue" onclick="editDuplicateProduct()">✏️ Edit Existing Product</button>
         </div>
     </div>
 

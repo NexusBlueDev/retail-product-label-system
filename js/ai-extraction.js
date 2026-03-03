@@ -3,7 +3,7 @@
  * OpenAI Vision API integration via Supabase Edge Function
  */
 
-import { FUNCTION_URL, SUPABASE_KEY } from './config.js';
+import { FUNCTION_URL } from './config.js';
 import { getDOMElements } from './dom.js';
 import { state } from './state.js';
 import { showStatus } from './ui-utils.js';
@@ -40,7 +40,7 @@ export async function extractProductData(images) {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                    'Authorization': `Bearer ${state.accessToken}`
                 },
                 body: JSON.stringify({
                     image,

@@ -20,13 +20,20 @@ files are in place.
 - CSV export with pagination (handles any DB size) — commit c5bea16
 - Merged backend repo into frontend monorepo (2026-03-03)
 - Added .gitignore, CLAUDE.md, ARCHITECTURE.md, HANDOFF.md, TODO.md, package.json, .env.local
+- Standardized ai-extraction.js auth: `state.accessToken` for Bearer, `SUPABASE_KEY` for apikey only
+- Removed duplicate prompt file (prompt-optimized.txt) — kept inline in index.ts
+- Removed orphaned duplicate quantity field (id="qty")
+- Extracted all inline styles from index.html into CSS classes in components.css
+- Verified OPENAI_API_KEY works via live Edge Function test
+- Set up pg_cron: rate_limits cleanup every 5 min (records > 10 min old)
+- Archived backend repo on GitHub
 
 ## In Progress
 - Nothing currently in progress
 
 ## Next Up
-1. Archive backend repo on GitHub
-2. Push all changes to GitHub
+1. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
+2. Monitor pg_cron job is running correctly
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools)
@@ -37,14 +44,12 @@ files are in place.
 - Supabase project ref: ayfwyvripnetwrkimxka
 
 ## Known Issues / Tech Debt
-- `ai-extraction.js` uses `SUPABASE_KEY` as Bearer token instead of `state.accessToken` (functional but inconsistent)
-- Extraction prompt duplicated: inline in `index.ts` AND in `prompt-optimized.txt`
 - User PINs stored in plaintext (accepted — internal tool)
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
 
-### 2026-03-03 — Repo Merge & Standards Compliance
+### 2026-03-03 — Repo Merge, Standards Compliance, Tech Debt Cleanup
 - Merged `retail-product-label-system-backend` into this repo (Edge Function, 6 migrations, config, concept doc)
 - Removed dead files: legacy backup HTML (117KB), duplicate image-compression.js, logo_base64.txt
 - Created .gitignore (was completely missing)
@@ -55,11 +60,18 @@ files are in place.
 - Created HANDOFF.md (this file)
 - Created TODO.md with action items
 - Updated README.md for merged monorepo structure
+- Verified OPENAI_API_KEY works via live Edge Function test
+- Set up pg_cron for rate_limits cleanup (every 5 min, deletes records > 10 min old)
+- Fixed ai-extraction.js: switched Bearer token from SUPABASE_KEY to state.accessToken
+- Deleted duplicate prompt-optimized.txt (kept inline prompt in index.ts)
+- Removed orphaned quantity field (id="qty", unused in JS)
+- Extracted ~200 lines of inline styles from index.html into components.css classes
+- Archived backend repo on GitHub
 
 ## How to Resume
 > Project: Retail Product Label System
 > Live: https://nexusbluedev.github.io/retail-product-label-system/
 > Repo: https://github.com/NexusBlueDev/retail-product-label-system
-> State: Fully operational v3.4, repos merged, all standard docs in place
-> Next action: Archive backend repo, then address tech debt items from TODO.md
+> State: Fully operational v3.4, repos merged, all standard docs in place, all tech debt resolved
+> Next action: Monitor pg_cron job, consider PIN hashing if security requirements change
 > Start by reading: HANDOFF.md → CLAUDE.md → ARCHITECTURE.md
