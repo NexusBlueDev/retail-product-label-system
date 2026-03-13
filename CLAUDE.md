@@ -1,5 +1,8 @@
 # CLAUDE.md — Retail Product Label System
 
+> Global rules loaded dynamically from Core DB via `~/.claude/CLAUDE.md` (v9.0 bootloader).
+> Project-specific rules below override global rules where they conflict.
+
 ## Project Type
 Website / Standalone (NOT Platform Product)
 
@@ -16,7 +19,7 @@ products are saved to PostgreSQL and exported as CSV for Lightspeed POS import.
 - **Hosting:** GitHub Pages (auto-deploys on push to main)
 - **Barcode:** QuaggaJS 2 v1.12.1 (CDN-loaded)
 
-## Static App Exceptions (per global CLAUDE.md)
+## Static App Exceptions
 This is a static HTML5/ES5 PWA hosted on GitHub Pages. Per the global testing and CI standards:
 - No CI/CD pipeline (GitHub Pages auto-deploys on push)
 - No Vitest tests (static PWA exception)
