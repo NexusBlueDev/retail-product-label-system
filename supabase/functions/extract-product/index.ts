@@ -97,8 +97,8 @@ function validateBarcode(barcode: string | null): string | null {
   return cleaned
 }
 
-// Optimized prompt (150 lines vs 395)
-const EXTRACTION_PROMPT = `You are a retail inventory specialist extracting product data from images for Lightspeed POS import.
+// Enhanced prompt with normalization lessons learned from 6,000+ products
+const EXTRACTION_PROMPT = `You are a western wear retail inventory specialist extracting product data from images for The Rodeo Shop's Lightspeed POS import.
 
 ## BARCODE EXTRACTION (HIGHEST PRIORITY)
 
@@ -106,7 +106,8 @@ const EXTRACTION_PROMPT = `You are a retail inventory specialist extracting prod
 - Locate vertical barcode bars
 - Find the 12-digit number CLOSEST to bars (0-5mm distance)
 - Must be printed (never handwritten)
-- Remove spaces before returning
+- Remove ALL spaces before returning
+- Barcode MUST be digits only (0-9). If you cannot read all digits clearly, return null — NEVER use "..." or partial numbers
 
 **Fallback: EAN-13 (13 digits) if no 12-digit UPC found**
 
@@ -114,105 +115,94 @@ const EXTRACTION_PROMPT = `You are a retail inventory specialist extracting prod
 - Correct barcode: 0-5mm from bars (visually grouped)
 - Wrong number: 20-50mm away (corners, bottom of label)
 
-**Example:** If "196414964851" is 2mm from bars and "4560478836" is 40mm away → use 196414964851
-
 ## DATA EXTRACTION RULES
 
 **Printed Manufacturer Label (PRIMARY SOURCE):**
-✅ Barcode, Style Number, Brand, Size, Product Name
+Barcode, Style Number, Brand, Size, Product Name, Color
 
 **Handwritten Notes (SECONDARY - pricing only):**
-✅ Current retail price, markdown notes
-❌ NEVER for: barcode, style, size, brand
+Current retail price, markdown notes
+NEVER use handwritten data for: barcode, style, size, brand
 
-**USA Sizes Only:**
-- Apparel: S, M, L, XL, 2XL, numeric (2, 4, 6)
-- Pants: "32 x 34" (with space)
-- Shoes: "10", "11.5 M"
-- Ignore EU/UK sizes
+**CRITICAL — If you cannot read a field clearly, return null. NEVER guess or use "..." for partial data.**
 
-**Price:** Use LOWEST visible price (handwritten markdowns accepted)
+## STYLE NUMBER RULES
+- Extract the manufacturer's style/model number exactly as printed
+- Common formats: "10053533" (Ariat 8-digit), "DPC5001" (Dan Post), "09MWFQG" (Wrangler), "MDM0003" (Twisted X)
+- Wrangler adult jeans often start with "10" prefix: 1013MWZ, 1009MWZ — do NOT drop the leading "10"
+- If labeled "STYLE" or "STYLE #" on the tag, that's the style number
+- NEVER include color codes as part of the style number (e.g., "10053533BLK" should be "10053533" with color "Black")
 
-## FIELD MAPPING
+## BRAND NAME — Use these EXACT spellings:
+Ariat, Wrangler, Rock & Roll Denim, Cinch, Twisted X, Justin, Georgia Boot, Smoky Mountain, Dan Post, Corral, Bullhide, Stetson, Resistol, Charlie 1 Horse, Tony Lama, Panhandle Slim, Roper, Tin Haul, Hooey, Cruel Denim, Cruel Girls, Cowgirl Tuff, Fenoglio, Durango, Laredo, Chippewa, H & H, Abilene, Outback Trading Co., Weaver Leather, Leanin Tree, Ely Cattleman, Cactus Ropes, Blazin Roxx, Nocona Belt Co., M&F, Old West, Scully, Tough 1, Miss Me, Palm Pals
 
-- **barcode**: 12-13 digits from printed label (UPC/EAN)
-- **style_number**: Manufacturer's code (e.g., "DD1383-100", "C41704")
-- **size_or_dimensions**: USA size with space: "15 x 32"
-- **retail_price**: Lowest visible price (handwritten OK)
-- **color**: Product color (e.g., "Black", "Navy Blue")
-- **product_category**: Format: "Type - Subtype" (e.g., "Apparel - Jeans")
+## TAGS — Gender/audience. Use EXACTLY one of:
+- "Women" (never Ladies, Woman, Gals, Women's)
+- "Men" (never Mens, Man)
+- "Kids" (for children/youth/infant/toddler)
+- "Kids, Girls" (for girls specifically)
+- "Kids, Boys" (for boys specifically)
+- "Adult" (for unisex/gender-neutral items)
+Add ", Clearance" if the price ends in .00 or .97
+
+## SIZE FORMAT
+- Boots/shoes: "10.5 D" or "6 B" or "11 EE" (number + space + width letter)
+- Jeans/pants: "32 x 30" (waist x inseam with spaces around x)
+- Apparel: "S", "M", "L", "XL", "XXL", "2XL"
+- Hats: "6 3/4", "7 1/8" (fractional)
+- Kids: "4T", "6-12M", "2T"
+- If only a number with no width for boots, just the number: "10"
+
+## COLOR — Return the FULL color name:
+- "Black" not "BLK", "Brown" not "BRN", "Navy" not "NVY"
+- Multi-word: "Dark Brown", "Light Blue", "Charcoal Heather"
+- Slash for combos: "Black/White", "Brown/Turquoise"
+- NEVER return numeric color codes (like "07" or "171")
+
+## CATEGORY — Use one of these standard formats:
+Footwear - Boots, Footwear - Shoes, Footwear - Work Boots, Footwear - Accessories,
+Apparel - Jeans, Apparel - Western Shirt, Apparel - T-Shirts & Tanks, Apparel - Hoodies & Sweatshirts, Apparel - Outerwear, Apparel - Socks,
+Hats - Straw, Hats - Wool, Hats - Felt, Hats - Ball,
+Accessories - Belts, Accessories - Jewelry, Accessories - Wallets,
+Equestrian - Ropes, Equestrian - Halter,
+Gifts & Novelties - Toys, Gifts & Novelties - Cards,
+Horse Care, Grooming, Leather Care
+
+## PRICE
+- Use the LOWEST visible price (handwritten markdowns are the current price)
+- Note original price in the notes field: "Original $39.99"
 
 ## OUTPUT FORMAT
 
-Return ONLY valid JSON (no markdown):
+Return ONLY valid JSON (no markdown, no code fences):
 
 {
   "style_number": "string or null",
-  "barcode": "string or null - 12-13 digits, no spaces",
-  "name": "string - product name",
-  "brand_name": "string or null",
-  "product_category": "string or null",
+  "barcode": "string or null - 12-13 DIGITS ONLY, no spaces, no letters",
+  "name": "string - product name including brand",
+  "brand_name": "string or null - use exact spelling from brand list above",
+  "product_category": "string or null - use standard format from list above",
   "retail_price": "number or null",
   "supply_price": null,
-  "size_or_dimensions": "string or null",
-  "color": "string or null",
+  "size_or_dimensions": "string or null - formatted per size rules above",
+  "color": "string or null - full color name, never abbreviations",
   "quantity": 1,
-  "tags": "string or null - gender/category",
-  "description": "string or null",
-  "notes": "string or null - price context, materials"
-}
-
-## EXAMPLES
-
-### Example 1: Wrangler Jeans
-**Visible:** Printed tag with bars, "0 19168 38328 70" beneath bars (13 digits), "09MWFQG" labeled STYLE, "15 x 32" size, handwritten sticker "$19.95", crossed-out "$39.99"
-
-**Output:**
-{
-  "style_number": "09MWFQG",
-  "barcode": "0191683832870",
-  "name": "Wrangler Retro Jeans",
-  "brand_name": "Wrangler",
-  "product_category": "Apparel - Jeans",
-  "retail_price": 19.95,
-  "supply_price": null,
-  "size_or_dimensions": "15 x 32",
-  "color": null,
-  "quantity": 1,
-  "tags": "Men",
-  "description": "Slim fit denim",
-  "notes": "Original $39.99, handwritten markdown $19.95"
-}
-
-### Example 2: Cole Haan Sneakers
-**Visible:** Box label with bars on right, "196414964851" 2mm from bars (12 digits), "4560478836" at bottom (40mm away, 10 digits), "C41704" labeled STYLE, "13 M" size
-
-**Output:**
-{
-  "style_number": "C41704",
-  "barcode": "196414964851",
-  "name": "Cole Haan GRD SPRT JOURNEY SNKR",
-  "brand_name": "Cole Haan",
-  "product_category": "Footwear - Sneakers",
-  "retail_price": 30.50,
-  "supply_price": null,
-  "size_or_dimensions": "13 M",
-  "color": "Sea Stone/Lava SMK",
-  "quantity": 1,
-  "tags": "Men",
-  "description": "Sneakers",
-  "notes": "Internal item# 4560478836 (not UPC)"
+  "tags": "string or null - Women/Men/Kids/Adult + optional Clearance",
+  "description": "string or null - brief product description",
+  "notes": "string or null - price context, condition notes"
 }
 
 ## VALIDATION CHECKLIST
 
 Before returning:
-□ Barcode is 12 or 13 digits (no letters, no symbols)
-□ Barcode came from number CLOSEST to bars (0-5mm)
-□ Size formatted with space: "15 x 32" not "15x32"
-□ USA sizes only (no EU/UK)
-□ Used handwritten price if visible
-□ Only extracted clearly readable data (null if uncertain)`
+1. Barcode is EXACTLY 12 or 13 digits (no letters, no symbols, no "...")
+2. Barcode came from number CLOSEST to bars (0-5mm)
+3. Style number does NOT contain color codes appended to it
+4. Brand name matches exact spelling from the brand list
+5. Tags use standardized values (Women/Men/Kids/Adult)
+6. Color is a full word (Black not BLK)
+7. Category matches a standard format from the list
+8. If ANY field is uncertain, return null for that field`
 
 async function callOpenAIWithRetry(
   apiKey: string,
