@@ -24,5 +24,11 @@ export const state = {
     // Desktop Processor
     processorQueue: [],      // Array of photo_only product records
     processorCurrentItem: null, // Currently selected queue item
-    processorAIData: null    // AI extraction result for current item
+    processorAIData: null,   // AI extraction result for current item
+
+    // Enhanced Processor
+    epQueue: [],              // Photo-only products for enhanced processing
+    epCurrentItem: null,      // Currently selected queue item
+    epAIData: null,           // AI extraction result for current item
+    epLightspeedData: null    // Lightspeed lookup result for current item
 };

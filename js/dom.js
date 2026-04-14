@@ -121,7 +121,23 @@ export function getDOMElements() {
             pQuantity: document.getElementById('p_quantity'),
             pTags: document.getElementById('p_tags'),
             pDescription: document.getElementById('p_description'),
-            pNotes: document.getElementById('p_notes')
+            pNotes: document.getElementById('p_notes'),
+
+            // Enhanced Processor view
+            epQueueCount: document.getElementById('epQueueCount'),
+            epRefreshQueueBtn: document.getElementById('epRefreshQueueBtn'),
+            epQueueList: document.getElementById('epQueueList'),
+            epPhotos: document.getElementById('epPhotos'),
+            epAIResults: document.getElementById('epAIResults'),
+            epAILoading: document.getElementById('epAILoading'),
+            epLightspeedPanel: document.getElementById('epLightspeedPanel'),
+            epLightspeedDetails: document.getElementById('epLightspeedDetails'),
+            epForm: document.getElementById('epForm'),
+            epFieldGrid: document.getElementById('epFieldGrid'),
+            epDerivedFields: document.getElementById('epDerivedFields'),
+            epSaveBtn: document.getElementById('epSaveBtn'),
+            epSkipBtn: document.getElementById('epSkipBtn'),
+            epCopyAllBtn: document.getElementById('epCopyAllBtn')
         };
     }
 

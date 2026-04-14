@@ -10,7 +10,8 @@ const VIEW_IDS = {
     menu: 'menuView',
     scanner: 'scannerView',
     quickCapture: 'quickCaptureView',
-    processor: 'processorView'
+    processor: 'processorView',
+    enhancedProcessor: 'enhancedProcessorView'
 };
 
 /**

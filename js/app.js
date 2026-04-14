@@ -17,6 +17,7 @@ import { getCurrentUser, clearCurrentUser, showUserLoginOverlay } from './user-a
 import { navigateTo, initNavigation } from './navigation.js';
 import { initQuickCapture } from './quick-capture.js';
 import { initDesktopProcessor, getPhotoOnlyCount } from './desktop-processor.js';
+import { initEnhancedProcessor } from './enhanced-processor.js';
 
 /**
  * Returns a function that delays invoking fn until after wait ms have elapsed
@@ -206,6 +207,7 @@ function initApp() {
 
     // Initialize Desktop Processor
     initDesktopProcessor();
+    initEnhancedProcessor();
 
     // Load product count on startup
     fetchProductCount();
@@ -233,6 +235,7 @@ function initApp() {
     });
     eventBus.on('capture:saved', () => updateMenuBadge());
     eventBus.on('processor:saved', () => updateMenuBadge());
+    eventBus.on('enhancedProcessor:saved', () => updateMenuBadge());
 
     console.log('✅ App initialized with modular architecture');
 }

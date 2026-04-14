@@ -86,7 +86,7 @@ const CATEGORY_NORMALIZE = {
 /**
  * Post-process AI extraction data — clean and normalize before showing to staff
  */
-function postProcessExtraction(data) {
+export function postProcessExtraction(data) {
     // 1. Normalize brand name
     if (data.brand_name) {
         const brandUpper = data.brand_name.trim().toUpperCase();

@@ -466,3 +466,170 @@ textarea.ai-field-input {
         font-size: 12px;
     }
 }
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   ENHANCED PROCESSOR — Three-source field grid + Lightspeed panel
+   ══════════════════════════════════════════════════════════════════════ */
+
+.ep-field-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 8px;
+}
+
+.ep-grid-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 10px 0 6px;
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 4px;
+}
+
+.ep-grid-header span {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+.ep-header-ai { color: #1976D2; }
+.ep-header-ls { color: #2E7D32; }
+.ep-header-form { color: #333; }
+
+.ep-field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    align-items: start;
+    padding: 3px 0;
+}
+
+.ep-cell-ai, .ep-cell-ls, .ep-cell-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.ep-cell-ai label, .ep-cell-ls label, .ep-cell-form label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 0;
+}
+
+.ep-cell-ai input, .ep-cell-ls input {
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+/* AI field — blue theme */
+.ep-cell-ai input {
+    border: 1.5px solid #90CAF9;
+    background: #E3F2FD;
+    color: #1c1c1e;
+}
+
+/* Lightspeed field — green theme */
+.ep-cell-ls input {
+    border: 1.5px solid #81C784;
+    background: #E8F5E9;
+    color: #1c1c1e;
+}
+
+/* Form field — standard theme */
+.ep-cell-form input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1.5px solid #ccc;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+.ep-cell-form input:focus {
+    border-color: #007AFF;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.15);
+}
+
+/* Lightspeed match panel */
+.ep-lightspeed-panel {
+    background: #E8F5E9;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px;
+}
+
+.ep-ls-header {
+    font-size: 14px;
+    font-weight: 700;
+    color: #2E7D32;
+    margin-bottom: 6px;
+}
+
+.ep-ls-details {
+    font-size: 13px;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* Derived fields section */
+.ep-derived-fields {
+    background: #f8f9fa;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px;
+}
+
+.ep-derived-fields h4 {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: #555;
+    font-weight: 700;
+}
+
+.ep-derived-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+}
+
+.ep-derived-row label {
+    width: 130px;
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 0;
+}
+
+.ep-derived-row input {
+    flex: 1;
+    padding: 5px 8px;
+    font-size: 13px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: inherit;
+}
+
+/* Responsive: 3-column → 1-column on mobile */
+@media (max-width: 768px) {
+    .ep-grid-header { display: none; }
+    .ep-field-row { grid-template-columns: 1fr; gap: 4px; }
+    .ep-derived-row { flex-direction: column; align-items: stretch; gap: 2px; }
+    .ep-derived-row label { width: auto; }
+}

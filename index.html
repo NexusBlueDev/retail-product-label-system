@@ -51,6 +51,11 @@
                     <div class="menu-card-desc">Review and complete photo-only products from desktop</div>
                     <div class="menu-card-badge" id="menuProcessBadge"></div>
                 </button>
+                <button type="button" class="menu-card" data-nav="enhancedProcessor">
+                    <div class="menu-card-icon">🔬</div>
+                    <div class="menu-card-title">Enhanced Processor</div>
+                    <div class="menu-card-desc">Process with Lightspeed lookup + expanded normalization</div>
+                </button>
             </div>
             <button type="button" class="btn-menu-export" id="menuExportBtn">📥 Export All Products to CSV</button>
         </div>
@@ -512,6 +517,170 @@
                     <div class="processor-actions">
                         <button type="button" id="processorSaveBtn" class="btn-primary" disabled>Save & Complete</button>
                         <button type="button" id="processorSkipBtn" class="btn-skip">Skip</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ENHANCED PROCESSOR VIEW
+         ═══════════════════════════════════════════════════════════════ -->
+    <div id="enhancedProcessorView" style="display:none;">
+        <div class="processor-layout enhanced-processor">
+            <div class="processor-topbar">
+                <a href="#" class="back-to-menu" data-nav="menu">← Menu</a>
+                <h2>Enhanced Processor</h2>
+                <span id="epQueueCount">0 items in queue</span>
+            </div>
+
+            <div class="processor-columns">
+                <!-- LEFT: Queue sidebar -->
+                <div class="processor-queue">
+                    <div class="queue-header">
+                        <h3>Photo Queue</h3>
+                        <button type="button" id="epRefreshQueueBtn" class="btn-queue-refresh">↻ Refresh</button>
+                    </div>
+                    <div id="epQueueList" class="queue-list"></div>
+                </div>
+
+                <!-- RIGHT: Main content -->
+                <div class="processor-main">
+                    <!-- Photos (sticky) -->
+                    <div id="epPhotos" class="processor-photos">
+                        <p class="processor-placeholder">Select an item from the queue</p>
+                    </div>
+
+                    <!-- AI loading spinner -->
+                    <div id="epAILoading" class="loading" style="display:none;">
+                        <div class="spinner"></div>
+                        <p class="loading-text">Running AI extraction...</p>
+                    </div>
+
+                    <!-- Lightspeed match panel -->
+                    <div id="epLightspeedPanel" class="ep-lightspeed-panel" style="display:none;">
+                        <div class="ep-ls-header">&#x2705; Lightspeed Match Found</div>
+                        <div id="epLightspeedDetails" class="ep-ls-details"></div>
+                    </div>
+
+                    <!-- Auto-fill button -->
+                    <div id="epAIResults" style="display:none;">
+                        <button type="button" id="epCopyAllBtn" class="btn-copy-all" disabled>&#x2190; Auto-fill Form from Best Source</button>
+                    </div>
+
+                    <!-- Three-source field grid -->
+                    <form id="epForm">
+                        <div class="ep-field-grid" id="epFieldGrid">
+                            <div class="ep-grid-header">
+                                <span class="ep-header-ai">AI Extracted</span>
+                                <span class="ep-header-ls">Lightspeed</span>
+                                <span class="ep-header-form">Editable Form</span>
+                            </div>
+
+                            <!-- Name -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Name *</label><input type="text" data-ep-ai="name" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Name</label><input type="text" data-ep-ls="name" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Name *</label><input type="text" id="ep_name" required></div>
+                            </div>
+                            <!-- Style Number -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Style #</label><input type="text" data-ep-ai="style_number" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Style #</label><input type="text" data-ep-ls="style_number" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Style #</label><input type="text" id="ep_style_number"></div>
+                            </div>
+                            <!-- SKU -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>SKU</label><input type="text" data-ep-ai="sku" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>SKU</label><input type="text" data-ep-ls="sku" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>SKU</label><input type="text" id="ep_sku"></div>
+                            </div>
+                            <!-- Barcode -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Barcode</label><input type="text" data-ep-ai="barcode" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Barcode</label><input type="text" data-ep-ls="barcode" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Barcode</label><input type="text" id="ep_barcode"></div>
+                            </div>
+                            <!-- Brand -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Brand</label><input type="text" data-ep-ai="brand_name" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Brand</label><input type="text" data-ep-ls="brand_name" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Brand</label><input type="text" id="ep_brand_name"></div>
+                            </div>
+                            <!-- Category -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Category</label><input type="text" data-ep-ai="product_category" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Category</label><input type="text" data-ep-ls="product_category" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Category</label><input type="text" id="ep_product_category"></div>
+                            </div>
+                            <!-- Retail Price -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Retail $</label><input type="text" data-ep-ai="retail_price" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Retail $</label><input type="text" data-ep-ls="retail_price" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Retail $</label><input type="number" id="ep_retail_price" step="0.01"></div>
+                            </div>
+                            <!-- Supply Price -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Supply $</label><input type="text" data-ep-ai="supply_price" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Supply $</label><input type="text" data-ep-ls="supply_price" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Supply $</label><input type="number" id="ep_supply_price" step="0.01"></div>
+                            </div>
+                            <!-- Size -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Size</label><input type="text" data-ep-ai="size_or_dimensions" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Size</label><input type="text" data-ep-ls="size_or_dimensions" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Size</label><input type="text" id="ep_size_or_dimensions"></div>
+                            </div>
+                            <!-- Color -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Color</label><input type="text" data-ep-ai="color" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Color</label><input type="text" data-ep-ls="color" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Color</label><input type="text" id="ep_color"></div>
+                            </div>
+                            <!-- Tags -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Tags</label><input type="text" data-ep-ai="tags" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Tags</label><input type="text" data-ep-ls="tags" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Tags</label><input type="text" id="ep_tags"></div>
+                            </div>
+                            <!-- Quantity -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Qty</label><input type="text" data-ep-ai="quantity" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Qty</label><input type="text" data-ep-ls="quantity" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Qty</label><input type="number" id="ep_quantity" value="1" min="1"></div>
+                            </div>
+                            <!-- Description -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Description</label><input type="text" data-ep-ai="description" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Description</label><input type="text" data-ep-ls="description" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Description</label><input type="text" id="ep_description"></div>
+                            </div>
+                            <!-- Notes -->
+                            <div class="ep-field-row">
+                                <div class="ep-cell-ai"><label>Notes</label><input type="text" data-ep-ai="notes" readonly tabindex="-1"></div>
+                                <div class="ep-cell-ls"><label>Notes</label><input type="text" data-ep-ls="notes" readonly tabindex="-1"></div>
+                                <div class="ep-cell-form"><label>Notes</label><input type="text" id="ep_notes"></div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Derived fields (computed from normalization rules) -->
+                    <div class="ep-derived-fields" id="epDerivedFields" style="display:none;">
+                        <h4>Derived Fields (auto-computed)</h4>
+                        <div class="ep-derived-row"><label>Supplier Code</label><input type="text" id="ep_supplier_code" readonly></div>
+                        <div class="ep-derived-row"><label>Gender</label><input type="text" id="ep_gender" readonly></div>
+                        <div class="ep-derived-row"><label>Generated SKU</label><input type="text" id="ep_sku_generated" readonly></div>
+                        <div class="ep-derived-row"><label>Size Value</label><input type="text" id="ep_size_value" readonly></div>
+                        <div class="ep-derived-row"><label>Width/Length</label><input type="text" id="ep_width_length" readonly></div>
+                        <div class="ep-derived-row"><label>Width/Length Value</label><input type="text" id="ep_width_length_value" readonly></div>
+                        <div class="ep-derived-row"><label>Color Code</label><input type="text" id="ep_color_code" readonly></div>
+                        <div class="ep-derived-row"><label>Lightspeed ID</label><input type="text" id="ep_lightspeed_product_id" readonly></div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="processor-actions">
+                        <button type="button" id="epSaveBtn" class="btn-primary" disabled>Save & Complete (Enhanced)</button>
+                        <button type="button" id="epSkipBtn" class="btn-skip">Skip</button>
                     </div>
                 </div>
             </div>
