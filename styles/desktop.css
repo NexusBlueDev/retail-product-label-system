@@ -481,7 +481,7 @@ textarea.ai-field-input {
 
 .ep-grid-header {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
     gap: 8px;
     padding: 10px 0 6px;
     border-bottom: 2px solid #e5e7eb;
@@ -502,7 +502,7 @@ textarea.ai-field-input {
 
 .ep-field-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
     gap: 8px;
     align-items: start;
     padding: 3px 0;
@@ -512,6 +512,41 @@ textarea.ai-field-input {
     display: flex;
     flex-direction: column;
     gap: 1px;
+}
+
+/* Copy buttons between columns */
+.ep-cell-copy {
+    display: flex;
+    align-items: center;
+    padding-top: 16px;
+}
+
+.btn-ep-copy {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1.5px solid #ccc;
+    border-radius: 50%;
+    background: #f9f9f9;
+    color: #666;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.btn-ep-copy:hover {
+    background: #e3f2fd;
+    border-color: #007AFF;
+    color: #007AFF;
+}
+
+.btn-ep-copy.copied {
+    background: #E8F5E9;
+    border-color: #4CAF50;
+    color: #4CAF50;
 }
 
 .ep-cell-ai label, .ep-cell-ls label, .ep-cell-form label {
@@ -626,10 +661,11 @@ textarea.ai-field-input {
     font-family: inherit;
 }
 
-/* Responsive: 3-column → 1-column on mobile */
+/* Responsive: 5-column → 1-column on mobile */
 @media (max-width: 768px) {
     .ep-grid-header { display: none; }
     .ep-field-row { grid-template-columns: 1fr; gap: 4px; }
+    .ep-cell-copy { display: none; }
     .ep-derived-row { flex-direction: column; align-items: stretch; gap: 2px; }
     .ep-derived-row label { width: auto; }
 }

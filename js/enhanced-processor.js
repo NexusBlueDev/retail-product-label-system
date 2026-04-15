@@ -17,6 +17,7 @@ import { getSignedUrl, getSignedUrls, fetchImageAsBase64 } from './storage.js';
 import { eventBus } from './events.js';
 import { postProcessExtraction } from './form-manager.js';
 import { getSupplierCode, getGenderCode, getColorCode, parseSize, generateSKU } from './sku-generator.js';
+import { CATEGORY_LIST, SUPPLIER_CODE_TO_NAME, SUPPLIER_NAME_TO_CODE } from './reference-data.js';
 
 // ── Field mapping ────────────────────────────────────────────────────
 // Maps AI extraction keys → enhanced processor form input IDs (ep_ prefixed)
@@ -26,6 +27,7 @@ const EP_FIELD_MAP = {
     sku:               'ep_sku',
     barcode:           'ep_barcode',
     brand_name:        'ep_brand_name',
+    supplier_name:     'ep_supplier_name',
     product_category:  'ep_product_category',
     retail_price:      'ep_retail_price',
     supply_price:      'ep_supply_price',
@@ -237,12 +239,17 @@ function processAIData(rawData) {
     const sizeParsed = parseSize(data.size_or_dimensions, data.product_category);
     const sku = generateSKU(data.style_number, data.brand_name, data.color, data.size_or_dimensions, data.tags, data.product_category);
 
+    // Derive supplier name from supplier code
+    const supplierName = SUPPLIER_CODE_TO_NAME[supplierCode] || '';
+
     // Attach derived fields to AI data
     data.sku = sku;
+    data.supplier_name = supplierName;
     state.epAIData = {
         ...data,
         _derived: {
             supplier_code: supplierCode,
+            supplier_name: supplierName,
             gender: gender,
             color_code: colorCode,
             size_value: sizeParsed.sizeValue,
@@ -339,6 +346,7 @@ function populateLSFields(lsData) {
     const fieldMap = {
         name: lsData.name || '',
         brand_name: lsData.brand || '',
+        supplier_name: lsData.supplier || '',
         product_category: lsData.category || '',
         retail_price: lsData.retail_price || '',
         supply_price: lsData.supply_price || '',
@@ -396,7 +404,7 @@ function clearAllFields() {
     if (!view) return;
     view.querySelectorAll('[data-ep-ai]').forEach(i => { i.value = ''; });
     view.querySelectorAll('[data-ep-ls]').forEach(i => { i.value = ''; });
-    ['ep_supplier_code', 'ep_gender', 'ep_size_value', 'ep_width_length',
+    ['ep_supplier_code', 'ep_supplier_name', 'ep_gender', 'ep_size_value', 'ep_width_length',
      'ep_width_length_value', 'ep_color_code', 'ep_sku_generated', 'ep_lightspeed_product_id'
     ].forEach(id => {
         const el = document.getElementById(id);
@@ -425,6 +433,7 @@ function copyAllFields() {
     if (ls) {
         lsValues.name = ls.name;
         lsValues.brand_name = ls.brand;
+        lsValues.supplier_name = ls.supplier;
         lsValues.product_category = ls.category;
         lsValues.retail_price = ls.retail_price;
         lsValues.supply_price = ls.supply_price;
@@ -502,6 +511,7 @@ async function saveAndComplete() {
         notes: getVal('ep_notes'),
         entered_by: state.currentUser || item.entered_by || null,
         // Enhanced fields
+        supplier_name: getVal('ep_supplier_name'),
         supplier_code: getVal('ep_supplier_code'),
         gender: getVal('ep_gender'),
         size_value: getVal('ep_size_value'),
@@ -601,6 +611,166 @@ function resetView() {
     }
 }
 
+// ── Per-Field Copy Buttons ───────────────────────────────────────────
+
+/**
+ * Get a Lightspeed field value mapped to the AI key namespace.
+ */
+function getLSFieldValue(aiKey) {
+    const ls = state.epLightspeedData;
+    if (!ls) return null;
+    const map = {
+        name: ls.name,
+        brand_name: ls.brand,
+        supplier_name: ls.supplier,
+        product_category: ls.category,
+        retail_price: ls.retail_price,
+        supply_price: ls.supply_price,
+    };
+    const vo = ls.variant_options || {};
+    if (vo.Size) map.size_or_dimensions = vo.Size;
+    if (vo.Color) map.color = vo.Color;
+    return map[aiKey] ?? null;
+}
+
+/**
+ * Handle a per-field copy button click (AI→Form or LS→Form).
+ */
+function handleEPCopyField(btn) {
+    const source = btn.dataset.epSource; // 'ai' or 'ls'
+    const field = btn.dataset.epField;   // AI key like 'name', 'brand_name', etc.
+    const inputId = EP_FIELD_MAP[field];
+    if (!inputId) return;
+
+    const input = document.getElementById(inputId);
+    if (!input) return;
+
+    let value;
+    if (source === 'ai') {
+        value = state.epAIData?.[field];
+    } else {
+        value = getLSFieldValue(field);
+    }
+
+    if (value === undefined || value === null || value === '') return;
+
+    input.value = value;
+    dataSource[field] = source === 'ai' ? 'ai' : 'lightspeed';
+
+    // Dispatch input event to trigger SKU regeneration + cross-population
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // Green flash feedback
+    btn.classList.add('copied');
+    setTimeout(() => btn.classList.remove('copied'), 600);
+}
+
+// ── Dynamic SKU Regeneration ────────────────────────────────────────
+
+/**
+ * Regenerate all derived fields from current form values.
+ * Called on any SKU-affecting field change.
+ */
+function regenerateDerivedFields() {
+    const getVal = id => document.getElementById(id)?.value?.trim() || '';
+
+    const style = getVal('ep_style_number');
+    const brand = getVal('ep_brand_name');
+    const color = getVal('ep_color');
+    const size = getVal('ep_size_or_dimensions');
+    const tags = getVal('ep_tags');
+    const category = getVal('ep_product_category');
+
+    const supplierCode = getSupplierCode(brand);
+    const gender = getGenderCode(tags);
+    const colorCode = getColorCode(color);
+    const sizeParsed = parseSize(size, category);
+    const sku = generateSKU(style, brand, color, size, tags, category);
+
+    const setVal = (id, val) => {
+        const el = document.getElementById(id);
+        if (el) el.value = val || '';
+    };
+
+    setVal('ep_supplier_code', supplierCode);
+    setVal('ep_gender', gender);
+    setVal('ep_color_code', colorCode);
+    setVal('ep_size_value', sizeParsed.sizeValue);
+    setVal('ep_width_length', sizeParsed.widthLengthType);
+    setVal('ep_width_length_value', sizeParsed.widthLengthValue);
+    setVal('ep_sku_generated', sku);
+    setVal('ep_sku', sku);
+}
+
+/**
+ * Attach input listeners on form fields that affect SKU generation.
+ */
+function setupEPSKUListeners() {
+    const skuFieldIds = [
+        'ep_style_number', 'ep_brand_name', 'ep_color',
+        'ep_size_or_dimensions', 'ep_tags', 'ep_product_category'
+    ];
+    skuFieldIds.forEach(id => {
+        const field = document.getElementById(id);
+        if (field) field.addEventListener('input', regenerateDerivedFields);
+    });
+}
+
+// ── Category Datalist ───────────────────────────────────────────────
+
+/**
+ * Populate the category datalist from reference data.
+ */
+function populateCategoryDatalist() {
+    const datalist = document.getElementById('epCategoryOptions');
+    if (!datalist) return;
+    CATEGORY_LIST.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        datalist.appendChild(opt);
+    });
+}
+
+// ── Supplier / Brand Cross-Population ───────────────────────────────
+
+/**
+ * Wire up brand ↔ supplier name ↔ supplier code cross-population.
+ * Changing brand auto-fills supplier name + code.
+ * Changing supplier code auto-fills supplier name.
+ * Changing supplier name auto-fills supplier code.
+ */
+function setupCrossPopulation() {
+    const brandField = document.getElementById('ep_brand_name');
+    const supplierNameField = document.getElementById('ep_supplier_name');
+    const supplierCodeField = document.getElementById('ep_supplier_code');
+
+    if (brandField) {
+        brandField.addEventListener('input', () => {
+            const code = getSupplierCode(brandField.value);
+            if (supplierCodeField) supplierCodeField.value = code;
+            if (supplierNameField) supplierNameField.value = SUPPLIER_CODE_TO_NAME[code] || '';
+        });
+    }
+
+    if (supplierCodeField) {
+        supplierCodeField.addEventListener('input', () => {
+            const code = supplierCodeField.value.trim().toUpperCase();
+            if (supplierNameField && SUPPLIER_CODE_TO_NAME[code]) {
+                supplierNameField.value = SUPPLIER_CODE_TO_NAME[code];
+            }
+        });
+    }
+
+    if (supplierNameField) {
+        supplierNameField.addEventListener('input', () => {
+            const name = supplierNameField.value.trim().toUpperCase();
+            if (SUPPLIER_NAME_TO_CODE[name] && supplierCodeField) {
+                supplierCodeField.value = SUPPLIER_NAME_TO_CODE[name];
+            }
+        });
+    }
+}
+
 // ── Initialization ───────────────────────────────────────────────────
 
 export function initEnhancedProcessor() {
@@ -610,6 +780,24 @@ export function initEnhancedProcessor() {
     if (dom.epSaveBtn) dom.epSaveBtn.addEventListener('click', saveAndComplete);
     if (dom.epSkipBtn) dom.epSkipBtn.addEventListener('click', skipItem);
     if (dom.epCopyAllBtn) dom.epCopyAllBtn.addEventListener('click', copyAllFields);
+
+    // Per-field copy buttons (delegated on the grid)
+    const fieldGrid = document.getElementById('epFieldGrid');
+    if (fieldGrid) {
+        fieldGrid.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn-ep-copy');
+            if (btn) handleEPCopyField(btn);
+        });
+    }
+
+    // Dynamic SKU regeneration on form field changes
+    setupEPSKUListeners();
+
+    // Category dropdown
+    populateCategoryDatalist();
+
+    // Supplier ↔ Brand cross-population
+    setupCrossPopulation();
 
     // Load queue when enhanced processor view is shown
     eventBus.on('view:changed', ({ view }) => {

@@ -101,3 +101,11 @@ Migrations in `supabase/migrations/` are reference SQL — they have already bee
 | `styles/desktop.css` | Processor 3-column grid layout + responsive breakpoints |
 | `supabase/functions/extract-product/index.ts` | Edge Function (384 lines) |
 | `supabase/migrations/` | 8 SQL migration files (reference) |
+
+## Setup Copilot
+- **Slug:** `retail-product-label-system` | **Dashboard:** https://setup.nexusblue.ai
+- Use `vault-get.sh` for ALL credentials — never grep .env.local for secrets
+- Push `setup_needs` when env vars or API keys are missing
+- Push `setup_blockers` when human input or decisions are needed
+- Update `setup_roadmap_phases/tasks` after each completed task
+- Check feedback at session start — the founder leaves notes between sessions

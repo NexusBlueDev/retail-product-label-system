@@ -1,15 +1,16 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-03-03 — Vercel hosting + PWA + module documentation + Command Center library
+2026-04-14 — Enhanced Processor with Lightspeed lookup, Lightspeed import cleanup plan
 
 ## Project State
-Production app (v4.6) with three operational modes, now PWA-enabled and hosted on Vercel. Post-login menu leads to:
+Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
 1. **Product Scanner** — mobile flow (scan, AI extract, review, save)
 2. **Quick Capture** — speed mode: stage photos, save, background AI extracts all fields into ai_cache
 3. **Process Photos** — desktop view: queue sidebar, sticky photos, side-by-side AI vs form fields with copy buttons
+4. **Enhanced Processor** — test mode: same queue but with Lightspeed lookup + expanded normalization + three-source display (AI blue | LS green | form white)
 
-All images in Supabase Storage (`product-images` bucket). Products have `status` (`photo_only`/`complete`) and `ai_cache` (JSONB, pre-computed AI extraction). PWA installable on mobile home screens.
+All images in Supabase Storage (`product-images` bucket). Products have `status` (`photo_only`/`complete`/`enhanced_complete`) and `ai_cache` (JSONB, pre-computed AI extraction). PWA installable on mobile home screens.
 
 ## Completed
 - Per-user login overlay with PIN gate (v3.4) — commit 6ebc952
@@ -32,17 +33,20 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - Menu badge shows photo-only queue count
 
 ## In Progress
-- Nothing currently in progress
+- **Enhanced Processor testing** — new 4th menu option deployed, needs staff testing on live photo_only queue
+- **Lightspeed import cleanup plan** — 5,000+ orphaned standalone products need deletion and re-import as proper variant families (plan documented, not yet executed)
 
 ## Next Up
-1. Verify Vercel deployment at `retail-scanner-nii.nexusblue.ai` (DNS propagation may take a few minutes)
-2. Test PWA install on mobile (Add to Home Screen)
-3. Test full workflow: Quick Capture on mobile → Process Photos on desktop
-4. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
-5. Monitor pg_cron job is running correctly
+1. **Test Enhanced Processor** with Corrinne — verify Lightspeed lookup, normalization, three-source display
+2. **Lightspeed cleanup Phase 0** — refresh LS catalog, build cleanup manifest (read-only)
+3. **Lightspeed cleanup Phase 1** — delete ~5,000 orphaned standalone products from April 13-14 import
+4. **Lightspeed cleanup Phase 2** — re-import as proper variant families with brand/category/tags/supplier/barcode
+5. **Lightspeed cleanup Phase 3** — verification report for Corrinne
+6. Review `docs/normalized_needs_review.csv` (300 products) — incomplete data items
+7. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
 
 ## Active Stack
-- Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 18 modules
+- Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 19 modules
 - Backend: Supabase Edge Function (Deno/TypeScript) + PostgreSQL
 - Storage: Supabase Storage (`product-images` bucket, private, UID-scoped RLS)
 - AI: OpenAI GPT-4o Vision (via Edge Function)
@@ -112,12 +116,59 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Updated README.md for merged monorepo structure
 - Verified OPENAI_API_KEY, set up pg_cron, fixed auth tokens, removed duplicates, extracted inline styles
 
+### 2026-04-14 — Enhanced Processor + Lightspeed Import Diagnosis
+- **Diagnosed Corrinne's Lightspeed import issues** — all 5 concerns validated:
+  - ~5,000 products created as standalone (0 as variants), 100% missing brand/supplier/category/tags
+  - 3,452 had SKU appended to name (name collision fallback)
+  - Existing LS families undamaged (Carter 2.4 = 60 variants, intact)
+  - Root cause: v2.0 POST creates standalone; script used `variant_options` (read-only field, ignored)
+- **Researched Lightspeed X-Series API** — variant creation model documented:
+  - v2.0 POST = new standalone; v2.1 POST = add to existing family; v2.1 PUT = update family+variant
+  - Variant attributes (Color, Size, Length, Width) have global UUIDs in LS
+  - DELETE /products/{id} = single product removal (no bulk endpoint)
+- **Analyzed scanner data quality** from 6,153 products:
+  - 40.8% of scanned barcodes already exist in Lightspeed (could have pulled LS data)
+  - 93.5% size correction rate, 44% tag correction, 28% name correction needed
+  - 101 products had partial/invalid barcodes from AI
+- **Built Enhanced Processor** (js/enhanced-processor.js, 430 lines):
+  - 4th menu option: same photo_only queue, same AI extraction
+  - Lightspeed lookup by barcode → style number (70,096-row lightspeed_index table)
+  - Three-source display: AI (blue) | Lightspeed (green) | Editable Form (white)
+  - Expanded normalization: size splitting, supplier codes, gender, color codes
+  - 8 new DB columns: supplier_code, gender, size_value, width_length, width_length_value, color_code, lightspeed_product_id, data_source
+  - Saves as `enhanced_complete` — zero impact on existing flows
+- **Documented 4-phase Lightspeed cleanup plan** (Phase 0-3: refresh cache → delete orphans → re-import as variants → verify)
+
+### 2026-04-13/14 — Data Normalization & Lightspeed Import
+- **Recovered lost session** — extracted instructions from crashed session JSONL
+- **Created `normalized_products` table** in Supabase — 6,129 products from scanner DB
+- **Lightspeed API connected** — personal token, 70K+ product catalog cached locally
+- **Full normalization pipeline built:**
+  - 12 normalization rules reverse-engineered from Corrinne's 1,177 manually normalized products
+  - Supplier codes mapped to Lightspeed vendor list (60+ brands)
+  - Size parsing (footwear width, jeans length, apparel sizes)
+  - Color codes, gender from tags, SKU formula (Corrinne's GENDER-SUPPLIER-STYLE-COLOR-SIZE-WIDTH)
+  - Brand misspelling fixes, category standardization, style number digit error detection
+  - Variant consistency enforcement, clearance auto-tagging (.00/.97 prices)
+  - "..." / non-numeric barcode / no style+barcode → flagged for review
+- **Lightspeed import completed:**
+  - 4,947 products created via API (initial + retry with SKU format fixes)
+  - 421 already existed (matched by SKU)
+  - 375 name collisions exported as CSV for LS import → `docs/lightspeed_variants_import.csv`
+  - 300 items need manual review → `docs/normalized_needs_review.csv`
+- **Enhanced AI extraction deployed:**
+  - Rewrote Edge Function prompt with exact brand spellings, standard tags/categories, full color names, no partial data
+  - Rewrote SKU generator with Corrinne's formula and Lightspeed vendor codes
+  - Added post-processing layer: brand normalization, tag standardization, barcode validation, clearance detection
+- **Complete playbook documented:** `docs/DATA_ANALYSIS_INSTRUCTIONS.md` — all phases, rules, lessons learned, rerun instructions
+
 ## How to Resume
 > Project: Retail Product Label System (NexusBlue Module — Standalone App)
 > Live: https://retail-scanner-nii.nexusblue.ai (Vercel)
 > Legacy: https://nexusbluedev.github.io/retail-product-label-system/ (GitHub Pages)
 > Repo: https://github.com/NexusBlueDev/retail-product-label-system
 > Vercel: https://vercel.com/nexus-blue-dev/retail-product-label-system
-> State: v4.6 — three-mode workflow, PWA, Vercel hosted, ai_cache
-> Next action: Verify Vercel deployment + test PWA install on mobile
-> Start by reading: HANDOFF.md → CLAUDE.md → ARCHITECTURE.md
+> State: v5.0 — three-mode workflow, PWA, Lightspeed integration, enhanced AI extraction
+> Playbook: docs/DATA_ANALYSIS_INSTRUCTIONS.md
+> Next action: Scan remaining 1,105 photo-only products, upload variants CSV to Lightspeed
+> Start by reading: HANDOFF.md → CLAUDE.md → docs/DATA_ANALYSIS_INSTRUCTIONS.md
