@@ -33,11 +33,11 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - Menu badge shows photo-only queue count
 
 ## In Progress
-- **Enhanced Processor testing** — new 4th menu option deployed, needs staff testing on live photo_only queue
+- **Enhanced Processor v2 deployed** — copy buttons, dynamic SKU, category dropdown, supplier cross-population, supplier name field. Awaiting Corrinne's testing.
 - **Lightspeed import cleanup plan** — 5,000+ orphaned standalone products need deletion and re-import as proper variant families (plan documented, not yet executed)
 
 ## Next Up
-1. **Test Enhanced Processor** with Corrinne — verify Lightspeed lookup, normalization, three-source display
+1. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
 2. **Lightspeed cleanup Phase 0** — refresh LS catalog, build cleanup manifest (read-only)
 3. **Lightspeed cleanup Phase 1** — delete ~5,000 orphaned standalone products from April 13-14 import
 4. **Lightspeed cleanup Phase 2** — re-import as proper variant families with brand/category/tags/supplier/barcode
@@ -46,7 +46,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 7. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
 
 ## Active Stack
-- Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 19 modules
+- Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 20 modules
 - Backend: Supabase Edge Function (Deno/TypeScript) + PostgreSQL
 - Storage: Supabase Storage (`product-images` bucket, private, UID-scoped RLS)
 - AI: OpenAI GPT-4o Vision (via Edge Function)
@@ -115,6 +115,15 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Created .gitignore, package.json, .env.local, CLAUDE.md, ARCHITECTURE.md, HANDOFF.md, TODO.md
 - Updated README.md for merged monorepo structure
 - Verified OPENAI_API_KEY, set up pg_cron, fixed auth tokens, removed duplicates, extracted inline styles
+
+### 2026-04-15 — Enhanced Processor UX Improvements (Corrinne's Feedback)
+- **Per-field copy buttons** — `→` buttons between AI→Form and LS→Form columns (5-column grid), delegated click handler with green flash feedback
+- **Dynamic SKU regeneration** — form field changes instantly rebuild SKU + all derived fields (supplier code, gender, color code, size value, width/length)
+- **Category dropdown** — `<datalist>` with 24 standard Rodeo Shop categories, browser-native autocomplete + free text
+- **Supplier/brand cross-population** — brand↔supplier name↔supplier code auto-fill bidirectionally using reference data maps
+- **Supplier name field** — new row in 3-source grid (AI derived from brand, LS from catalog, Form editable). DB column `supplier_name TEXT` added. Supplier code now editable for override.
+- **New module:** `js/reference-data.js` — 24 categories, 46 supplier code↔name mappings
+- **Architect review: PASS** (2026-04-15) — all additive, no Edge Function changes, no RLS changes
 
 ### 2026-04-14 — Enhanced Processor + Lightspeed Import Diagnosis
 - **Diagnosed Corrinne's Lightspeed import issues** — all 5 concerns validated:
