@@ -47,34 +47,62 @@ export async function checkBarcodeExists(barcode) {
     // Skip check when editing (own barcode would trigger false positive)
     if (state.editingId) return;
 
-    if (!barcode || (barcode.length !== 12 && barcode.length !== 13)) {
+    // Validate barcode format — warn on non-numeric or too short
+    if (barcode && barcode.length > 0) {
+        if (!/^\d+$/.test(barcode)) {
+            state.duplicateProductId = null;
+            barcodeDupWarning.textContent = `⚠️ Invalid barcode: contains non-numeric characters. Real barcodes are digits only.`;
+            barcodeDupWarning.style.display = 'block';
+            return;
+        }
+        if (barcode.length < 6) {
+            state.duplicateProductId = null;
+            barcodeDupWarning.textContent = `⚠️ Barcode too short (${barcode.length} digits). Standard barcodes are 8-13 digits.`;
+            barcodeDupWarning.style.display = 'block';
+            return;
+        }
+    }
+
+    if (!barcode || barcode.length < 6) {
         barcodeDupWarning.style.display = 'none';
         barcodeDupWarning.textContent = '';
         return;
     }
 
     try {
-        const response = await fetch(
-            `${SUPABASE_URL}/rest/v1/products?barcode=eq.${barcode}&select=name,id`,
-            {
-                headers: {
-                    'apikey': SUPABASE_KEY,
-                    'Authorization': `Bearer ${state.accessToken}`
-                }
-            }
-        );
-        const data = await response.json();
+        // Check both our products table AND Lightspeed index in parallel
+        const [prodResponse, lsResponse] = await Promise.all([
+            fetch(`${SUPABASE_URL}/rest/v1/products?barcode=eq.${barcode}&select=name,id`, {
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${state.accessToken}` }
+            }),
+            fetch(`${SUPABASE_URL}/rest/v1/lightspeed_index?barcode=eq.${barcode}&select=name,brand,category,retail_price,variant_name&limit=1`, {
+                headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${state.accessToken}` }
+            })
+        ]);
+        const [prodData, lsData] = await Promise.all([prodResponse.json(), lsResponse.json()]);
 
-        // If the barcode input was cleared while this fetch was in flight (e.g. after save),
-        // discard the result so a stale warning doesn't reappear.
+        // If barcode input changed while fetching, discard stale result
         if (getDOMElements().barcodeInput.value.trim() !== barcode) return;
 
-        if (data && data.length > 0) {
-            state.duplicateProductId = data[0].id;
-            barcodeDupWarning.textContent = `⚠️ Already in database: ${data[0].name || 'Unknown product'} (ID: ${data[0].id})`;
-            barcodeDupWarning.style.display = 'block';
+        const warnings = [];
+
+        if (prodData && prodData.length > 0) {
+            state.duplicateProductId = prodData[0].id;
+            warnings.push(`⚠️ Already scanned: ${prodData[0].name || 'Unknown'} (ID: ${prodData[0].id})`);
         } else {
             state.duplicateProductId = null;
+        }
+
+        if (lsData && lsData.length > 0) {
+            const ls = lsData[0];
+            const price = ls.retail_price ? `$${ls.retail_price}` : '';
+            warnings.push(`📋 In Lightspeed: ${ls.name || ''} | ${ls.brand || ''} | ${ls.category || ''} ${price}`);
+        }
+
+        if (warnings.length > 0) {
+            barcodeDupWarning.innerHTML = warnings.join('<br>');
+            barcodeDupWarning.style.display = 'block';
+        } else {
             barcodeDupWarning.style.display = 'none';
             barcodeDupWarning.textContent = '';
         }
@@ -96,8 +124,51 @@ export async function saveProduct() {
         return;
     }
 
-    saveBtn.disabled = true;
     const isEditing = !!state.editingId;
+
+    // Warn on duplicate barcode — ask user to confirm before saving
+    if (!isEditing && state.duplicateProductId && formData.barcode) {
+        const proceed = confirm(
+            `This barcode (${formData.barcode}) already exists on another product in the database.\n\n` +
+            `Saving will create a duplicate. Are you sure you want to continue?`
+        );
+        if (!proceed) {
+            showStatus('Save cancelled — duplicate barcode', 'error');
+            return;
+        }
+    }
+
+    // Variant consistency check — warn if siblings have fields this product is missing
+    if (!isEditing && formData.style_number) {
+        try {
+            const sibResp = await fetch(
+                `${SUPABASE_URL}/rest/v1/products?style_number=eq.${encodeURIComponent(formData.style_number)}&select=size_or_dimensions,color&limit=5`,
+                { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${state.accessToken}` } }
+            );
+            const siblings = await sibResp.json();
+            if (siblings && siblings.length > 0) {
+                const missing = [];
+                const sibHasSize = siblings.some(s => s.size_or_dimensions);
+                const sibHasColor = siblings.some(s => s.color);
+                if (sibHasSize && !formData.size_or_dimensions) missing.push('Size');
+                if (sibHasColor && !formData.color) missing.push('Color');
+                if (missing.length > 0) {
+                    const proceed = confirm(
+                        `This style (${formData.style_number}) has ${siblings.length} existing variant(s) with ${missing.join(' and ')}.\n\n` +
+                        `Your product is missing: ${missing.join(', ')}. This may cause Lightspeed import issues.\n\nSave anyway?`
+                    );
+                    if (!proceed) {
+                        showStatus('Save cancelled — add missing variant fields', 'error');
+                        return;
+                    }
+                }
+            }
+        } catch {
+            // Non-critical — proceed with save
+        }
+    }
+
+    saveBtn.disabled = true;
     showStatus(isEditing ? 'Updating...' : 'Saving...', 'info');
 
     console.log(isEditing ? `Updating product ID ${state.editingId}:` : 'Saving product:', formData);

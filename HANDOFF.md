@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-14 — Enhanced Processor with Lightspeed lookup, Lightspeed import cleanup plan
+2026-04-16 — Lightspeed cleanup executed (5,286 deleted, ~5,270 re-imported as variant families)
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -34,16 +34,13 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## In Progress
 - **Enhanced Processor v2 deployed** — copy buttons, dynamic SKU, category dropdown, supplier cross-population, supplier name field. Awaiting Corrinne's testing.
-- **Lightspeed import cleanup plan** — 5,000+ orphaned standalone products need deletion and re-import as proper variant families (plan documented, not yet executed)
 
 ## Next Up
 1. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
-2. **Lightspeed cleanup Phase 0** — refresh LS catalog, build cleanup manifest (read-only)
-3. **Lightspeed cleanup Phase 1** — delete ~5,000 orphaned standalone products from April 13-14 import
-4. **Lightspeed cleanup Phase 2** — re-import as proper variant families with brand/category/tags/supplier/barcode
-5. **Lightspeed cleanup Phase 3** — verification report for Corrinne
-6. Review `docs/normalized_needs_review.csv` (300 products) — incomplete data items
-7. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
+2. **6 barcode-conflict products** need manual resolution in Lightspeed — see `docs/ls_cleanup_needs_review.csv` (styles: SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L)
+3. **874 photo-only products** — 746 have AI cache, need Enhanced Processor review. 128 need AI extraction first.
+4. **365 needs_review products** — incomplete data, many can be enriched from refreshed LS index
+5. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 20 modules
@@ -125,6 +122,34 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - **New module:** `js/reference-data.js` — 24 categories, 46 supplier code↔name mappings
 - **Architect review: PASS** (2026-04-15) — all additive, no Edge Function changes, no RLS changes
 
+### 2026-04-16 — Post-Cleanup Data Quality Improvements
+- **Refreshed `lightspeed_index`** — 74,179 rows from post-cleanup catalog (was stale from Apr 14)
+- **Normalized 650 missing products** — complete/enhanced_complete products that were never in normalized_products. 551 normalized, 99 to needs_review.
+- **Barcode validation** — `checkBarcodeExists` in database.js now validates format (non-numeric, too-short warnings), checks both products table AND lightspeed_index in parallel, shows LS product info on match
+- **Duplicate barcode block** — `saveProduct` now prompts confirmation when saving a product with a barcode that already exists in the database
+- **Variant consistency check** — `saveProduct` checks siblings by style_number before saving. Warns if siblings have Size/Color but the new product doesn't (prevents LS import failures)
+- **Enhanced Processor promoted** — reordered menu: Enhanced Processor now 3rd (before basic Process Photos), labeled "Recommended", photo-only badge moved to it
+- **Edge Function color extraction** — added directive to describe product color from image when label doesn't specify (deployed, 35% of products were missing color)
+- **Barcode input validation** — debounced check now fires on any input (not just 12-13 digits), catching bad barcodes immediately
+
+### 2026-04-15/16 — Lightspeed Cleanup Execution (4-Phase)
+- **Phase 0: Catalog refresh + manifest** — fetched 75,379 products, diffed against pre-import cache (70,093), identified 5,286 orphans via multi-layer safety filters (standalone + no metadata + SKU pattern match). Built re-import plan: 635 new families, 561 add-to-existing, 1,229 standalone.
+- **Phase 1: Deleted 5,286 orphaned products** — 100% success, 0 failures. ~96 min runtime at 55 req/min.
+- **Phase 2: Re-imported 5,746 products** (3 passes):
+  - Pass 1: 448 new variant families created (v2.0 POST with `variant_definitions`), 154 added to existing families (v2.1 POST matching parent attributes), 170 standalone
+  - Pass 2 (fix): Corrected attribute ID mismatches (Color/Size/Width UUIDs from `/variant_attributes` endpoint), fetched 561 parent products to match exact attribute structure, created remaining standalone. Resolved 1,329 failures → 0.
+  - Pass 3 (final): Converted 1,283 supplier-mismatch products to standalone (v2.1 API doesn't support supplier in POST), resolved single-variant families, duplicate barcodes, duplicate variant defs.
+  - **Final: 600 families + 154 added to existing + 2,516 standalone = ~5,270 products imported. 18 residual (12 already-exist + 6 barcode conflicts).**
+- **Phase 3: Verification report** — post-cleanup catalog: 74,908 products. 0 remaining orphans. Report saved to `docs/ls_cleanup_report.txt`.
+- **Key learnings:**
+  - Lightspeed v2.0 POST `variant_options` is READ-ONLY. Use `variant_definitions` with `attribute_id` for family creation.
+  - Variant attribute UUIDs from product `variant_options.id` differ from `/variant_attributes` endpoint IDs.
+  - v2.1 POST doesn't accept supplier fields — inherits from family, but fails validation if mismatch.
+  - Existing families use "Width" (e7261267) not "Shoe Width" (2add3700) — must fetch parent's actual attributes.
+  - v2.0 POST response: `{"data": ["uuid1", "uuid2", ...]}` — list of IDs, not full objects.
+- **Scripts:** `docs/ls_cleanup_phase0.py`, `phase1.py`, `phase2.py`, `phase2_fix.py`, `phase2_final.py`, `phase3.py`
+- **Architect review: ISSUES FOUND → all resolved** (2026-04-15) — 6 issues addressed during execution
+
 ### 2026-04-14 — Enhanced Processor + Lightspeed Import Diagnosis
 - **Diagnosed Corrinne's Lightspeed import issues** — all 5 concerns validated:
   - ~5,000 products created as standalone (0 as variants), 100% missing brand/supplier/category/tags
@@ -177,7 +202,8 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 > Legacy: https://nexusbluedev.github.io/retail-product-label-system/ (GitHub Pages)
 > Repo: https://github.com/NexusBlueDev/retail-product-label-system
 > Vercel: https://vercel.com/nexus-blue-dev/retail-product-label-system
-> State: v5.0 — three-mode workflow, PWA, Lightspeed integration, enhanced AI extraction
+> State: v6.0 — four-mode workflow, PWA, Lightspeed integration, cleanup complete
 > Playbook: docs/DATA_ANALYSIS_INSTRUCTIONS.md
-> Next action: Scan remaining 1,105 photo-only products, upload variants CSV to Lightspeed
-> Start by reading: HANDOFF.md → CLAUDE.md → docs/DATA_ANALYSIS_INSTRUCTIONS.md
+> Cleanup report: docs/ls_cleanup_report.txt
+> Next action: Corrinne tests Enhanced Processor v2, resolve 6 barcode conflicts, review 300 needs-review items
+> Start by reading: HANDOFF.md → CLAUDE.md → docs/ls_cleanup_report.txt

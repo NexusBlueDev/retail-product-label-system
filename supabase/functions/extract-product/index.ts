@@ -158,6 +158,7 @@ Add ", Clearance" if the price ends in .00 or .97
 - Multi-word: "Dark Brown", "Light Blue", "Charcoal Heather"
 - Slash for combos: "Black/White", "Brown/Turquoise"
 - NEVER return numeric color codes (like "07" or "171")
+- **If the label does NOT show a color name, describe the primary color of the product visible in the image** (e.g., if you see brown leather boots but the tag doesn't say the color, return "Brown")
 
 ## CATEGORY — Use one of these standard formats:
 Footwear - Boots, Footwear - Shoes, Footwear - Work Boots, Footwear - Accessories,

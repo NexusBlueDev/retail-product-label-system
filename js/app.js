@@ -90,9 +90,10 @@ function initEventListeners() {
         }
     });
 
-    // Barcode pre-check: only fire after user stops typing, and only for complete barcodes
+    // Barcode pre-check: fire after user stops typing for any non-empty barcode
+    // checkBarcodeExists handles format validation, duplicate check, and LS lookup
     const debouncedBarcodeCheck = debounce((value) => {
-        if (/^\d{12,13}$/.test(value)) checkBarcodeExists(value);
+        if (value.length > 0) checkBarcodeExists(value);
     }, 500);
     dom.barcodeInput.addEventListener('input', () => {
         debouncedBarcodeCheck(dom.barcodeInput.value.trim());

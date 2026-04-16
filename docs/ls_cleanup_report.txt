@@ -1,0 +1,48 @@
+============================================================
+LIGHTSPEED CLEANUP — VERIFICATION REPORT
+Generated: 2026-04-16T19:15:04.394779+00:00
+============================================================
+
+CATALOG OVERVIEW:
+  Pre-import baseline:     70093
+  Orphans targeted:        5286
+  Post-cleanup total:      74908
+  Standalone products:     68008
+  Variant families:        6900
+  Products with brand:     52031 (69.5%)
+  Products with supplier:  70972 (94.7%)
+  Products with category:  72792 (97.2%)
+
+DELETION RESULTS (Phase 1):
+  Deleted:                 5286
+  Failed:                  0
+  Remaining orphans:       0
+
+RE-IMPORT RESULTS (Phase 2):
+  New families created:    600
+  Added to existing:       154
+  Standalone created:      2516
+  Failed:                  18
+
+FAILED IMPORTS (needs attention):
+  - [final_standalone] L6098 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] L6090 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] L6090 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] A4229 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] A4229 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] B5000 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] B5000 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] L5704 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] L5704 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] L5704 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] L5704 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_standalone] MTW7062374 — HTTP : {'error': 'Validation Error', 'fields': {'sku': 'Already exists for your retaile
+  - [final_dup_barcode] SE2801 — HTTP : {'error': 'Product codes must be unique.', 'fields': {'duplicate_product_codes':
+  - [final_dup_barcode] 03-050-0522-1697-AS — HTTP : {'error': 'Product codes must be unique.', 'fields': {'duplicate_product_codes':
+  - [final_dup_barcode] HL4227 — HTTP : {'error': 'Product codes must be unique.', 'fields': {'duplicate_product_codes':
+  - [final_dup_barcode] 100153-234 — HTTP : {'error': 'Product codes must be unique.', 'fields': {'duplicate_product_codes':
+  - [final_dup_barcode] AR2341-002-M — HTTP : {'error': 'Product codes must be unique.', 'fields': {'duplicate_product_codes':
+  - [final_dup_barcode] 230992MUL-L — HTTP : {'error': 'Product codes must be unique.', 'fields': {'duplicate_product_codes':
+
+VERDICT: NEEDS ATTENTION
+============================================================
