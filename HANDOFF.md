@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-16 — Lightspeed cleanup executed (5,286 deleted, ~5,270 re-imported as variant families)
+2026-04-17 — Space-SKU remediation: 544 orphan standalones replaced with 60 variant families + 310 standalones
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -36,11 +36,14 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - **Enhanced Processor v2 deployed** — copy buttons, dynamic SKU, category dropdown, supplier cross-population, supplier name field. Awaiting Corrinne's testing.
 
 ## Next Up
-1. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
-2. **6 barcode-conflict products** need manual resolution in Lightspeed — see `docs/ls_cleanup_needs_review.csv` (styles: SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L)
-3. **874 photo-only products** — 746 have AI cache, need Enhanced Processor review. 128 need AI extraction first.
-4. **365 needs_review products** — incomplete data, many can be enriched from refreshed LS index
-5. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
+1. **Corrinne spot-checks space-SKU remediation** — verify MSW9165087, MTW1725003, CTK8990004 now show as proper variant families (not standalones)
+2. **Metadata follow-up for 60 rebuilt families** — supplier_id + product_type_id could not be set via API (LS v2.1 PUT rejects these fields, v2.0 has no PUT route). Options: (a) manual dashboard edits; (b) investigate alternate LS endpoint or CSV re-import. See `docs/ls_patch_metadata.py` (pre-built, awaits unblocked endpoint)
+3. **44 sibling-dupe products couldn't be rebuilt** — see `docs/ls_space_sku_review.csv` (143 sibling-match cases flagged for review; 44 of those collided on POST)
+4. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
+5. **6 barcode-conflict products** need manual resolution in Lightspeed — see `docs/ls_cleanup_needs_review.csv` (styles: SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L)
+6. **874 photo-only products** — 746 have AI cache, need Enhanced Processor review. 128 need AI extraction first.
+7. **365 needs_review products** — incomplete data, many can be enriched from refreshed LS index
+8. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 20 modules
@@ -57,6 +60,39 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-04-17 — Space-SKU Remediation (Corrinne's 3-style complaint → 544 orphans fixed)
+
+**Trigger:** Corrinne reported MSW9165087, MTW1725003, CTK8990004 appearing as multiple standalone products instead of variant families, with missing Tag/Category/UPC/Supplier.
+
+**Root cause:** Source `style_number` field contained embedded color codes with a space (e.g. "MSW9165087 LIM"). The generated SKU inherited the space. Lightspeed's SKU regex `^[a-zA-Z0-9_/()#\-\|\.]+$` rejected 1,129 SKUs during the Apr 13-14 import. The retry logic stripped the space and re-pushed each variant as a **standalone** (dropping variant-family grouping + most metadata). Scope: 1,129 rejections → 544 distinct products landed as orphan standalones across 383 styles.
+
+**Recovery:**
+- v1 attempt halted: `docs/ls_fresh_sku_idx.json` was captured Apr 15 19:08 before Phase 1 cleanup soft-deleted ~5k products, so our manifest UUIDs pointed at already-dead shadow records. DELETE calls were idempotent no-ops; Corrinne's live orphans were untouched.
+- v2 successful: Rebuilt fresh sku→uuid mapping via live LS search for all 383 styles (`docs/ls_refresh_manifest_uuids.py`), then re-ran remediation (`docs/ls_space_sku_remediation.py`) with the correct live UUIDs.
+- Script patched mid-flight to handle "Product codes must be unique" (strip barcodes and retry) and "Variant definitions do not match" (normalize variant attribute sets across family).
+
+**Final outcome:**
+- 544 orphans soft-deleted (all live UUIDs confirmed via search)
+- 60 variant families created with brand_id set (vs 0 before)
+- 310 standalones rebuilt with brand_id (single-variant fallbacks)
+- 44 rebuild failures — 43 sibling-SKU collisions with Corrinne's pre-existing clean products (see `docs/ls_space_sku_review.csv` for the 143 cases to manually spot-check), 1 residual barcode conflict
+- Corrinne's 3 flagged styles verified as proper variant families
+
+**Known gap (follow-up):** supplier_id + product_type_id could NOT be set on the 60 new families — LS API update endpoints are locked down (v2.0 /products has no PUT/PATCH route; v2.1 PUT rejects all metadata fields with "Unknown field in payload"). `docs/ls_patch_metadata.py` is ready to run once we identify a working endpoint. Brand_id IS set correctly on all new families.
+
+**Prevention:** Patched `js/sku-generator.js` to sanitize `style_number` in `generateSKU()` — drops anything after the first whitespace and strips characters outside LS's allowed SKU regex. Prevents this specific class of regression for any future Enhanced Processor entries.
+
+**Artifacts:**
+- `docs/ls_space_sku_remediation.csv` — 544-row manifest (post-UUID-refresh)
+- `docs/ls_space_sku_remediation.v1.csv` — pre-refresh manifest (archived)
+- `docs/ls_space_sku_remediation.py` — DELETE+REBUILD script (with barcode + variant-def fallbacks)
+- `docs/ls_refresh_manifest_uuids.py` — live-search UUID refresh
+- `docs/ls_space_sku_review.csv` — 143 sibling-dupe cases for Corrinne to spot-check
+- `docs/ls_patch_metadata.py` — supplier/category patch script (blocked by API; kept for future)
+- `docs/ls_space_sku_progress.json` — final progress snapshot
+- `docs/ls_space_sku_progress.v1.json` — halted v1 run archive
+
 
 ### 2026-03-03 (Session 4) — Command Center Library Population
 - Created `project_library` table in Supabase (portable schema from cross-project template)

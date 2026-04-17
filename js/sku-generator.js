@@ -201,6 +201,16 @@ export function generateSKU(style, brand, color, size, tags, category) {
     brand = (brand || '').trim();
     if (!style && !brand) return '';
 
+    // Sanitize style: Lightspeed SKU pattern is ^[a-zA-Z0-9_/()#\-\|\.]+$
+    // Drop anything after a space (common case: "MSW9165087 LIM" where the color
+    // got merged into the style number) and strip any disallowed characters.
+    // This prevented a 544-product variant-family import from grouping correctly
+    // in April 2026 — Lightspeed rejected the space-containing SKUs and the
+    // retry fallback created flat standalones instead of grouped families.
+    if (style) {
+        style = style.split(/\s/)[0].replace(/[^a-zA-Z0-9_/()#\-|.]/g, '');
+    }
+
     const gender = getGenderCode(tags);
     const supplierCode = getSupplierCode(brand);
 
