@@ -193,23 +193,27 @@ export function parseSize(sizeStr, category) {
 }
 
 /**
+ * Sanitize a style_number to match Lightspeed's SKU regex: ^[a-zA-Z0-9_/()#\-\|\.]+$
+ * Drops anything after the first whitespace (catches embedded color codes like
+ * "MSW9165087 LIM") and strips disallowed characters.
+ *
+ * April 2026 incident: unsanitized style_numbers caused 1,129 LS POST rejections
+ * and 544 orphan standalone products. See HANDOFF.md session log.
+ */
+export function sanitizeStyleNumber(style) {
+    if (!style) return style;
+    const cleaned = String(style).trim().split(/\s/)[0].replace(/[^a-zA-Z0-9_/()#\-|.]/g, '');
+    return cleaned || null;
+}
+
+/**
  * Generate SKU using Corrinne's formula:
  * GENDER-SUPPLIER_CODE-STYLE-COLOR_CODE-SIZE_VALUE[-WIDTH_OR_LENGTH]
  */
 export function generateSKU(style, brand, color, size, tags, category) {
-    style = (style || '').trim();
+    style = sanitizeStyleNumber(style) || '';
     brand = (brand || '').trim();
     if (!style && !brand) return '';
-
-    // Sanitize style: Lightspeed SKU pattern is ^[a-zA-Z0-9_/()#\-\|\.]+$
-    // Drop anything after a space (common case: "MSW9165087 LIM" where the color
-    // got merged into the style number) and strip any disallowed characters.
-    // This prevented a 544-product variant-family import from grouping correctly
-    // in April 2026 — Lightspeed rejected the space-containing SKUs and the
-    // retry fallback created flat standalones instead of grouped families.
-    if (style) {
-        style = style.split(/\s/)[0].replace(/[^a-zA-Z0-9_/()#\-|.]/g, '');
-    }
 
     const gender = getGenderCode(tags);
     const supplierCode = getSupplierCode(brand);

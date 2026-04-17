@@ -10,6 +10,7 @@ import { state } from './state.js';
 import { fetchPhotoOnlyProducts } from './database.js';
 import { getSignedUrl, getSignedUrls, fetchImageAsBase64 } from './storage.js';
 import { eventBus } from './events.js';
+import { sanitizeStyleNumber } from './sku-generator.js';
 
 // ── Field mapping ────────────────────────────────────────────────────
 // Maps AI extraction keys → processor form input IDs (p_ prefixed)
@@ -433,7 +434,7 @@ async function saveAndComplete() {
 
     const formData = {
         name,
-        style_number: dom.pStyleNumber.value || null,
+        style_number: sanitizeStyleNumber(dom.pStyleNumber.value) || null,
         sku: dom.pSku.value ? dom.pSku.value.toUpperCase() : null,
         barcode: dom.pBarcode.value || null,
         brand_name: dom.pBrandName.value || null,

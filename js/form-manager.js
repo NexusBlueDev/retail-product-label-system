@@ -4,7 +4,7 @@
  */
 
 import { getDOMElements } from './dom.js';
-import { generateSKUFromForm, getSupplierCode, getGenderCode, getColorCode, SUPPLIER_MAP } from './sku-generator.js';
+import { generateSKUFromForm, getSupplierCode, getGenderCode, getColorCode, SUPPLIER_MAP, sanitizeStyleNumber } from './sku-generator.js';
 import { showStatus } from './ui-utils.js';
 import { state } from './state.js';
 
@@ -122,11 +122,12 @@ export function postProcessExtraction(data) {
         data.color = color;
     }
 
-    // 5. Clean style number — remove trailing spaces, fix "..." to null
+    // 5. Clean style number — drop "..." placeholders, then sanitize to LS regex
     if (data.style_number) {
-        data.style_number = data.style_number.trim();
         if (data.style_number.includes('...') || data.style_number.includes('…')) {
             data.style_number = null;
+        } else {
+            data.style_number = sanitizeStyleNumber(data.style_number);
         }
     }
 

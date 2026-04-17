@@ -16,7 +16,7 @@ import { fetchPhotoOnlyProducts } from './database.js';
 import { getSignedUrl, getSignedUrls, fetchImageAsBase64 } from './storage.js';
 import { eventBus } from './events.js';
 import { postProcessExtraction } from './form-manager.js';
-import { getSupplierCode, getGenderCode, getColorCode, parseSize, generateSKU } from './sku-generator.js';
+import { getSupplierCode, getGenderCode, getColorCode, parseSize, generateSKU, sanitizeStyleNumber } from './sku-generator.js';
 import { CATEGORY_LIST, SUPPLIER_CODE_TO_NAME, SUPPLIER_NAME_TO_CODE } from './reference-data.js';
 
 // ── Field mapping ────────────────────────────────────────────────────
@@ -496,7 +496,7 @@ async function saveAndComplete() {
 
     const formData = {
         name,
-        style_number: getVal('ep_style_number'),
+        style_number: sanitizeStyleNumber(getVal('ep_style_number')),
         sku: getVal('ep_sku') ? getVal('ep_sku').toUpperCase() : null,
         barcode: getVal('ep_barcode'),
         brand_name: getVal('ep_brand_name'),

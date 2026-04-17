@@ -81,7 +81,18 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 **Known gap (follow-up):** supplier_id + product_type_id could NOT be set on the 60 new families — LS API update endpoints are locked down (v2.0 /products has no PUT/PATCH route; v2.1 PUT rejects all metadata fields with "Unknown field in payload"). `docs/ls_patch_metadata.py` is ready to run once we identify a working endpoint. Brand_id IS set correctly on all new families.
 
-**Prevention:** Patched `js/sku-generator.js` to sanitize `style_number` in `generateSKU()` — drops anything after the first whitespace and strips characters outside LS's allowed SKU regex. Prevents this specific class of regression for any future Enhanced Processor entries.
+**Prevention (code):** Added `sanitizeStyleNumber()` helper in `js/sku-generator.js` — drops anything after first whitespace and strips characters outside LS's allowed SKU regex. Applied at ALL save paths:
+- Scanner: `js/form-manager.js` postProcessExtraction step 5
+- Desktop Processor: `js/desktop-processor.js` formData.style_number
+- Enhanced Processor: `js/enhanced-processor.js` formData.style_number
+- SKU generation: `js/sku-generator.js` `generateSKU()`
+
+**Data cleanup (existing rows):**
+- `products` table: 727 rows had whitespace in `style_number`, 184 had whitespace in `sku` — all cleaned in-place
+- `normalized_products` table: 58 rows with whitespace in `style_number` — cleaned
+- 1 duplicate group required `-V2/-V3` disambiguation suffix during SKU clean
+- Residual: 29 cosmetic double/leading/trailing-dash SKUs — non-blocking (LS regex allows `-`), tagged as follow-up
+- Final state: **zero** whitespace or invalid characters in `style_number` or `sku` across 7,596 products
 
 **Artifacts:**
 - `docs/ls_space_sku_remediation.csv` — 544-row manifest (post-UUID-refresh)
