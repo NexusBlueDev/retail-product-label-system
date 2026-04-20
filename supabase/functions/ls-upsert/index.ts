@@ -172,6 +172,13 @@ async function searchBySku(token: string, sku: string): Promise<LsProduct | null
     ?? null
 }
 
+async function searchByName(token: string, name: string): Promise<LsProduct | null> {
+  const { data, status } = await lsGet(token, `search?type=products&q=${encodeURIComponent(name)}&limit=10`)
+  if (status !== 200) return null
+  const items = ((data as { data?: unknown[] })?.data ?? []) as LsProduct[]
+  return items.find(p => !p.deleted_at && p.active && p.name?.toLowerCase() === name.toLowerCase()) ?? null
+}
+
 async function updateProduct(token: string, product: LsProduct, req: UpsertRequest): Promise<UpsertResult> {
   // NOTE: PUT v2.1 accepts operational fields (price, supply_price, active) but rejects ALL
   // metadata fields (supplier_id, product_type_id, brand_id, name, tags → 422 "Unknown field").
@@ -216,11 +223,11 @@ async function createProduct(token: string, req: UpsertRequest): Promise<UpsertR
   // (docs/ls_cleanup_phase2_final.py), not this per-product upsert. Changing this to
   // auto-create families would recreate the 5K+ orphaned-standalone debt from April cleanup.
   const variant: Record<string, unknown> = {
-    sku: req.sku,
     price_excluding_tax: req.retail_price ?? 0,
     supply_price: req.supply_price ?? 0,
     variant_definitions: STANDALONE_VARIANT_DEF,
   }
+  if (req.sku) variant.sku = req.sku
 
   if (req.barcode) {
     variant.product_codes = [{ type: 'UPC', code: req.barcode }]
@@ -298,12 +305,15 @@ serve(async (req) => {
   try {
     let existing: LsProduct | null = null
 
-    // Lookup: barcode first, SKU second
+    // Lookup: barcode → SKU → name (prevents duplicate-name 422 on create)
     if (body.barcode) {
       existing = await searchByBarcode(token, body.barcode)
     }
     if (!existing && body.sku) {
       existing = await searchBySku(token, body.sku)
+    }
+    if (!existing && body.name) {
+      existing = await searchByName(token, body.name)
     }
 
     const result: UpsertResult = existing

@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-20 (Session 3) — lightspeed_index rebuilt (75,379 rows + new columns), cross-validation completed, variant grouping diagnostic saved
+2026-04-20 (Session 4) — ls-upsert bugs fixed (null SKU + name fallback), backfill script committed, old import files archived, backfill launched
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -41,7 +41,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 1. **Corrinne tests ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`, no duplicate created) + save a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
 2. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
 3. **Fix swapped prices (critical)** — cross-validation found JACKIE SQUARE TOE and SILVERSMITH SQUARE TOE have their prices inverted between our DB and LS. Corrinne to fix in LS dashboard. See `docs/ls_validation_report.json` for all 36 price mismatches.
-4. **LS backfill (354 products)** — 510 of 674 enhanced_complete products not yet in LS. 354 are matchable (286 have barcode, 68 have SKU). Write a bulk-push script using ls-upsert. The 156 with no barcode/SKU need manual review.
+4. **LS backfill in progress** — `docs/ls_backfill.py` running (2026-04-20). 658 products queued: 435 barcode, 67 SKU-only, 156 no-key (skipped). ls-upsert fixed: null-SKU 422 and name-collision 422 resolved (deployed same session). Results log: `docs/ls_backfill.log`.
 5. **Supplier gap on 60 styles** — Corrinne continues manual LS dashboard edits for historic products. New products correct from day one via ls-upsert.
 6. **Price update path** — v2.1 PUT confirmed to reject ALL fields. Need OAuth or Retailer API investigation.
 7. **6 barcode-conflict products** need manual LS resolution — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
@@ -353,4 +353,15 @@ LS soft-delete (DELETE /products/{id}) does NOT release the product NAME for reu
 - Edge function deployed: ls-upsert
 - Edge function deployed: ls-upsert
 - Git commit [main 12ec850]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-04-20T23:47:24Z — auto-compaction)
+**Ledger stats:** 28 entries (0 decisions, 0 lessons, 0 errors, 6 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Edge function deployed: ls-upsert
+- Git commit [main 12ec850]
+- Git push to main
+- Git commit [main 706e706]
 - Git push to main

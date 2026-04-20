@@ -7,9 +7,13 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "deploy:function": "supabase functions deploy extract-product --no-verify-jwt --project-ref ayfwyvripnetwrkimxka"
+    "deploy:function": "supabase functions deploy extract-product --no-verify-jwt --project-ref ayfwyvripnetwrkimxka",
+    "deploy:ls-upsert": "supabase functions deploy ls-upsert --no-verify-jwt --project-ref ayfwyvripnetwrkimxka",
+    "lint": "echo 'Static HTML/ES6 app — no lint configured' && exit 0",
+    "typecheck": "echo 'Static HTML/ES6 app — no TypeScript' && exit 0"
   },
   "devDependencies": {
-    "supabase": "^2.76.9"
+    "supabase": "^2.76.9",
+    "typescript": "^6.0.3"
   }
 }
