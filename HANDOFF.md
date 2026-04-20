@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-20 — ls-upsert Edge Function deployed + wired into Enhanced Processor: lookup-first LS import (duplicate prevention live)
+2026-04-20 (Session 3) — lightspeed_index rebuilt (75,379 rows + new columns), cross-validation completed, variant grouping diagnostic saved
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -35,18 +35,18 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## In Progress
 - **Enhanced Processor v2 deployed** — copy buttons, dynamic SKU, category dropdown, supplier cross-population, supplier name field. Awaiting Corrinne's testing.
 - **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Duplicate prevention active. See session log for test results and known limitation (price UPDATE path).
+- **lightspeed_index refreshed** — 75,379 rows loaded with new columns: family_id, variant_parent_id, supplier_id, brand_id, product_type_id. Script: `docs/ls_index_refresh.py` (caches catalog, supports --dry-run/--validate-only).
 
 ## Next Up
 1. **Corrinne tests ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`, no duplicate created) + save a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
-2. **Supplier gap on 60 styles** — Corrinne continues manual LS dashboard edits. Now that ls-upsert is live, new Enhanced Processor saves will include supplier at create time (from form → Edge Function → LS). The gap is historic; new products are correct from day one.
-3. **Price update path** — v2.1 PUT returns 422 for all fields (confirmed in smoke test). Need to find the correct LS price-update endpoint. Candidates: `/api/2.1/products/{uuid}/price` or a dedicated inventory endpoint. Low urgency — prices can be set at create time.
-4. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
-4. **44 sibling-dupe products couldn't be rebuilt** — see `docs/ls_space_sku_review.csv`. After P2 UPDATE logic exists, re-process via Enhanced Processor.
-5. **6 barcode-conflict products** need manual resolution in Lightspeed — styles: SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
-6. **874 photo-only products** — 746 have AI cache, need Enhanced Processor review. 128 need AI extraction first.
-7. **365 needs_review products** — incomplete data, many can be enriched from refreshed LS index
-8. **P4 SKU normalization** — target only 1,514 DB products (~55 min), not 75K full catalog. Barcode is permanent dedup key. Do after P2.
-9. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
+2. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
+3. **Fix swapped prices (critical)** — cross-validation found JACKIE SQUARE TOE and SILVERSMITH SQUARE TOE have their prices inverted between our DB and LS. Corrinne to fix in LS dashboard. See `docs/ls_validation_report.json` for all 36 price mismatches.
+4. **LS backfill (354 products)** — 510 of 674 enhanced_complete products not yet in LS. 354 are matchable (286 have barcode, 68 have SKU). Write a bulk-push script using ls-upsert. The 156 with no barcode/SKU need manual review.
+5. **Supplier gap on 60 styles** — Corrinne continues manual LS dashboard edits for historic products. New products correct from day one via ls-upsert.
+6. **Price update path** — v2.1 PUT confirmed to reject ALL fields. Need OAuth or Retailer API investigation.
+7. **6 barcode-conflict products** need manual LS resolution — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
+8. **P4 SKU normalization** — now unblocked. Reassess scope (products table has 7,875 rows, not 1,514 — HANDOFF was stale). Barcode is dedup key.
+9. Consider hashing user PINs (low priority — internal tool)
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 20 modules
@@ -63,6 +63,28 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-04-20 (Session 3) — lightspeed_index Rebuild + Cross-Validation
+
+**Trigger:** User request to "validate again and use the lightspeed data to help" after ls-upsert deployment.
+
+**What was built / discovered:**
+- `docs/ls_index_refresh.py` — full rebuild script for lightspeed_index. Version-based pagination from LS API. Adds 5 new columns (family_id, variant_parent_id, supplier_id, brand_id, product_type_id). Truncates and reloads all rows in batches. Runs cross-validation comparing our products against live LS. Supports --dry-run and --validate-only. Caches catalog (1hr TTL) to skip re-fetch on repeated runs.
+- `docs/ls_validation_report.json` — cross-validation output (generated Apr-20, based on April-15 LS snapshot).
+- `docs/variant_grouping_diagnostic.csv` — 51 styles with 4+ products in our DB (variant family candidates).
+- lightspeed_index rebuilt: **75,379 rows** with new ID columns.
+
+**Cross-validation findings (674 enhanced_complete products vs LS):**
+- **510 not found in LS** — pre-date ls-upsert (deployed today). 354 are matchable: 286 have barcode, 68 have SKU. 156 have neither.
+- **0 stale LS IDs** — all `lightspeed_product_id` values are 0 (none set yet); ls-upsert will populate going forward.
+- **36 price mismatches** (>$1). Key ones: JACKIE SQUARE TOE (ours $46.97, LS $65.95) and SILVERSMITH SQUARE TOE (ours $65.95, LS $46.97) — prices are **swapped between these two products**. Ariat accessories have $14-16 gaps.
+- **0 supplier gaps** — where we have a supplier and LS matched, LS also has it.
+
+**Issues encountered and fixed in ls_index_refresh.py:**
+- REST insert 401 — `ACCESS_TOKEN` (Management API PAT) is not a JWT; switched to Management API SQL INSERT.
+- Supabase Management API rate limit (429) — added 0.4s sleep between batches + 4-attempt retry with exponential backoff.
+- `UnboundLocalError: batch_size` — moved `batch_size = 200` before the log() call that referenced it.
+- Cache not written during dry-run — fixed: cache now always written after fetching.
 
 ### 2026-04-20 (Session 2) — ls-upsert Edge Function: Lookup-First LS Import
 
@@ -323,3 +345,12 @@ LS soft-delete (DELETE /products/{id}) does NOT release the product NAME for reu
 ### Mid-Session Checkpoint (2026-04-20T21:23:44Z — auto-compaction)
 **Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-04-20T23:13:25Z — auto-compaction)
+**Ledger stats:** 13 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Edge function deployed: ls-upsert
+- Git commit [main 12ec850]
+- Git push to main
