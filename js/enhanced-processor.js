@@ -9,7 +9,7 @@
  * Saves with status='enhanced_complete' to avoid interfering with existing processor.
  */
 
-import { SUPABASE_URL, SUPABASE_KEY, FUNCTION_URL } from './config.js';
+import { SUPABASE_URL, SUPABASE_KEY, FUNCTION_URL, LS_UPSERT_URL } from './config.js';
 import { getDOMElements } from './dom.js';
 import { state } from './state.js';
 import { fetchPhotoOnlyProducts } from './database.js';
@@ -494,6 +494,11 @@ async function saveAndComplete() {
         return el ? el.value.trim() || null : null;
     };
 
+    // Capture the existing LS ID from the form before building formData.
+    // lightspeed_product_id is excluded from the first PATCH and handled
+    // after the LS upsert resolves — avoids a race between two concurrent PATCHes.
+    const existingLsId = getVal('ep_lightspeed_product_id');
+
     const formData = {
         name,
         style_number: sanitizeStyleNumber(getVal('ep_style_number')),
@@ -518,13 +523,13 @@ async function saveAndComplete() {
         width_length: getVal('ep_width_length'),
         width_length_value: getVal('ep_width_length_value'),
         color_code: getVal('ep_color_code'),
-        lightspeed_product_id: getVal('ep_lightspeed_product_id'),
         data_source: Object.keys(dataSource).length > 0 ? dataSource : null,
         status: 'enhanced_complete',
         ai_cache: null
     };
 
     try {
+        // Step 1: Save to our Supabase DB
         const response = await fetch(
             `${SUPABASE_URL}/rest/v1/products?id=eq.${item.id}`,
             {
@@ -544,6 +549,32 @@ async function saveAndComplete() {
             throw new Error(err.message || `Save failed (${response.status})`);
         }
 
+        // Step 2: Upsert to Lightspeed (non-fatal — LS sync failure does not block save)
+        dom.epSaveBtn.textContent = 'Syncing LS...';
+        let finalLsId = existingLsId;
+        try {
+            const lsResult = await syncToLightspeed(formData, state.accessToken);
+            if (lsResult?.lightspeed_id) finalLsId = lsResult.lightspeed_id;
+            if (lsResult?.action === 'error') {
+                console.warn('LS sync failed (non-fatal):', lsResult.message);
+            }
+        } catch (lsErr) {
+            console.warn('LS sync error (non-fatal):', lsErr);
+        }
+
+        // Step 3: Single consolidated PATCH with final lightspeed_product_id
+        if (finalLsId) {
+            await fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${item.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${state.accessToken}`,
+                },
+                body: JSON.stringify({ lightspeed_product_id: finalLsId })
+            }).catch(() => {});
+        }
+
         removeFromQueueAndAdvance(item.id);
         dom.epSaveBtn.textContent = 'Save & Complete (Enhanced)';
 
@@ -555,6 +586,38 @@ async function saveAndComplete() {
         dom.epSaveBtn.textContent = 'Save & Complete (Enhanced)';
         console.error('Enhanced processor save error:', e);
     }
+}
+
+async function syncToLightspeed(formData, accessToken) {
+    const payload = {
+        name: formData.name,
+        sku: formData.sku,
+        barcode: formData.barcode,
+        style_number: formData.style_number,
+        brand_name: formData.brand_name,
+        supplier_name: formData.supplier_name,
+        product_category: formData.product_category,
+        retail_price: formData.retail_price,
+        supply_price: formData.supply_price,
+        description: formData.description,
+        gender: formData.tags,
+    };
+
+    const res = await fetch(LS_UPSERT_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+        throw new Error(`ls-upsert HTTP ${res.status}`);
+    }
+
+    return res.json();
 }
 
 function skipItem() {

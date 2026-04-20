@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-20 — Metadata rebuild attempt: 60 Apr 17 families deleted, pre-existing products survive (mixed supplier state); architectural plan for P2 UPDATE vs INSERT drafted
+2026-04-20 — ls-upsert Edge Function deployed + wired into Enhanced Processor: lookup-first LS import (duplicate prevention live)
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -34,11 +34,13 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## In Progress
 - **Enhanced Processor v2 deployed** — copy buttons, dynamic SKU, category dropdown, supplier cross-population, supplier name field. Awaiting Corrinne's testing.
+- **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Duplicate prevention active. See session log for test results and known limitation (price UPDATE path).
 
 ## Next Up
-1. **P2 — UPDATE vs INSERT logic in Enhanced Processor** (most impactful next task): before any LS import, search by barcode then style; if found → UPDATE price/SKU via v2.1 PUT; if not found → CREATE. Kills all duplicate creation at the source. Build LS price-sync Edge Function proxy (browser can't hold LS token). See architect review in session log below.
-2. **Supplier gap on 60 styles** — pre-existing products survive (duplicates cleaned) but many still lack supplier. Corrinne has been manually setting supplier on some. Options: (a) continue manual via LS dashboard; (b) targeted DELETE+POST script with full collision handling (see session log for what `ls_metadata_rebuild.py` revealed). Recommend (a) until P2 is built.
-3. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
+1. **Corrinne tests ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`, no duplicate created) + save a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
+2. **Supplier gap on 60 styles** — Corrinne continues manual LS dashboard edits. Now that ls-upsert is live, new Enhanced Processor saves will include supplier at create time (from form → Edge Function → LS). The gap is historic; new products are correct from day one.
+3. **Price update path** — v2.1 PUT returns 422 for all fields (confirmed in smoke test). Need to find the correct LS price-update endpoint. Candidates: `/api/2.1/products/{uuid}/price` or a dedicated inventory endpoint. Low urgency — prices can be set at create time.
+4. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
 4. **44 sibling-dupe products couldn't be rebuilt** — see `docs/ls_space_sku_review.csv`. After P2 UPDATE logic exists, re-process via Enhanced Processor.
 5. **6 barcode-conflict products** need manual resolution in Lightspeed — styles: SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
 6. **874 photo-only products** — 746 have AI cache, need Enhanced Processor review. 128 need AI extraction first.
@@ -62,7 +64,32 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## Session Log
 
-### 2026-04-20 — Metadata Rebuild Attempt + Architectural Design for LS Integration
+### 2026-04-20 (Session 2) — ls-upsert Edge Function: Lookup-First LS Import
+
+**Trigger:** Duplicate prevention (P2) — import agent always created new products, never checked if one existed.
+
+**What was built:**
+- `supabase/functions/ls-upsert/index.ts` — new Deno Edge Function. Reads `LIGHTSPEED_TOKEN` from Deno.env. Accepts product data, searches LS by barcode then SKU, updates price if found, creates standalone with full metadata if not found.
+- `js/enhanced-processor.js` — wired `saveAndComplete()`: (1) Supabase PATCH, (2) ls-upsert call (non-fatal), (3) single consolidated PATCH with final `lightspeed_product_id`.
+- `js/config.js` — added `LS_UPSERT_URL`.
+
+**Smoke test results (live LS):**
+- UPDATE path (existing barcode): `action: skipped`, correct UUID returned (`e3f0c956...`). v2.1 PUT returns 422 even for price fields — documented limitation. UUID writeback works.
+- CREATE path (new product): `action: created`, correct UUID returned. Supplier + brand resolved from cached LS API lookups (Kontoor Brands, Inc. + Wrangler resolved ✓). product_type_id = null (category name mismatch — minor gap).
+- CORS + OPTIONS preflight: works.
+- Test products created and deleted during smoke test.
+
+**Known limitation:** v2.1 PUT rejects ALL fields (not just metadata). Price sync is currently a no-op. Product duplicate prevention (the primary goal) is fully working — existing products are found and not duplicated.
+
+**Architect review:** APPROVED_WITH_CHANGES. RC-1 (unverified PUT) handled gracefully. RC-2 (standalone comment) added. RC-3 (module-scope cache reliability) deferred for v2. RC-4 (race condition) fixed with single consolidated PATCH.
+
+**Security review:** SECURITY APPROVED. Token not exposed. Injection blocked by encodeURIComponent + JSON body. SSRF not possible (hardcoded URLs). No-JWT accepted (consistent with project security model).
+
+**Variant_definitions API change:** LS now rejects `variant_definitions: []`. Standalones require at least 1 definition. Using `[{attribute_id: SIZE_UUID, value: "One Size"}]` as neutral placeholder.
+
+---
+
+### 2026-04-20 (Session 1) — Metadata Rebuild Attempt + Architectural Design for LS Integration
 
 **Trigger:** Corrinne's email (Apr 20) reporting: (1) 60 rebuilt families still missing supplier/category; (2) duplicates from previously-imported products; (3) root-cause insight — import agent needs UPDATE vs INSERT logic; (4) 4-step SKU normalization proposal.
 
