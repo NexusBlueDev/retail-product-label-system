@@ -1,0 +1,624 @@
+{
+  "done": [],
+  "failed": [
+    {
+      "style": "11-054-0214-0807",
+      "family_id": "89ac7441-bed7-4da9-b0de-b74954ae0b79",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '14d4fd77-8806-42a7-a86f-98a0ebcf7f7a', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "TL",
+      "family_id": "39e29c1d-e10c-4b15-835a-8609db2865f3",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '78102bee-0f34-4117-aba5-e1c99bbcb8a0', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "PH5046",
+      "family_id": "6f2cd570-3015-40f3-baab-5c8bd09f31da",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '819b1a15-bfa8-4edb-82cc-8db37c195356', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "SF03320730",
+      "family_id": "5e51bff6-a928-4f60-901e-913dd5e32a72",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '431fc815-d143-4762-a2cc-4b8911375d20', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MXY",
+      "family_id": "385fadef-e88b-4d7a-92c1-0e099f148709",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '38361079-d236-41aa-b224-ebb64381e47e', 'sku': 'Already exists for your retailer', 'sku_code': 'A-MIN-MXY-6005002-BLK-BLA-M', 'sku_existing_id': '38361079-d236-41aa-b224-ebb64381e47e'}}",
+      "variants": [
+        "A-GEN-MXY-6005001-WHT-WHI-M",
+        "A-MIN-MXY-6005002-BLK-BLA-M"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Socks"
+    },
+    {
+      "style": "May-80",
+      "family_id": "5dd014f4-bbaf-41d6-905f-f4072e676c24",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '168aef3d-ac41-40b5-b929-f3c4abea3df4'}}"
+    },
+    {
+      "style": "MWK1904001",
+      "family_id": "beef8b58-1099-43ce-8ef8-4195c4d56adc",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '9a8e7a3f-ef42-43de-8da5-f19ed4c8d8c0', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MWK1904001-MUL-MUL-S', 'sku_existing_id': '9a8e7a3f-ef42-43de-8da5-f19ed4c8d8c0'}}",
+      "variants": [
+        "M-MIN-MWK1904001-MUL-MUL-S",
+        "M-MIN-MWK1904001-MUL-MUL-L"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Mid-Layer"
+    },
+    {
+      "style": "MWJ1919002",
+      "family_id": "c3058a6f-4572-42cd-be54-8e484710bc32",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '070adfa1-2f68-4c2a-b9a7-a51c1d6117d7', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MWJ1919002-NAV-NAV-XXL', 'sku_existing_id': '070adfa1-2f68-4c2a-b9a7-a51c1d6117d7'}}",
+      "variants": [
+        "M-MIN-MWJ1919002-NAV-NAV-XXL",
+        "M-MIN-MWJ1919002-NAV-NAV-XL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Outerwear"
+    },
+    {
+      "style": "MTK1721018",
+      "family_id": "a98f12da-4ddb-477a-82cc-66dbb163aca8",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '652aca0a-7d6c-4534-b466-1d6846dd2374', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MTK1721018-TEA-TEA-M', 'sku_existing_id': '652aca0a-7d6c-4534-b466-1d6846dd2374'}}",
+      "variants": [
+        "M-MIN-MTK1721018-TEA-NA-L",
+        "M-MIN-MTK1721018-TEA-TEA-M",
+        "M-MIN-MTK1721018-TEA-NA-XXL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - T-Shirts & Tanks"
+    },
+    {
+      "style": "MTW1105995",
+      "family_id": "a428bfbc-617f-4765-8ae6-4f9acf8c16c8",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '19d15c15-3dc4-47d4-a86b-4e4b152aebc7', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MTW1105881",
+      "family_id": "9574ea3d-3caa-487a-b8a4-c6f7d81f09c2",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '6095bf0c-16cf-4592-9733-7d8e39048af2', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MB58135005",
+      "family_id": "7975b4d2-ef59-4af2-94f3-3117239c98ed",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '0988df1d-3d76-429e-be28-aba2087a0ae1', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MSK7895006",
+      "family_id": "860e2ca6-bc6a-403a-bc34-b88a85c839a8",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'fea5bebc-2b96-439c-9afb-407cf42ac564', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSK7895006-LTB-GRA-XXL', 'sku_existing_id': 'fea5bebc-2b96-439c-9afb-407cf42ac564'}}",
+      "variants": [
+        "W-MIN-MSK7895006-LTB-GRA-XXL",
+        "W-MIN-MSK7895006-LTB-GRA-XL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "CWJ8009001",
+      "family_id": "167ecf5e-3780-4a21-8b16-48a50a423026",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'f6321c75-8fe5-4b2e-918c-03cb8b85859c', 'sku': 'Already exists for your retailer', 'sku_code': 'K-CRU-CWJ8009001-GLD-GOL-XXL', 'sku_existing_id': 'f6321c75-8fe5-4b2e-918c-03cb8b85859c'}}",
+      "variants": [
+        "K-CRU-CWJ8009001-GLD-GOL-M/8",
+        "K-CRU-CWJ8009001-GLD-GOL-XXL"
+      ],
+      "supplier": "Cruel Denim",
+      "category": "Apparel - Outerwear"
+    },
+    {
+      "style": "CTK7459005",
+      "family_id": "fbe02695-1d89-4453-9002-39204011979a",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '870ed632-e86b-4006-8037-cc734e6b7754', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "CTK7459004",
+      "family_id": "d0df5008-3d33-4002-b190-ce499ecb8b6c",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'b15cfbf4-6f53-4ef0-ab33-6fe82c7f6616', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "SS25058126",
+      "family_id": "dc0e021b-3ede-493f-b02d-fbe3aabeb69a",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '0691bd1d-db49-4ea8-a38b-65e4554303b4', 'sku': 'Already exists for your retailer', 'sku_code': 'A-RHE-SS25058126-PPRD-R-NAT-7-3/8-R', 'sku_existing_id': '0691bd1d-db49-4ea8-a38b-65e4554303b4'}}",
+      "variants": [
+        "A-RHE-SS25058126-PPRD-R-NAT-7-3/8-R",
+        "A-RHE-SS25058126-OPRD-R-NAT-7-1/2-R"
+      ],
+      "supplier": "HATCO. RHE Hatco, Inc.",
+      "category": "Hats - Straw Cowboy Hats"
+    },
+    {
+      "style": "RFKGMN-52402276",
+      "family_id": "3b31c291-f878-436a-80a7-545a79237fbb",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'acec3435-c443-40b2-be91-f6378c9b4e94', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "Thunderbolt",
+      "family_id": "6c7ceb8e-8cc0-4f5e-9fa3-6ce0afc1120d",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'c20f8ffd-cc5e-4010-a472-0121bbebdb10', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "CB76953001",
+      "family_id": "eddf6bc1-154b-40f0-99fb-8e309c7b0e35",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'c03b77e3-9d54-4cb7-86b5-bf4b1dc3fc6f', 'sku': 'Already exists for your retailer', 'sku_code': 'W-CRU-CB76953001-IND-IND-29/7-R', 'sku_existing_id': 'c03b77e3-9d54-4cb7-86b5-bf4b1dc3fc6f'}}",
+      "variants": [
+        "W-CRU-CB76953001-IND-IND-29/7-R",
+        "W-CRU-CB76953001-IND-IND-24-00-XLong-XL",
+        "W-CRU-CB76953001-IND-IND-24/00-L",
+        "W-CRU-CB76953001-IND-IND-24/00-R",
+        "W-CRU-CB76953001-IND-IND-25/0-S",
+        "W-CRU-CB76953001-IND-IND-28/5-R",
+        "W-CRU-CB76953001-IND-IND-25/0-R"
+      ],
+      "supplier": "Cruel Denim",
+      "category": "Apparel - Jeans"
+    },
+    {
+      "style": "MB71934005",
+      "family_id": "c130f5fc-4dff-4a43-ac2d-ece0767981cd",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '589b443f-ad27-4dec-a18f-924915a7182b', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MB71934005-IND-NA-44-30', 'sku_existing_id': '589b443f-ad27-4dec-a18f-924915a7182b'}}",
+      "variants": [
+        "M-MIN-MB71934005-IND-NA-36-30",
+        "M-MIN-MB71934005-IND-NA-40-38",
+        "M-MIN-MB71934005-IND-NA-31-38",
+        "M-MIN-MB71934005-IND-NA-44-30",
+        "M-MIN-MB71934005-IND-NA-42-30",
+        "M-MIN-MB71934005-IND-NA-33-34"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Jeans"
+    },
+    {
+      "style": "PH",
+      "family_id": "b3a60872-b913-4f60-9993-a219c1ff6640",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '48a2e416-32d3-484b-a662-8f2a28eef4e4', 'sku': 'Already exists for your retailer', 'sku_code': 'M-BHS-PH-5047-12-D', 'sku_existing_id': '48a2e416-32d3-484b-a662-8f2a28eef4e4'}}",
+      "variants": [
+        "M-BHS-PH-5047-12-D",
+        "M-BHS-PH-5046-13-D"
+      ],
+      "supplier": "BH Shoe Holdings, Inc",
+      "category": "Footwear - Boots"
+    },
+    {
+      "style": "CTW7473002",
+      "family_id": "808b352b-01d5-4a97-83ef-9e6c55c5243b",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'c28326bb-a732-4074-9c8c-99050bf7e21f', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MSW9162001",
+      "family_id": "99676c76-8199-48b4-91c1-6101e19be303",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'b4679e66-8c5d-4fe6-8781-efa1e4a087a0', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9162001-COR-COR-XXL', 'sku_existing_id': 'b4679e66-8c5d-4fe6-8781-efa1e4a087a0'}}",
+      "variants": [
+        "W-MIN-MSW9162001-COR-COR-M",
+        "W-MIN-MSW9162001-COR-COR-XXL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MSW9162003",
+      "family_id": "95b4a246-d13d-481a-a34f-7bf34d237f9d",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'd349e0b2-805e-48d1-a25b-ce6d62630e61', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9162003-GRN-GRN-XXL', 'sku_existing_id': 'd349e0b2-805e-48d1-a25b-ce6d62630e61'}}",
+      "variants": [
+        "W-MIN-MSW9162003-GRN-GRN-XXL",
+        "W-MIN-MSW9162003-GRN-GRN-M",
+        "W-MIN-MSW9162003-GRN-GRN-L",
+        "W-MIN-MSW9162003-GRN-GRN-S"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "CTK7450009",
+      "family_id": "71056886-1314-4e5e-b87b-f5174ac97ffa",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'd83badb8-d6c0-4b5d-8c73-c5eadde5ebef', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "CTK7508001",
+      "family_id": "30580731-4f8c-4a09-a7db-f60979c7e893",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'c5b9369d-2ff4-4cb3-91c0-d876e594be8d', 'sku': 'Already exists for your retailer', 'sku_code': 'W-CRU-CTK7508001-GRN-GRN-S', 'sku_existing_id': 'c5b9369d-2ff4-4cb3-91c0-d876e594be8d'}}",
+      "variants": [
+        "W-CRU-CTK7508001-GRN-GRN-S",
+        "W-CRU-CTK7508001-GRN-GRN-L"
+      ],
+      "supplier": "Cruel Denim",
+      "category": "Apparel - T-Shirts & Tanks"
+    },
+    {
+      "style": "3880",
+      "family_id": "39b42db8-783c-46cb-b7ee-22c9e84cd8e0",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'd9a0ec3e-9d82-4e4c-8bf7-92cea7fc3f05', 'sku': 'Already exists for your retailer', 'sku_code': 'K-SMB-3880-Y-V-6-NA', 'sku_existing_id': 'd9a0ec3e-9d82-4e4c-8bf7-92cea7fc3f05'}}",
+      "variants": [
+        "K-SMB-3880-Y-V-4-NA",
+        "K-SMB-3880-Y-V-6-NA",
+        "K-SMB-3880-Y-V-4.5-NA"
+      ],
+      "supplier": "Smokey Mountain Boots",
+      "category": "Footwear - Boots"
+    },
+    {
+      "style": "DH",
+      "family_id": "848ef3ff-7280-42a2-88e6-436a9d87b41e",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '20d02c3d-afce-48d4-a5b4-1f1212a7cacc', 'sku': 'Already exists for your retailer', 'sku_code': 'W-BHS-DH-7030-9.5-M', 'sku_existing_id': '20d02c3d-afce-48d4-a5b4-1f1212a7cacc'}}",
+      "variants": [
+        "W-BHS-DH-7030-9.5-M",
+        "M-BHS-DH-4655-14-EE",
+        "M-BHS-DH-4159-10.5-D"
+      ],
+      "supplier": "BH Shoe Holdings, Inc",
+      "category": "Footwear - Boots"
+    },
+    {
+      "style": "MAK9924001",
+      "family_id": "eff8e7ec-13f2-4352-8e89-116958e9517e",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '6da2ce69-8b18-447e-9037-af6c7955139b', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MAK9924001-TEA-TEA-XXL', 'sku_existing_id': '6da2ce69-8b18-447e-9037-af6c7955139b'}}",
+      "variants": [
+        "W-MIN-MAK9924001-TEA-TEA-L",
+        "W-MIN-MAK9924001-TEA-TEA-XXL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Mid-Layer"
+    },
+    {
+      "style": "MSW9164256",
+      "family_id": "6fb94eb2-0fe5-4c09-8ae1-4b6eb8c4d23a",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'b6212e40-2f4e-4af4-b4df-4ae9c74949b6', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9164256-PUR-PUR-M', 'sku_existing_id': 'b6212e40-2f4e-4af4-b4df-4ae9c74949b6'}}",
+      "variants": [
+        "W-MIN-MSW9164256-PUR-PUR-M",
+        "M-MIN-MSW9164256-PUR-PUR-XXL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MSW9165073",
+      "family_id": "4c2bef10-afd8-4f0c-9962-a4a61b39256d",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'b765e3e5-fb1e-4db0-9326-c5f1d8613122', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9165073-RED-RED-XL', 'sku_existing_id': 'b765e3e5-fb1e-4db0-9326-c5f1d8613122'}}",
+      "variants": [
+        "W-MIN-MSW9165073-Red-RED-M",
+        "W-MIN-MSW9165073-RED-RED-S",
+        "W-MIN-MSW9165073-RED-RED-XL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MSW9164253",
+      "family_id": "f92be830-6f77-4225-99ac-bd1d33903c25",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '641e803f-fa08-4401-aa60-1cb9a4d923ce', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9164253-BLK-BLA-XL', 'sku_existing_id': '641e803f-fa08-4401-aa60-1cb9a4d923ce'}}",
+      "variants": [
+        "W-MIN-MSW9164253-BLK-BLA-S",
+        "W-MIN-MSW9164253-BLK-BLA-XL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MSW9164027",
+      "family_id": "18eb446e-405c-46c1-9383-cc54c2b40a13",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'e57ac761-f8f0-44fb-ba67-2f338c75d04d', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9164027-BLK-BLA-XXL', 'sku_existing_id': 'e57ac761-f8f0-44fb-ba67-2f338c75d04d'}}",
+      "variants": [
+        "W-MIN-MSW9164027-BLK-BLA-XL",
+        "W-MIN-MSW9164027-BLK-BLA-L",
+        "W-MIN-MSW9164027-BLK-BLA-XXL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "CTW7501002",
+      "family_id": "6c12b987-8b15-4753-a554-9e0646219112",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'd9fbc02d-78d7-4851-8e0e-179b739d6b57', 'sku': 'Already exists for your retailer', 'sku_code': 'W-CRU-CTW7501002-GRN-GRN-XXL', 'sku_existing_id': 'd9fbc02d-78d7-4851-8e0e-179b739d6b57'}}",
+      "variants": [
+        "W-CRU-CTW7501002-GRN-GRN-M",
+        "W-CRU-CTW7501002-GRN-GRN-XL",
+        "W-CRU-CTW7501002-GRN-GRN-XS",
+        "W-CRU-CTW7501002-GRN-GRN-XXL"
+      ],
+      "supplier": "Cruel Denim",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MSW9164244",
+      "family_id": "55769db4-998b-4693-9aa7-65f898829e9c",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'ce9e0d37-7070-46ce-98d9-28365b3ce5ae', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9164244-TUR-TUR-XXL', 'sku_existing_id': 'ce9e0d37-7070-46ce-98d9-28365b3ce5ae'}}",
+      "variants": [
+        "W-MIN-MSW9164244-TUR-TUR-XL",
+        "W-MIN-MSW9164244-TUR-TUR-XXL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "CTW7245014",
+      "family_id": "cb9cd829-00e4-43fc-852f-a47d18131539",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '02e58af2-212a-4498-9714-18b9a4ac3daf', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MSW9165064",
+      "family_id": "bd56c3fa-19b6-4742-8cfa-66e894e60079",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '133f5d96-b532-4b37-9e35-58ef4456baa2', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9165064-BLU-NA-XL', 'sku_existing_id': '133f5d96-b532-4b37-9e35-58ef4456baa2'}}",
+      "variants": [
+        "W-MIN-MSW9165064-BLU-BLU-XXL",
+        "W-MIN-MSW9165064-BLU-NA-XL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MB58135010",
+      "family_id": "a741e512-226a-4166-97c1-16a955550246",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '96511372-0fcf-4510-8475-d5b1d63c22a2', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MB58135010-TEA-T-XL', 'sku_existing_id': '96511372-0fcf-4510-8475-d5b1d63c22a2'}}",
+      "variants": [
+        "M-MIN-MB58135010-TEA-T-XL",
+        "M-MIN-MB58135010-TEA-T-M"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Shorts"
+    },
+    {
+      "style": "MB92834019",
+      "family_id": "c2c35ace-cb88-4857-abcb-cf9a908d08fa",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '4e91308e-6f97-496a-9351-ebb1a12bbe51', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MB92834019-IND-NA-40-34', 'sku_existing_id': '4e91308e-6f97-496a-9351-ebb1a12bbe51'}}",
+      "variants": [
+        "M-MIN-MB92834019-IND-NA-40-34",
+        "M-MIN-MB92834019-IND-NA-34-36",
+        "M-MIN-MB92834019-IND-IND-33-38"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Jeans"
+    },
+    {
+      "style": "13MWJBK",
+      "family_id": "65d0a01c-af45-49fe-b29f-72da2911c699",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '1e6c71a7-e281-4b56-8e7c-cef15761c96e', 'sku': 'Already exists for your retailer', 'sku_code': 'K-KON-13MWJBK-NA-3T-SLIM-NA', 'sku_existing_id': '1e6c71a7-e281-4b56-8e7c-cef15761c96e'}}",
+      "variants": [
+        "K-KON-13MWJBK-NA-2T-Reg-NA",
+        "K-KON-13MWJBK-NA-3T-SLIM-NA",
+        "K-KON-13MWJBK-BLA-1T-Slim-NA"
+      ],
+      "supplier": "Kontoor Brands",
+      "category": "Apparel - Jeans"
+    },
+    {
+      "style": "OSBLGD",
+      "family_id": "3e6959bd-cdef-4452-a93f-ae78efb56054",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '03fc14fc-238e-4bab-87b9-c581852cef9f', 'sku': 'Already exists for your retailer', 'sku_code': 'A-RHE-OSBLGD---343007XL-BLA-XL', 'sku_existing_id': '03fc14fc-238e-4bab-87b9-c581852cef9f'}}",
+      "variants": [
+        "A-RHE-OSBLGD---343007XL-BLA-XL",
+        "A-RHE-OSBLGD---34007L0-BLA-L"
+      ],
+      "supplier": "HATCO. RHE Hatco, Inc.",
+      "category": "Hats - Straw Cowboy Hats"
+    },
+    {
+      "style": "RSSHOT-3042",
+      "family_id": "941e2fc0-a8fa-47c0-a80f-8af22e6bd9e0",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '67b33d61-8620-4b3f-b353-896a618ce50d', 'sku': 'Already exists for your retailer', 'sku_code': 'A-RHE-RSSHOT-3042-NEU-6-7/8', 'sku_existing_id': '67b33d61-8620-4b3f-b353-896a618ce50d'}}",
+      "variants": [
+        "A-RHE-RSSHOT-3042-NAT-6-3/4",
+        "A-RHE-RSSHOT-3042-NAT-7-1/4",
+        "A-RHE-RSSHOT-3042-NAT-7-1/2",
+        "A-RHE-RSSHOT-3042-NEU-6-7/8"
+      ],
+      "supplier": "HATCO. RHE Hatco, Inc.",
+      "category": "Hats - Straw Cowboy Hats"
+    },
+    {
+      "style": "MWJ7480003",
+      "family_id": "e9764425-0eaf-46f4-ae1d-4e760c67e6d8",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'c3c64740-9838-4665-b4d5-692fb48db318', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MWJ7480003-BLK-BLA-L', 'sku_existing_id': 'c3c64740-9838-4665-b4d5-692fb48db318'}}",
+      "variants": [
+        "A-MIN-MWJ7480003-BLK-BLA-XXL",
+        "A-MIN-MWJ7480003-BLK-BLA-XS",
+        "M-MIN-MWJ7480003-BLK-BLA-L"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Outerwear"
+    },
+    {
+      "style": "MWV7520002",
+      "family_id": "c8a2af5f-c974-44b2-b43a-33701b14e6df",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '34fdcce1-1e32-45cb-8937-229fed2ef590', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MWV7520002-BLK-BLA-XL/14', 'sku_existing_id': '34fdcce1-1e32-45cb-8937-229fed2ef590'}}",
+      "variants": [
+        "M-MIN-MWV7520002-BLK-BLA-XL/14",
+        "A-MIN-MWV7520002-BLK-BLA-XS/4-5"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Outerwear"
+    },
+    {
+      "style": "10PQJ136D",
+      "family_id": "3b544835-f999-4843-b346-985a7f8704d3",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '29f54625-a10f-45a8-aaa2-a76731f0b01a', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "10PQ1371D",
+      "family_id": "f2d4eeea-961f-46da-b127-370c57372d1b",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '3a97ffa4-a9c4-4554-af4c-db18d009dc13', 'sku': 'Already exists for your retailer', 'sku_code': 'K-KON-10PQ1371D-6-9-MO.-NA', 'sku_existing_id': '3a97ffa4-a9c4-4554-af4c-db18d009dc13'}}",
+      "variants": [
+        "K-KON-10PQ1371D-6-9-MO.-NA",
+        "K-KON-10PQ1371D-12-MO.-NA",
+        "K-KON-10PQ1371D-3-6-MO-NA",
+        "K-KON-10PQ1371D-18-MO-NA"
+      ],
+      "supplier": "Kontoor Brands",
+      "category": "Apparel - Jeans"
+    },
+    {
+      "style": "MTW7061374",
+      "family_id": "251020fe-e86b-41d1-a021-47f5989e792b",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '1a99d395-6b37-4046-9220-e8e16909e187', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MTW7060381",
+      "family_id": "dce6ab2c-1fd0-4236-b882-fc279dd34060",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '4e488d58-2b01-439f-8947-719c29c571c9', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MTW7060374",
+      "family_id": "1e0f75e7-325f-4e2c-a17e-c361eea02e88",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '37371a8c-bb1b-40ed-a867-5ec520676c51', 'sku': 'Already exists for your retailer', 'sku_code': 'B-MIN-MTW7060374-TUR-TUR-XXL', 'sku_existing_id': '37371a8c-bb1b-40ed-a867-5ec520676c51'}}",
+      "variants": [
+        "B-MIN-MTW7060374-TUR-TUR-XS",
+        "B-MIN-MTW7060374-TUR-TUR-XXL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "10PQJ113D",
+      "family_id": "02e67de9-f6cb-4f59-bf41-d8ac52454f85",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '94a359d9-b421-463f-931a-a88c320d92d3', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "CTK8860008",
+      "family_id": "1bf81fde-50b7-4a0e-b839-ef0bf5b29c4b",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '844bfdb1-fe28-4c3d-9516-b2f7023c30bf', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "CTW3370028",
+      "family_id": "ff2bf47f-716f-40d7-8bf0-e277f0f6c430",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '30993e37-fd6d-47c1-8731-33c0ed441556', 'sku': 'Already exists for your retailer', 'sku_code': 'G-CRU-CTW3370028-RED-RED-XL/12', 'sku_existing_id': '30993e37-fd6d-47c1-8731-33c0ed441556'}}",
+      "variants": [
+        "G-CRU-CTW3370028-RED-RED-XL/12",
+        "G-CRU-CTW3370028-RED-RED-S/6-7"
+      ],
+      "supplier": "Cruel Denim",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "CTW3120002",
+      "family_id": "e9ffcc95-dffc-46f7-9f6e-503d85b8270c",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '68fe253b-1373-4aee-98b1-2cee0b2663f6', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "CTW3120001",
+      "family_id": "693a2f06-1e78-4db7-8130-da97264f4369",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '71c239b3-bb65-488f-aca3-5a9adba1ae70', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "CTK8890003",
+      "family_id": "5ccc0145-7176-4310-b80f-0391b1d752d0",
+      "reason": "standalone_post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '260c714b-3abf-4592-8c72-f5e0d78f9e25', 'sku': 'Already exists for your retailer', 'sku_code': "
+    },
+    {
+      "style": "MSW9162005",
+      "family_id": "3513d609-0184-4a35-9f23-7f0f148ab5aa",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'f71db65b-a1df-4c07-811a-088cad364929', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9162005-LIL-LIG-XS', 'sku_existing_id': 'f71db65b-a1df-4c07-811a-088cad364929'}}",
+      "variants": [
+        "W-MIN-MSW9162005-LIL-LIG-XL",
+        "W-MIN-MSW9162005-LIL-LIG-S",
+        "W-MIN-MSW9162005-LIL-LIG-XS",
+        "W-MIN-MSW9162005-LIL-LIG-L",
+        "W-MIN-MSW9162005-LIL-LIG-M"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MSW9164269",
+      "family_id": "9b8efa97-d3b1-4546-9377-4e525434c2ee",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'e74852a6-cc0b-42da-beb9-3d575b0930cf', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9164269-PNK-DAR-XXL', 'sku_existing_id': 'e74852a6-cc0b-42da-beb9-3d575b0930cf'}}",
+      "variants": [
+        "W-MIN-MSW9164269-PNK-DAR-XXL",
+        "W-MIN-MSW9164269-PNK-DAR-S",
+        "W-MIN-MSW9164269-PNK-DAR-XL",
+        "W-MIN-MSW9164269-PNK-DAR-L"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MTW1725003",
+      "family_id": "5d39f866-7292-4675-aac5-c47cecfe4f76",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': '76ec98d1-dd0a-44f8-a478-75b9183b6a59', 'sku': 'Already exists for your retailer', 'sku_code': 'M-MIN-MTW1725003-RED-RED-XXL', 'sku_existing_id': '76ec98d1-dd0a-44f8-a478-75b9183b6a59'}}",
+      "variants": [
+        "M-MIN-MTW1725003-RED-RED-XL",
+        "M-MIN-MTW1725003-RED-RED-XS",
+        "M-MIN-MTW1725003-RED-RED-XXL",
+        "M-MIN-MTW1725003-RED-RED-M",
+        "M-MIN-MTW1725003-RED-RED-S"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    },
+    {
+      "style": "MSW9165087",
+      "family_id": "3fdee565-ec5f-40fd-bfbe-d312892e0963",
+      "reason": "post_failed_422_FAMILY_WAS_DELETED",
+      "error": "{'error': 'Validation Error', 'fields': {'name': 'Already exists for your retailer', 'name_existing_id': 'a2812217-3f8f-4fb1-ac73-7bab52efb055', 'sku': 'Already exists for your retailer', 'sku_code': 'W-MIN-MSW9165087-LIM-LIM-XXL', 'sku_existing_id': 'a2812217-3f8f-4fb1-ac73-7bab52efb055'}}",
+      "variants": [
+        "W-MIN-MSW9165087-LIM-LIM-XS",
+        "W-MIN-MSW9165087-LIM-LIM-S",
+        "W-MIN-MSW9165087-LIM-LIM-M",
+        "W-MIN-MSW9165087-LIM-LIM-XXL",
+        "W-MIN-MSW9165087-LIM-LIM-XL"
+      ],
+      "supplier": "Miller Brands LLC",
+      "category": "Apparel - Western Woven Shirts"
+    }
+  ],
+  "skipped": []
+}

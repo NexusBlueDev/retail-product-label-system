@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-17 — Space-SKU remediation: 544 orphan standalones replaced with 60 variant families + 310 standalones
+2026-04-20 — Metadata rebuild attempt: 60 Apr 17 families deleted, pre-existing products survive (mixed supplier state); architectural plan for P2 UPDATE vs INSERT drafted
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -36,14 +36,15 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - **Enhanced Processor v2 deployed** — copy buttons, dynamic SKU, category dropdown, supplier cross-population, supplier name field. Awaiting Corrinne's testing.
 
 ## Next Up
-1. **Corrinne spot-checks space-SKU remediation** — verify MSW9165087, MTW1725003, CTK8990004 now show as proper variant families (not standalones)
-2. **Metadata follow-up for 60 rebuilt families** — supplier_id + product_type_id could not be set via API (LS v2.1 PUT rejects these fields, v2.0 has no PUT route). Options: (a) manual dashboard edits; (b) investigate alternate LS endpoint or CSV re-import. See `docs/ls_patch_metadata.py` (pre-built, awaits unblocked endpoint)
-3. **44 sibling-dupe products couldn't be rebuilt** — see `docs/ls_space_sku_review.csv` (143 sibling-match cases flagged for review; 44 of those collided on POST)
-4. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
-5. **6 barcode-conflict products** need manual resolution in Lightspeed — see `docs/ls_cleanup_needs_review.csv` (styles: SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L)
+1. **P2 — UPDATE vs INSERT logic in Enhanced Processor** (most impactful next task): before any LS import, search by barcode then style; if found → UPDATE price/SKU via v2.1 PUT; if not found → CREATE. Kills all duplicate creation at the source. Build LS price-sync Edge Function proxy (browser can't hold LS token). See architect review in session log below.
+2. **Supplier gap on 60 styles** — pre-existing products survive (duplicates cleaned) but many still lack supplier. Corrinne has been manually setting supplier on some. Options: (a) continue manual via LS dashboard; (b) targeted DELETE+POST script with full collision handling (see session log for what `ls_metadata_rebuild.py` revealed). Recommend (a) until P2 is built.
+3. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population
+4. **44 sibling-dupe products couldn't be rebuilt** — see `docs/ls_space_sku_review.csv`. After P2 UPDATE logic exists, re-process via Enhanced Processor.
+5. **6 barcode-conflict products** need manual resolution in Lightspeed — styles: SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
 6. **874 photo-only products** — 746 have AI cache, need Enhanced Processor review. 128 need AI extraction first.
 7. **365 needs_review products** — incomplete data, many can be enriched from refreshed LS index
-8. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
+8. **P4 SKU normalization** — target only 1,514 DB products (~55 min), not 75K full catalog. Barcode is permanent dedup key. Do after P2.
+9. Consider hashing user PINs (low priority — internal tool, plaintext is accepted)
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 20 modules
@@ -60,6 +61,43 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-04-20 — Metadata Rebuild Attempt + Architectural Design for LS Integration
+
+**Trigger:** Corrinne's email (Apr 20) reporting: (1) 60 rebuilt families still missing supplier/category; (2) duplicates from previously-imported products; (3) root-cause insight — import agent needs UPDATE vs INSERT logic; (4) 4-step SKU normalization proposal.
+
+**Corrinne's key findings addressed:**
+- ls_60_families_metadata_todo CSV: she corrected supplier/category names to match live LS. Confirmed all 60 supplier + category names resolve to live LS IDs.
+- ls_space_sku_review: she manually resolved first 7 rows (updated originals, deleted our imports). Confirmed UPDATE vs INSERT is the root cause of all duplications.
+- Specific products (CJ429674/675/676, T71270, 368): examples of broader variant-grouping gap (see P4 in Next Up).
+
+**Metadata rebuild attempt (docs/ls_metadata_rebuild.py):**
+- Built DELETE+re-POST script using Corrinne's updated CSV as source of truth.
+- Validated: all 60 supplier + category names resolved to live LS IDs via live GET /suppliers + GET /product_types. Two aliases added: "Miller Brands LLC" → "Miller International, Inc.", "Kontoor Brands" → "Kontoor Brands, Inc."
+- Ran live: 60 Apr 17 families soft-deleted ✓. 0 rebuilt — every POST failed 422 "name already exists." The name conflicts were from pre-existing products (Corrinne's original imports with old-format SKUs or duplicate standalones) that share the same product names.
+- LS API restore blocked: v2.1 PUT {active:true} → 422; v2.0 PUT → 404. Soft-deletes are permanent via API.
+
+**Net state after script:**
+- 60 Apr 17 families (no supplier, some had category): DELETED. These were duplicates of pre-existing products.
+- Pre-existing products (various old/new format SKUs): survive. Supplier state is mixed — some styles have supplier on old-format SKU products (Corrinne's manual work), most new-format products have no supplier.
+- Example (MWK1904001): old SKUs "MWK1904001-MUL-L/S" have Miller International + Apparel - Mid-Layer; new SKUs "M-MIN-MWK1904001-MUL-MUL-S/L" have no supplier. The deletions removed a third set (our Apr 17 duplicate family).
+- Net assessment: **neutral to slightly positive** — we removed duplicates that had no supplier anyway. Corrinne's correctly-configured originals survive unchanged.
+
+**Root cause of 422 collisions (documented for future scripts):**
+LS soft-delete (DELETE /products/{id}) does NOT release the product NAME for reuse, only the SKU code. Our POST failed because the family NAME was already held by a pre-existing product. Future DELETE+POST scripts must also delete the conflicting product (identified via `name_existing_id` in the 422 response) OR use a unique name.
+
+**Architect review completed (spawned as background agent):**
+- P1 (60 families supplier): DELETE+POST approach confirmed sound. Pre-existing product name collision is the blocker, not the script structure.
+- P2 (UPDATE vs INSERT): Two-phase architecture — (1) price/SKU sync via v2.1 PUT for operational fields; (2) metadata diffs flagged in `data_source` JSONB for batch script resolution. Requires new Edge Function proxy (browser can't hold LS token).
+- P3 (lightspeed_index freshness): weekly scheduled refresh. Add `family_id` + `variant_parent_id` columns to index table.
+- P4 (SKU normalization): target only 1,514 DB products, not 75K. ~55 min operation. Do after P2.
+- P5 (variant grouping SQL): `GROUP BY style_number HAVING COUNT(*) > 1` — identifies all styles that should be families.
+
+**Token leak flagged:** `docs/lightspeed_import.py` and `docs/lightspeed_import_v2.py` have LS token hardcoded. All current active scripts use .env.local pattern. Old files should be cleaned up.
+
+**Artifacts:**
+- `docs/ls_metadata_rebuild.py` — DELETE+POST script (validated, resumable, dry-run mode). Ready to re-run with collision handling added.
+- `docs/ls_metadata_rebuild_progress.json` — run log (60 failures, all "FAMILY_WAS_DELETED + post_failed_422")
 
 ### 2026-04-17 — Space-SKU Remediation (Corrinne's 3-style complaint → 544 orphans fixed)
 
@@ -254,3 +292,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 > Cleanup report: docs/ls_cleanup_report.txt
 > Next action: Corrinne tests Enhanced Processor v2, resolve 6 barcode conflicts, review 300 needs-review items
 > Start by reading: HANDOFF.md → CLAUDE.md → docs/ls_cleanup_report.txt
+
+### Mid-Session Checkpoint (2026-04-20T21:23:44Z — auto-compaction)
+**Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
