@@ -413,7 +413,7 @@ function showLightspeedPanel(lsData) {
     dom.epLightspeedDetails.innerHTML = `
         <strong>${lsData.name || 'Unknown'}</strong>
         ${lsData.variant_name ? `<br>Variant: ${lsData.variant_name}` : ''}
-        <br>Brand: ${lsData.brand || '—'} | Category: ${lsData.category || '—'}
+        <br>Brand: ${lsData.brand || '—'} | Category: ${extractCategoryName(lsData.category) || '—'}
         <br>Supplier: ${lsData.supplier || '—'}
         ${lsData.retail_price ? `<br>Price: $${Number(lsData.retail_price).toFixed(2)}` : ''}
         ${variantStr ? `<br>Options: ${variantStr}` : ''}
