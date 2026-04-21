@@ -1,18 +1,19 @@
 # TODO — Retail Product Label System
 
-> Last updated: 2026-04-20 (Session 3)
+> Last updated: 2026-04-21 (Session 7)
 > These are actions required from the client or NexusBlue team — NOT Claude tasks.
 
 ## Client — Pending Testing
 - [ ] **Corrinne** Test Enhanced Processor ls-upsert integration — save a product that already exists in LS (confirm no duplicate created, `action: skipped` in browser console), then save a new product (confirm `action: created` and it appears in LS)
 - [ ] **Corrinne** Test Enhanced Processor v2 features — copy buttons, dynamic SKU, category dropdown (24 categories), supplier cross-population (name ↔ code bidirectional)
-- [ ] **Corrinne** Continue manual supplier/category edits for ~60 historic styles missing supplier in LS dashboard (new products going forward are correct automatically)
+- [ ] **Corrinne** Review ~44 products still missing supplier (grooming/equine brands not in our map: Absorbine, Cowboy Magic, Farnam, Exhibitor's, Jacks Mfg, etc.) — NexusBlue automated 120 supplier assignments; these 44 have no known LS supplier UUID
 - [ ] **Corrinne** Spot-check `docs/ls_space_sku_review.csv` — 136 sibling-dupe cases remaining after 7 manual resolutions
 
 ## Client — LS Manual Fixes Required
 - [ ] **Corrinne** Resolve 6 barcode-conflict products in Lightspeed: SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
-- [ ] **Corrinne** Fix swapped prices in LS (cross-validation found prices are inverted): **JACKIE SQUARE TOE** ours=$46.97 vs LS=$65.95 and **SILVERSMITH SQUARE TOE** ours=$65.95 vs LS=$46.97 — the two prices are literally exchanged
-- [ ] **Corrinne** Review 36 price mismatches — `docs/ls_validation_report.json` has full list. Most are small ($1-2 rounding), but 4 products differ by >$10
+- [ ] **Corrinne** Fix swapped prices in LS (manual — automation skipped, can't determine correct direction): **JACKIE SQUARE TOE** ours=$46.97 vs LS=$65.95 and **SILVERSMITH SQUARE TOE** ours=$65.95 vs LS=$46.97 — these two prices are literally exchanged between products
+- [ ] **Corrinne** Fix 5 price mismatches not auto-resolved (Nocona buckles, Youth Belt Buckle — name mismatch in LS prevented match): see `docs/ls_price_mismatches.csv` rows 13, 14, 33, 36, 37
+- [x] **NexusBlue** Auto-fix 25 of 36 price mismatches — 77 LS variants updated via bulk script (2026-04-21)
 
 ## NexusBlue — Next Engineering
 - [x] **NexusBlue** lightspeed_index refresh — done 2026-04-20. 75,379 rows loaded. Added family_id, variant_parent_id, supplier_id, brand_id, product_type_id. Script: `docs/ls_index_refresh.py`.
@@ -25,6 +26,9 @@
 ## Nice to Have
 - [ ] **NexusBlue** User PINs stored in plaintext — consider hashing (low priority, internal tool)
 - [x] **NexusBlue** lightspeed_index weekly scheduled refresh — cron job added 2026-04-21. Runs Mondays 3 AM UTC via Droplet crontab. Log: `/home/nexusblue/logs/ls-index-refresh.log`.
+- [x] **NexusBlue** Bulk price fix — 77 LS variants corrected across 25 products via v2.1 PUT `details` — done 2026-04-21
+- [x] **NexusBlue** Supplier backfill — 120 products assigned correct LS supplier via v2.1 PUT `common` key — done 2026-04-21
+- [x] **NexusBlue** Nester Hosiery mapping errors corrected — Tough1 (10), Tough 1 blankets (9), Lone Star Hats (12 cleared), Ariat (5), Arait typo fixed — 0 wrong-supplier products remain — done 2026-04-21
 
 ## Completed
 - [x] **NexusBlue** lightspeed_index refresh + cross-validation — 75,379 rows, family/supplier/brand IDs added, validation report generated — done 2026-04-20

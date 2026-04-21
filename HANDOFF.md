@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-21 (Session 5) — Price sync unblocked: v2.1 PUT requires `{"details": {"price_excluding_tax": value}}` nested schema. ls-upsert Edge Function updated + redeployed. `action: "updated"` confirmed end-to-end.
+2026-04-21 (Session 7) — Supplier cleanup complete: bulk price fix (77 variants, 25 products), supplier backfill (120 assigned via v2.1 PUT `common` key), Nester Hosiery mapping errors corrected (Tough1→JTI, Lone Star→cleared, Ariat→Ariat, Arait typo fixed). Zero products with wrong supplier.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -42,9 +42,9 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ### Corrinne — Action Required
 1. **Test ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`, no duplicate created) + save a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
 2. **Test Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
-3. **Fix swapped prices (critical)** — JACKIE SQUARE TOE and SILVERSMITH SQUARE TOE have inverted prices between our DB and LS. Fix in LS dashboard. Full list: `docs/ls_price_mismatches.csv`.
-4. **Resolve 6 barcode-conflict products** in LS — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
-5. **Supplier gap on ~60 historic styles** — continue manual LS dashboard edits. New products correct automatically.
+3. **Fix swapped prices (manual)** — JACKIE SQUARE TOE and SILVERSMITH SQUARE TOE still have inverted prices in LS ($46.97↔$65.95 swapped). Automated fix skipped these because it couldn't determine which direction was correct. Fix manually in LS dashboard. See `docs/ls_price_mismatches.csv` rows 2–6.
+4. **5 price mismatches not auto-fixed** — Nocona buckle items and a generic Youth Belt Buckle couldn't be matched by name in LS (different name format). Verify manually: `docs/ls_price_mismatches.csv` rows 13, 14, 33, 36, 37.
+5. **Resolve 6 barcode-conflict products** in LS — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
 6. **Spot-check `docs/ls_space_sku_review.csv`** — 136 sibling-dupe cases remaining.
 
 ### NexusBlue — v6.1 Polish (next session)
@@ -69,6 +69,39 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-04-21 (Session 7) — Supplier Cleanup + Bulk Price Fix
+
+**Trigger:** "Now that price sync is working, what can we automate to reduce Corrinne's burden?"
+
+**What was done:**
+
+**Phase 1 — Bulk price fix (26 products, 77 LS variants):**
+Generated `docs/ls_price_mismatches.csv` (36 rows) from `docs/ls_validation_report.json`. Automated fix via LS v2.1 PUT `{"details": {"price_excluding_tax": our_price}}`. Matched products by name in lightspeed_index. Sent updates directly to LS — no Corrinne involvement needed. 
+- Fixed: 25 products / 77 variants (buckles, hats, wallets, Ariat accessories)
+- Skipped: Montana Silversmiths (we're $6.95 HIGHER than LS — left as-is, may be intentional)
+- Not found by name: 5 Nocona/Youth Buckle items (name differs in LS)
+- Still manual: JACKIE + SILVERSMITH SQUARE TOE price swap (inverted prices, can't auto-determine correct direction)
+
+**Phase 2 — Supplier backfill (164 products, 120 assigned):**
+Built brand→SUPPLIER_CODE→LS_supplier_UUID chain from existing SUPPLIER_MAP in js/sku-generator.js (66 brands). Sent LS v2.1 PUT `{"common": {"product_suppliers": [{"supplier_id": uuid, "price": 0}]}}` — newly discovered endpoint capability (prior assumption was supplier updates were impossible via API). Also updated `supplier_name` in our DB simultaneously.
+- Correctly assigned: 120 products
+- Unmapped: 44 products (grooming/equine brands not in SUPPLIER_MAP: Absorbine, Cowboy Magic, Farnam, Jacks Mfg, Exhibitor's, etc.)
+
+**Phase 3 — Nester Hosiery mapping error corrections:**
+The bulk supplier backfill had 3 mapping bugs:
+1. **Tough1 (no space)**: Brand loop matched "TOUGH1" → JTI code → incorrectly resolved to Nester Hosiery UUID (wrong LS UUID in map). Fixed: 10 products → JT International Distributors, Inc.
+2. **Tough 1 (with space)**: Script only matched `brand_name='Tough1'`; 9 more products with `brand_name='Tough 1'` were missed. Fixed: 9 products → JT International.
+3. **Lone Star Hats**: No "Lone Star" supplier exists in LS. Wrong UUID chain assigned Nester. Fixed: cleared to NULL (both LS and our DB) — 12 products.
+4. **Ariat PATRIOT SLIPPER + SILVERSMITH**: Mapping error put Ariat products on Nester. Fixed: 5 products → Ariat supplier.
+5. **"Arait" typo** (id=7126): brand_name='Arait' and supplier_code='GEN' — corrected to 'Ariat' / 'ARI' in our DB.
+
+Final state: **0 products with Nester Hosiery supplier** (was 26 at peak, all resolved).
+
+**New discovery — v2.1 PUT `common` key:**
+`{"common": {"product_suppliers": [{"supplier_id": "uuid", "price": 0}]}}` updates supplier assignment in LS. This was previously undocumented in our codebase and assumed impossible. Enables bulk supplier maintenance going forward.
+
+---
 
 ### 2026-04-21 (Session 6) — v6.1 Polish: Price Warning + LS Error Feedback
 
@@ -451,3 +484,13 @@ LS soft-delete (DELETE /products/{id}) does NOT release the product NAME for reu
 - Git push to main
 - Git commit [main 3a22548]
 - Git push to main
+
+### Mid-Session Checkpoint (2026-04-21T11:34:53Z — auto-compaction)
+**Ledger stats:** 27 entries (0 decisions, 0 lessons, 0 errors, 5 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 9f8ccea]
+- Git push to main
+- Git commit [main 5d2526f]
+- Git push to main
+- Git commit [main 6032e51]
