@@ -38,18 +38,24 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - **lightspeed_index refreshed** — 75,379 rows loaded with new columns: family_id, variant_parent_id, supplier_id, brand_id, product_type_id. Script: `docs/ls_index_refresh.py` (caches catalog, supports --dry-run/--validate-only).
 
 ## Next Up
-1. **Corrinne tests ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`, no duplicate created) + save a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
-2. **Corrinne tests Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
-3. **Fix swapped prices (critical)** — cross-validation found JACKIE SQUARE TOE and SILVERSMITH SQUARE TOE have their prices inverted between our DB and LS. Corrinne to fix in LS dashboard. See `docs/ls_validation_report.json` for all 36 price mismatches.
-4. **LS backfill COMPLETE** — 658 processed (141 created, 355 ID-written-back, 156 no-key, 10 errors resolved). All enhanced_complete products with a barcode or SKU are now linked to LS. Log: `docs/ls_backfill.log`.
-5. **Supplier gap on 60 styles** — Corrinne continues manual LS dashboard edits for historic products. New products correct from day one via ls-upsert.
-6. **Price update path** — FIXED (Session 5). v2.1 PUT works with `{"details": {"price_excluding_tax": value}}`. ls-upsert redeployed. When Corrinne saves a product via Enhanced Processor, the price now syncs to LS automatically.
-7. **6 barcode-conflict products** need manual LS resolution — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
-8. **P4 SKU normalization** — now unblocked. Reassess scope (products table has 7,875 rows, not 1,514 — HANDOFF was stale). Barcode is dedup key.
-9. Consider hashing user PINs (low priority — internal tool)
+
+### Corrinne — Action Required
+1. **Test ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`, no duplicate created) + save a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
+2. **Test Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
+3. **Fix swapped prices (critical)** — JACKIE SQUARE TOE and SILVERSMITH SQUARE TOE have inverted prices between our DB and LS. Fix in LS dashboard. Full list: `docs/ls_price_mismatches.csv`.
+4. **Resolve 6 barcode-conflict products** in LS — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
+5. **Supplier gap on ~60 historic styles** — continue manual LS dashboard edits. New products correct automatically.
+6. **Spot-check `docs/ls_space_sku_review.csv`** — 136 sibling-dupe cases remaining.
+
+### NexusBlue — v6.1 Polish (next session)
+7. **Rotate LS personal access token** — old PAT was in deleted files; rotate in LS dashboard.
+8. **Price-mismatch warning in Enhanced Processor** — if our price vs LS differs >$5, warn Corrinne before save (10 lines, prevent overwriting correct LS prices with stale data).
+9. **LS lookup error feedback** — if LS lookup fails, show "LS unavailable, using AI data" instead of silent fallback.
+10. **Log rotation** — add logrotate for `/home/nexusblue/logs/ls-index-refresh.log`.
+11. Consider hashing user PINs (low priority — internal tool)
 
 ## Active Stack
-- Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 20 modules
+- Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 21 modules
 - Backend: Supabase Edge Function (Deno/TypeScript) + PostgreSQL
 - Storage: Supabase Storage (`product-images` bucket, private, UID-scoped RLS)
 - AI: OpenAI GPT-4o Vision (via Edge Function)
