@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-21 (Session 7) — Supplier cleanup + 3 bug fixes: gender field wired to wrong value in syncToLightspeed(), TOUGH1 missing from SUPPLIER_MAP, ls-upsert updateProduct() now auto-assigns supplier via v2.1 PUT `common` key on every Enhanced Processor save.
+2026-04-21 (Session 8) — Category JSON bug fix: extractCategoryName() added to Enhanced Processor; DB migrated (0 raw JSON rows remain). Barcode conflicts identified. Enhanced Processor sync behavior documented for Corrinne.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -42,10 +42,10 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ### Corrinne — Action Required
 1. **Test ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`, no duplicate created) + save a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
 2. **Test Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
-3. **Fix swapped prices (manual)** — JACKIE SQUARE TOE and SILVERSMITH SQUARE TOE still have inverted prices in LS ($46.97↔$65.95 swapped). Automated fix skipped these because it couldn't determine which direction was correct. Fix manually in LS dashboard. See `docs/ls_price_mismatches.csv` rows 2–6.
-4. **5 price mismatches not auto-fixed** — Nocona buckle items and a generic Youth Belt Buckle couldn't be matched by name in LS (different name format). Verify manually: `docs/ls_price_mismatches.csv` rows 13, 14, 33, 36, 37.
-5. **Resolve 6 barcode-conflict products** in LS — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
-6. **Spot-check `docs/ls_space_sku_review.csv`** — 136 sibling-dupe cases remaining.
+3. [x] **Fix swapped prices (manual)** — DONE by Corrinne 2026-04-21. JACKIE SQUARE TOE ↔ SILVERSMITH SQUARE TOE prices corrected in LS dashboard.
+4. [x] **5 price mismatches not auto-fixed** — DONE by Corrinne 2026-04-21. Nocona buckle + Youth Belt Buckle rows 13, 14, 33, 36, 37 corrected in LS.
+5. **6 barcode-conflict products** — these are from the April bulk cleanup, NOT scanning sessions. Style numbers used as barcodes conflicted with existing LS products. Search LS by product name to find/verify, or re-scan physical items through Enhanced Processor. Products: SE2801 (Liberty Spicy Brown Water Buffalo Boots), 03-050-0522-1697-AS (Roper Women's Shirt), HL4227 (Lafayette Cinnamon Cowhide Boots), 100153-234 (TuffRider Cotton LS Show Shirt), AR2341-002-M (AriatTEK Ultrathin Performance Socks), 230992MUL-L (Justin Socks 2 pr — Kids).
+6. **Spot-check `docs/ls_space_sku_review.csv`** — 136 sibling-dupe cases remaining. Corrinne: will revisit after all items are processed.
 
 ### NexusBlue — v6.1 Polish (next session)
 7. [x] **LIGHTSPEED_TOKEN vaulted** — token was never in git history (files were always untracked). No rotation needed. Vaulted in Setup Copilot 2026-04-21 via vault-get.sh.
@@ -69,6 +69,24 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-04-21 (Session 8) — Category JSON bug fix + Corrinne feedback triage
+
+**Trigger:** Corrinne's session notes from processing items 04212026 am — questions about Enhanced Processor sync behavior, 6 unresolved barcode conflicts, category display showing raw JSON.
+
+**What was done:**
+
+**Bug fix — Category JSON in Enhanced Processor:**
+`lightspeed_index.category` is stored as a raw JSON string from LS (e.g. `{"id":"...","name":"Hats - Hat Accessories & Care",...}`). Three read paths in `enhanced-processor.js` (`populateLSFields`, `copyAllFields`, `getLSFieldValue`) were writing the raw JSON to the form field, which then saved corrupt values to `products.product_category` and broke category resolution in `ls-upsert`. Added `extractCategoryName()` helper, applied to all three paths. DB migration cleaned all affected rows (0 raw JSON rows remain after `UPDATE ... SET product_category = (product_category::jsonb)->>'name'`). Commit: d1343c5. Migration: `supabase/migrations/20260421_fix_category_json.sql`.
+
+**Barcode conflicts identified:**
+The 6 barcodes listed in S7 (SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L) are style numbers that were used as codes in the April bulk cleanup re-import. They failed because another LS product already had those codes. Product names identified from `docs/ls_cleanup_manifest.csv` — see updated Next Up item 5.
+
+**Enhanced Processor sync behavior clarified (for Corrinne):**
+For existing LS products (barcode/SKU/name match), ls-upsert updates ONLY price and supplier. Name, brand, category, SKU, tags, and quantity are intentionally NOT pushed back to LS — LS is the source of truth for those fields on existing products. Corrinne's "no" results on those columns are expected, not errors.
+
+**Corrinne's manual fixes acknowledged:**
+Swapped prices (items 3) and 5 Nocona/buckle price mismatches (item 4) confirmed done. Marked complete in Next Up.
 
 ### 2026-04-21 (Session 7) — Supplier Cleanup + Bulk Price Fix
 
