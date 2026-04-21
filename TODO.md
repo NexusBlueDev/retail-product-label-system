@@ -24,7 +24,7 @@
 
 ## Nice to Have
 - [ ] **NexusBlue** User PINs stored in plaintext — consider hashing (low priority, internal tool)
-- [ ] **NexusBlue** lightspeed_index weekly scheduled refresh (pg_cron)
+- [x] **NexusBlue** lightspeed_index weekly scheduled refresh — cron job added 2026-04-21. Runs Mondays 3 AM UTC via Droplet crontab. Log: `/home/nexusblue/logs/ls-index-refresh.log`.
 
 ## Completed
 - [x] **NexusBlue** lightspeed_index refresh + cross-validation — 75,379 rows, family/supplier/brand IDs added, validation report generated — done 2026-04-20
