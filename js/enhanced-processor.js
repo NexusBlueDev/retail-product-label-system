@@ -52,6 +52,22 @@ const LS_TO_AI = {
 // Track which source populated each form field
 let dataSource = {};
 
+// The lightspeed_index table stores category as a raw JSON string from LS
+// (e.g. '{"id":"...","name":"Hats - Hat Accessories & Care",...}').
+// This helper extracts just the display name so we never save raw JSON to the form.
+function extractCategoryName(cat) {
+    if (!cat) return '';
+    if (typeof cat === 'string') {
+        const trimmed = cat.trim();
+        if (trimmed.startsWith('{')) {
+            try { return JSON.parse(trimmed).name || trimmed; } catch { return trimmed; }
+        }
+        return trimmed;
+    }
+    if (typeof cat === 'object') return cat.name || '';
+    return String(cat);
+}
+
 // ── Queue Management ─────────────────────────────────────────────────
 
 async function loadQueue() {
@@ -352,7 +368,7 @@ function populateLSFields(lsData) {
         name: lsData.name || '',
         brand_name: lsData.brand || '',
         supplier_name: lsData.supplier || '',
-        product_category: lsData.category || '',
+        product_category: extractCategoryName(lsData.category),
         retail_price: lsData.retail_price || '',
         supply_price: lsData.supply_price || '',
         description: ''
@@ -447,7 +463,7 @@ function copyAllFields() {
         lsValues.name = ls.name;
         lsValues.brand_name = ls.brand;
         lsValues.supplier_name = ls.supplier;
-        lsValues.product_category = ls.category;
+        lsValues.product_category = extractCategoryName(ls.category);
         lsValues.retail_price = ls.retail_price;
         lsValues.supply_price = ls.supply_price;
         const vo = ls.variant_options || {};
@@ -715,7 +731,7 @@ function getLSFieldValue(aiKey) {
         name: ls.name,
         brand_name: ls.brand,
         supplier_name: ls.supplier,
-        product_category: ls.category,
+        product_category: extractCategoryName(ls.category),
         retail_price: ls.retail_price,
         supply_price: ls.supply_price,
     };
