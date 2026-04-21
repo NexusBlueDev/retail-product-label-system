@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-21 (Session 7) — Supplier cleanup complete: bulk price fix (77 variants, 25 products), supplier backfill (120 assigned via v2.1 PUT `common` key), Nester Hosiery mapping errors corrected (Tough1→JTI, Lone Star→cleared, Ariat→Ariat, Arait typo fixed). Zero products with wrong supplier.
+2026-04-21 (Session 7) — Supplier cleanup + 3 bug fixes: gender field wired to wrong value in syncToLightspeed(), TOUGH1 missing from SUPPLIER_MAP, ls-upsert updateProduct() now auto-assigns supplier via v2.1 PUT `common` key on every Enhanced Processor save.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
