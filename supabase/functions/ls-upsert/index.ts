@@ -3,12 +3,12 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 /**
  * ls-upsert — Lightspeed X-Series lookup-first upsert proxy.
  *
- * Searches LS by barcode (primary) then SKU (fallback).
- * If found: updates price_excluding_tax + supply_price via PUT v2.1.
+ * Searches LS by barcode (primary) then SKU (fallback) then name.
+ * If found: updates price_excluding_tax + supply_price via PUT v2.1 (nested under "details").
  * If not found: creates standalone product via POST v2.0.
  *
- * This proxy exists because the LS personal access token cannot be
- * held in the browser — it must live in server-side secrets.
+ * v2.1 PUT schema: fields must nest under "details" key — top-level fields are rejected 422.
+ * This proxy exists because the LS personal access token cannot be held in the browser.
  */
 
 const corsHeaders = {
@@ -180,26 +180,25 @@ async function searchByName(token: string, name: string): Promise<LsProduct | nu
 }
 
 async function updateProduct(token: string, product: LsProduct, req: UpsertRequest): Promise<UpsertResult> {
-  // NOTE: PUT v2.1 accepts operational fields (price, supply_price, active) but rejects ALL
-  // metadata fields (supplier_id, product_type_id, brand_id, name, tags → 422 "Unknown field").
-  // This is intentional and matches documented LS API limitations. If v2.1 PUT price support
-  // ever breaks, action='skipped' ensures the save still completes non-fatally.
-  const payload: Record<string, unknown> = { active: true }
+  // v2.1 PUT schema: all variant-level fields must nest under "details".
+  // Top-level fields (e.g. price_excluding_tax at root) return 422 "Unknown field in payload".
+  // Metadata fields (supplier_id, brand_id, name) are not accepted by v2.1 PUT at all.
+  const details: Record<string, unknown> = { is_active: true }
 
   if (req.retail_price !== null && req.retail_price !== undefined) {
-    payload.price_excluding_tax = req.retail_price
+    details.price_excluding_tax = req.retail_price
   }
   if (req.supply_price !== null && req.supply_price !== undefined) {
-    payload.supply_price = req.supply_price
+    details.supply_price = req.supply_price
   }
 
-  const { status } = await lsPut(token, product.id, payload)
+  const { status } = await lsPut(token, product.id, { details })
 
   if (status === 200 || status === 204) {
     return { action: 'updated', lightspeed_id: product.id, sku: product.sku, message: 'Price updated in Lightspeed' }
   }
 
-  // PUT rejected (likely 422) — product exists in LS but prices not updated.
+  // PUT rejected — product exists in LS but prices not updated.
   // Non-fatal: return the found ID so our DB records the correct lightspeed_product_id.
   console.warn(`ls-upsert: PUT ${product.id} returned ${status} — prices not updated but product exists`)
   return { action: 'skipped', lightspeed_id: product.id, sku: product.sku, message: `Product found in LS (id: ${product.id}) but price update returned ${status}` }

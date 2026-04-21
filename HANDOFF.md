@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-21 (Session 4) — LS backfill complete: 141 created, 355 skipped, 156 no-key, 10 errors cleaned up. All enhanced_complete products now linked to LS.
+2026-04-21 (Session 5) — Price sync unblocked: v2.1 PUT requires `{"details": {"price_excluding_tax": value}}` nested schema. ls-upsert Edge Function updated + redeployed. `action: "updated"` confirmed end-to-end.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -34,7 +34,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## In Progress
 - **Enhanced Processor v2 deployed** — copy buttons, dynamic SKU, category dropdown, supplier cross-population, supplier name field. Awaiting Corrinne's testing.
-- **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Duplicate prevention active. See session log for test results and known limitation (price UPDATE path).
+- **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Duplicate prevention active. Price sync active (v2.1 PUT `{"details": {...}}` schema confirmed working — Session 5).
 - **lightspeed_index refreshed** — 75,379 rows loaded with new columns: family_id, variant_parent_id, supplier_id, brand_id, product_type_id. Script: `docs/ls_index_refresh.py` (caches catalog, supports --dry-run/--validate-only).
 
 ## Next Up
@@ -43,7 +43,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 3. **Fix swapped prices (critical)** — cross-validation found JACKIE SQUARE TOE and SILVERSMITH SQUARE TOE have their prices inverted between our DB and LS. Corrinne to fix in LS dashboard. See `docs/ls_validation_report.json` for all 36 price mismatches.
 4. **LS backfill COMPLETE** — 658 processed (141 created, 355 ID-written-back, 156 no-key, 10 errors resolved). All enhanced_complete products with a barcode or SKU are now linked to LS. Log: `docs/ls_backfill.log`.
 5. **Supplier gap on 60 styles** — Corrinne continues manual LS dashboard edits for historic products. New products correct from day one via ls-upsert.
-6. **Price update path** — v2.1 PUT confirmed to reject ALL fields. Need OAuth or Retailer API investigation.
+6. **Price update path** — FIXED (Session 5). v2.1 PUT works with `{"details": {"price_excluding_tax": value}}`. ls-upsert redeployed. When Corrinne saves a product via Enhanced Processor, the price now syncs to LS automatically.
 7. **6 barcode-conflict products** need manual LS resolution — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L
 8. **P4 SKU normalization** — now unblocked. Reassess scope (products table has 7,875 rows, not 1,514 — HANDOFF was stale). Barcode is dedup key.
 9. Consider hashing user PINs (low priority — internal tool)
@@ -63,6 +63,25 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-04-21 (Session 5) — Price Sync Unblocked
+
+**Trigger:** Continuation from Session 4. User confirmed LS credentials accessible — investigate price sync blocker.
+
+**Root cause found and fixed:**
+Previous investigation said v2.1 PUT rejects ALL fields. That was wrong — the payload structure was wrong. The real v2.1 schema wraps variant fields under a `"details"` key:
+- ❌ `{"price_excluding_tax": 41.95}` → 422 "Unknown field in payload"
+- ✅ `{"details": {"price_excluding_tax": 41.95}}` → 200, price updated
+
+Discovery method: `PUT /api/2.1/products/{id}` with empty body `{}` returns 200 and the full expected schema. The response showed `details.price_excluding_tax`, revealing the correct nesting.
+
+**What was changed:**
+- `supabase/functions/ls-upsert/index.ts` `updateProduct()`: changed from flat `payload.price_excluding_tax = value` to `details.price_excluding_tax = value` + `lsPut(..., { details })`.
+- Function redeployed. End-to-end test via Edge Function returned `action: "updated"`.
+
+**Confirmed:** When Corrinne saves any product in Enhanced Processor that already exists in LS (matched by barcode/SKU/name), the price now syncs automatically on save.
+
+---
 
 ### 2026-04-21 (Session 4) — LS Backfill Complete + Error Cleanup
 
@@ -121,7 +140,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - CORS + OPTIONS preflight: works.
 - Test products created and deleted during smoke test.
 
-**Known limitation:** v2.1 PUT rejects ALL fields (not just metadata). Price sync is currently a no-op. Product duplicate prevention (the primary goal) is fully working — existing products are found and not duplicated.
+**Known limitation (resolved Session 5):** v2.1 PUT appeared to reject all fields — the payload structure was wrong. Fields must be nested under `"details"` key. Price sync now works.
 
 **Architect review:** APPROVED_WITH_CHANGES. RC-1 (unverified PUT) handled gracefully. RC-2 (standalone comment) added. RC-3 (module-scope cache reliability) deferred for v2. RC-4 (race condition) fixed with single consolidated PATCH.
 
@@ -399,4 +418,19 @@ LS soft-delete (DELETE /products/{id}) does NOT release the product NAME for reu
 - Git commit [main 2a9ec49]
 - Git commit [main 646f0fd]
 - Git commit [main ddae8cc]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-04-21T04:03:09Z — auto-compaction)
+**Ledger stats:** 75 entries (0 decisions, 0 lessons, 0 errors, 21 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 1b142d1]
+- Git push to main
+- Git commit [main 75c5c0c]
+- Git push to main
+- Git commit [main a5a7c24]
+- Git push to main
+- Git commit [main 0d7a9fa]
+- Git push to main
+- Git commit [main 3a22548]
 - Git push to main
