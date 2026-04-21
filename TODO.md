@@ -18,7 +18,7 @@
 - [x] **NexusBlue** lightspeed_index refresh — done 2026-04-20. 75,379 rows loaded. Added family_id, variant_parent_id, supplier_id, brand_id, product_type_id. Script: `docs/ls_index_refresh.py`.
 - [x] **NexusBlue** Variant grouping diagnostic — done 2026-04-20. `docs/variant_grouping_diagnostic.csv` (51 styles, 4+ variants each). Top: MB71934005/Cinch×54, MB92834019/Cinch×46.
 - [x] **NexusBlue** LS backfill — complete 2026-04-21. 658 processed: 141 created, 355 skipped (ID written back), 156 no-key (no barcode/SKU). 10 errors cleaned up (6 indexing-lag dupes linked; 4 bad-SKU chars sanitized + created). Script: `docs/ls_backfill.py`.
-- [ ] **NexusBlue** P4 SKU normalization on products table — now unblocked. Reassess scope (7,875 total rows, not 1,514).
+- [x] **NexusBlue** P4 SKU normalization — complete 2026-04-21. 4,096 SKUs generated (collision-safe: 423 duplicate-scan skips, 564 no-style skips). complete: 5,351/6,201 now have SKU. enhanced_complete: 537/674.
 - [ ] **NexusBlue** Price sync gap — confirmed: LS personal access token rejects ALL PUT fields (price, active, everything). Investigate OAuth or Retailer API.
 - [x] **NexusBlue** Archive `docs/lightspeed_import.py` + `docs/lightspeed_import_v2.py` (contain hardcoded LS token from old pattern) — deleted 2026-04-20. Rotate the LS personal access token in the Lightspeed dashboard.
 
