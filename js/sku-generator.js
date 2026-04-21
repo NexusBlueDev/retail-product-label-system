@@ -49,7 +49,7 @@ export const SUPPLIER_MAP = {
     'ELY CATTLEMAN': 'ECA', 'CRIPPLE CREEK': 'CCR',
     'HOOEY': 'HBR', 'COWGIRL TUFF': 'CTU',
     'WEAVER': 'WLE', 'WEAVER LEATHER': 'WLE',
-    'TOUGH 1': 'JTI', 'JT INT\'L': 'JTI',
+    'TOUGH 1': 'JTI', 'TOUGH1': 'JTI', 'JT INT\'L': 'JTI',
     'SCULLY': 'SSI', 'OLD WEST': 'OWB',
     'OUTBACK TRADING': 'OTC', 'OUTBACK TRADING CO.': 'OTC',
     'JPC EQUESTRIAN': 'JPC', 'OVATION': 'JPC',

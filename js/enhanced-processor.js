@@ -629,7 +629,7 @@ async function syncToLightspeed(formData, accessToken) {
         retail_price: formData.retail_price,
         supply_price: formData.supply_price,
         description: formData.description,
-        gender: formData.tags,
+        gender: formData.gender,
     };
 
     const res = await fetch(LS_UPSERT_URL, {

@@ -180,9 +180,10 @@ async function searchByName(token: string, name: string): Promise<LsProduct | nu
 }
 
 async function updateProduct(token: string, product: LsProduct, req: UpsertRequest): Promise<UpsertResult> {
-  // v2.1 PUT schema: all variant-level fields must nest under "details".
-  // Top-level fields (e.g. price_excluding_tax at root) return 422 "Unknown field in payload".
-  // Metadata fields (supplier_id, brand_id, name) are not accepted by v2.1 PUT at all.
+  // v2.1 PUT schema:
+  //   "details" key — variant-level fields (price, supply_price, is_active)
+  //   "common" key  — product-level fields (product_suppliers, name)
+  // Flat top-level fields return 422 "Unknown field in payload".
   const details: Record<string, unknown> = { is_active: true }
 
   if (req.retail_price !== null && req.retail_price !== undefined) {
@@ -192,7 +193,19 @@ async function updateProduct(token: string, product: LsProduct, req: UpsertReque
     details.supply_price = req.supply_price
   }
 
-  const { status } = await lsPut(token, product.id, { details })
+  const payload: Record<string, unknown> = { details }
+
+  // Set supplier via common key if we can resolve it — only when supplier_name is provided
+  // and resolves to a known LS UUID. Never sends empty supplier_id (would clear existing).
+  if (req.supplier_name) {
+    await ensureCaches(token)
+    const supplierId = resolveId(supplierCache, req.supplier_name)
+    if (supplierId) {
+      payload.common = { product_suppliers: [{ supplier_id: supplierId, price: 0 }] }
+    }
+  }
+
+  const { status } = await lsPut(token, product.id, payload)
 
   if (status === 200 || status === 204) {
     return { action: 'updated', lightspeed_id: product.id, sku: product.sku, message: 'Price updated in Lightspeed' }
