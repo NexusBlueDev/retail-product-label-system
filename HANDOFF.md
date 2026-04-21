@@ -48,7 +48,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 6. **Spot-check `docs/ls_space_sku_review.csv`** — 136 sibling-dupe cases remaining.
 
 ### NexusBlue — v6.1 Polish (next session)
-7. **Rotate LS personal access token** — old PAT was in deleted files; rotate in LS dashboard.
+7. [x] **LIGHTSPEED_TOKEN vaulted** — token was never in git history (files were always untracked). No rotation needed. Vaulted in Setup Copilot 2026-04-21 via vault-get.sh.
 8. [x] **Price-mismatch warning in Enhanced Processor** — confirm dialog fires if our price vs LS catalog differs >$5. Done Session 6.
 9. [x] **LS lookup error feedback** — network failure now shows "⚠ Lightspeed catalog unavailable — using AI data only" in the LS panel instead of silent fallback. Done Session 6.
 10. **Log rotation** — add logrotate for `/home/nexusblue/logs/ls-index-refresh.log`.
