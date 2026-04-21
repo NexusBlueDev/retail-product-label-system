@@ -226,12 +226,15 @@ export function generateSKU(style, brand, color, size, tags, category) {
     const colorCode = getColorCode(color);
     const { sizeValue, widthLengthValue } = parseSize(size, category);
 
+    // Sanitize size parts — LS SKU regex rejects quotes, apostrophes, spaces
+    const sanitizePart = v => v ? String(v).replace(/\s+/g, '-').replace(/[^a-zA-Z0-9_/()#\-|.]/g, '') || null : null;
+
     // Build SKU with only real parts
     let parts = [gender, supplierCode];
     if (style) parts.push(style);
     if (colorCode) parts.push(colorCode);
-    if (sizeValue) parts.push(sizeValue);
-    if (widthLengthValue) parts.push(widthLengthValue);
+    if (sizeValue) parts.push(sanitizePart(sizeValue));
+    if (widthLengthValue) parts.push(sanitizePart(widthLengthValue));
 
     return parts.join('-');
 }
