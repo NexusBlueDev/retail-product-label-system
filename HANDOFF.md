@@ -49,8 +49,8 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ### NexusBlue — v6.1 Polish (next session)
 7. **Rotate LS personal access token** — old PAT was in deleted files; rotate in LS dashboard.
-8. **Price-mismatch warning in Enhanced Processor** — if our price vs LS differs >$5, warn Corrinne before save (10 lines, prevent overwriting correct LS prices with stale data).
-9. **LS lookup error feedback** — if LS lookup fails, show "LS unavailable, using AI data" instead of silent fallback.
+8. [x] **Price-mismatch warning in Enhanced Processor** — confirm dialog fires if our price vs LS catalog differs >$5. Done Session 6.
+9. [x] **LS lookup error feedback** — network failure now shows "⚠ Lightspeed catalog unavailable — using AI data only" in the LS panel instead of silent fallback. Done Session 6.
 10. **Log rotation** — add logrotate for `/home/nexusblue/logs/ls-index-refresh.log`.
 11. Consider hashing user PINs (low priority — internal tool)
 
@@ -69,6 +69,17 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-04-21 (Session 6) — v6.1 Polish: Price Warning + LS Error Feedback
+
+**Trigger:** Architecture review identified two UX gaps before closing out.
+
+**What was changed — `js/enhanced-processor.js`:**
+- `saveAndComplete()`: Added price-mismatch confirm dialog. If our entered price and the LS catalog price differ by >$5, Corrinne sees a modal showing both prices and the difference before save fires. Prevents silently overwriting a correct LS price with stale data.
+- `lookupLightspeed()`: Tracks network errors separately from "no match" results. On error, calls `showLightspeedUnavailable()` which shows the LS panel with an amber warning ("⚠ Lightspeed catalog unavailable — using AI data only") instead of silently hiding the panel.
+- New `showLightspeedUnavailable()` function added.
+
+---
 
 ### 2026-04-21 (Session 5) — Price Sync Unblocked
 

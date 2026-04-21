@@ -279,6 +279,7 @@ async function lookupLightspeed(barcode, styleNumber) {
     state.epLightspeedData = null;
 
     let match = null;
+    let lookupFailed = false;
 
     // Try barcode first (most reliable)
     if (barcode && /^\d{12,13}$/.test(barcode)) {
@@ -295,7 +296,8 @@ async function lookupLightspeed(barcode, styleNumber) {
             const results = await response.json();
             if (results && results.length > 0) match = results[0];
         } catch (e) {
-            console.error('LS barcode lookup error:', e);
+            console.warn('LS barcode lookup unavailable:', e);
+            lookupFailed = true;
         }
     }
 
@@ -314,7 +316,8 @@ async function lookupLightspeed(barcode, styleNumber) {
             const results = await response.json();
             if (results && results.length > 0) match = results[0];
         } catch (e) {
-            console.error('LS style lookup error:', e);
+            console.warn('LS style lookup unavailable:', e);
+            lookupFailed = true;
         }
     }
 
@@ -322,6 +325,8 @@ async function lookupLightspeed(barcode, styleNumber) {
         state.epLightspeedData = match;
         populateLSFields(match);
         showLightspeedPanel(match);
+    } else if (lookupFailed) {
+        showLightspeedUnavailable();
     } else {
         dom.epLightspeedPanel.style.display = 'none';
         clearLSFields();
@@ -397,6 +402,14 @@ function showLightspeedPanel(lsData) {
         ${lsData.retail_price ? `<br>Price: $${Number(lsData.retail_price).toFixed(2)}` : ''}
         ${variantStr ? `<br>Options: ${variantStr}` : ''}
     `;
+}
+
+function showLightspeedUnavailable() {
+    const dom = getDOMElements();
+    dom.epLightspeedPanel.style.display = 'block';
+    dom.epLightspeedDetails.innerHTML =
+        '<span style="color:#e67e22;font-weight:600;">⚠ Lightspeed catalog unavailable — using AI data only</span>';
+    clearLSFields();
 }
 
 function clearAllFields() {
@@ -484,6 +497,22 @@ async function saveAndComplete() {
     if (!name) {
         alert('Product name is required');
         return;
+    }
+
+    // Warn if our price differs significantly from the LS catalog price — prevents
+    // accidentally overwriting a correct LS price with a stale value from our DB.
+    const lsCatalogPrice = state.epLightspeedData ? parseFloat(state.epLightspeedData.retail_price) : null;
+    const ourPriceRaw = parseFloat(document.getElementById('ep_retail_price')?.value);
+    if (lsCatalogPrice && ourPriceRaw && Math.abs(ourPriceRaw - lsCatalogPrice) > 5) {
+        const diff = Math.abs(ourPriceRaw - lsCatalogPrice).toFixed(2);
+        const proceed = confirm(
+            `Price mismatch detected!\n\n` +
+            `Lightspeed has: $${lsCatalogPrice.toFixed(2)}\n` +
+            `Your entry: $${ourPriceRaw.toFixed(2)}\n` +
+            `Difference: $${diff}\n\n` +
+            `Saving will update Lightspeed to your price. Continue?`
+        );
+        if (!proceed) return;
     }
 
     dom.epSaveBtn.disabled = true;
