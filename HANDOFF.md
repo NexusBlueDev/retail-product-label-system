@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-04-21 (Session 8) — Category JSON bug fix: extractCategoryName() added to Enhanced Processor; DB migrated (0 raw JSON rows remain). Barcode conflicts identified. Enhanced Processor sync behavior documented for Corrinne.
+2026-05-04 (Session 9) — LS data gap analysis + SKU formula remediation. 978 old-format SKUs updated to GENDER-SUPPLIER-STYLE-COLOR-SIZE formula. 3 validation CSVs generated for LS barcode/category remediation (review gate before any LS writes).
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -39,20 +39,42 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## Next Up
 
-### Corrinne — Action Required
-1. **Test ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`, no duplicate created) + save a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
-2. **Test Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
-3. [x] **Fix swapped prices (manual)** — DONE by Corrinne 2026-04-21. JACKIE SQUARE TOE ↔ SILVERSMITH SQUARE TOE prices corrected in LS dashboard.
-4. [x] **5 price mismatches not auto-fixed** — DONE by Corrinne 2026-04-21. Nocona buckle + Youth Belt Buckle rows 13, 14, 33, 36, 37 corrected in LS.
-5. **6 barcode-conflict products** — these are from the April bulk cleanup, NOT scanning sessions. Style numbers used as barcodes conflicted with existing LS products. Search LS by product name to find/verify, or re-scan physical items through Enhanced Processor. Products: SE2801 (Liberty Spicy Brown Water Buffalo Boots), 03-050-0522-1697-AS (Roper Women's Shirt), HL4227 (Lafayette Cinnamon Cowhide Boots), 100153-234 (TuffRider Cotton LS Show Shirt), AR2341-002-M (AriatTEK Ultrathin Performance Socks), 230992MUL-L (Justin Socks 2 pr — Kids).
-6. **Spot-check `docs/ls_space_sku_review.csv`** — 136 sibling-dupe cases remaining. Corrinne: will revisit after all items are processed.
+### Corrinne — Action Required (S9 — PRIORITY)
+1. **Review `docs/fix_barcodes_lightspeed.csv`** — 1,763 LS products missing barcodes that we can fill from our scanned data. Column `confidence`: HIGH rows (22) are safe to apply immediately. MEDIUM rows (881) are likely correct — spot-check a few per brand. REVIEW rows (860) have name mismatches between our record and LS — Corrinne must verify before we push.
+2. **Review `docs/fix_categories_lightspeed.csv`** — 1,078 LS products missing categories. Same confidence system. HIGH=157, MEDIUM=537, REVIEW=384. Verify the `our_category` column looks right for the product — that value would be written to LS.
+3. **Review `docs/fix_barcodes_our_db.csv`** — 73 products in our DB missing barcodes that LS has. All HIGH/MEDIUM confidence. These are safe — we're just pulling from LS into our own DB.
+4. **Reply with: any REVIEW rows that look wrong; any rows where the category value looks incorrect** — that feedback gates the next session's LS writes.
 
-### NexusBlue — v6.1 Polish (next session)
-7. [x] **LIGHTSPEED_TOKEN vaulted** — token was never in git history (files were always untracked). No rotation needed. Vaulted in Setup Copilot 2026-04-21 via vault-get.sh.
-8. [x] **Price-mismatch warning in Enhanced Processor** — confirm dialog fires if our price vs LS catalog differs >$5. Done Session 6.
-9. [x] **LS lookup error feedback** — network failure now shows "⚠ Lightspeed catalog unavailable — using AI data only" in the LS panel instead of silent fallback. Done Session 6.
-10. **Log rotation** — add logrotate for `/home/nexusblue/logs/ls-index-refresh.log`.
-11. Consider hashing user PINs (low priority — internal tool)
+### Corrinne — Carry-over Actions
+5. **Test ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`) + a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
+6. **Test Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
+7. **6 barcode-conflict products** — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L. Search LS by product name to find/verify or re-scan through Enhanced Processor.
+8. **Spot-check `docs/ls_space_sku_review.csv`** — 136 sibling-dupe cases, deferred until all items processed.
+
+### NexusBlue — Next Session Implementation Plan
+**Phase 1 (data prep, no LS writes):**
+- Fix 73 barcodes in our DB ← LS (HIGH confidence, safe)
+- Add `tag_ids` column to `lightspeed_index`, re-run `ls_index_refresh.py`
+- Resolve LS tag UUIDs → names via `GET /tags` LS API
+- Build `fix_tags_lightspeed.csv` (third gap, currently blocked on UUID resolution)
+
+**Phase 2 (after Corrinne reviews CSVs):**
+- Write HIGH+MEDIUM barcodes to LS via new `POST /products/{id}/product_codes` edge function
+- Write HIGH+MEDIUM categories to LS via `PUT v2.1 /products/{id}` `{"common": {"product_type_id": uuid}}`
+- Write tags to LS via `PUT v2.0` `{"tag_ids": [uuid]}` (after tag map built)
+
+**Phase 3 (cleanup):**
+- Resolve 497 SKU conflict records (duplicate products — one per pair needs deletion or merge)
+- Delete 325 ghost records (enhanced_complete with name="NA", no data)
+- Log rotation for `ls-index-refresh.log`
+
+### Current Gap Counts (as of 2026-05-04)
+| Gap | LS | Our DB | Fillable |
+|---|---|---|---|
+| Missing barcodes | 9,557 (non-UPC codes) | 2,274 processed records | 1,763 LS fillable; 73 our DB fillable |
+| Missing categories | 2,151 | 1,596 | 1,078 LS fillable |
+| Missing tags | 15,084 no tag_ids | 1,692 non-photo | Unknown (tag UUID not yet resolved) |
+| Old-format SKUs | Already correct in LS | 497 conflicts remain | — |
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 21 modules
@@ -69,6 +91,38 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
 ## Session Log
+
+### 2026-05-04 (Session 9) — LS data gap analysis + SKU formula remediation
+
+**Trigger:** Review of LS data quality — items missing barcodes, tags, categories. Cross-validate against our Supabase products DB.
+
+**What was done:**
+
+**LS data gap validation:**
+- `lightspeed_index` has 77,743 active items. Missing barcodes: 9,557 (all have product_codes but not 12/13-digit UPC — non-UPC codes, expected for some items). Missing categories: 2,151. Tags: LS stores `tag_ids` as UUID arrays — never captured in our index, so cross-validation was not possible without resolving UUIDs.
+- Our `products` table: 2,274 processed records (complete/enhanced_complete) missing barcodes; 1,692 non-photo_only missing tags; 1,596 missing categories.
+
+**SKU format analysis:**
+- Confirmed LS stores SKUs in our current `GENDER-SUPPLIER-STYLE-COLOR-SIZE` formula for products we imported.
+- Found 1,475 records in our DB still using the old format (no gender prefix, e.g. `SGK54L-JU-BLK-6.5B`).
+
+**SKU remediation (`docs/sku_regen.py`):**
+- Wrote script that regenerates old-format SKUs using current formula.
+- For 213 records where `style_number IS NULL`, extracted style from the old SKU's first dash-component.
+- Result: 978 of 1,475 old-format records updated. 497 remain — their generated SKU conflicted with an existing record (unique constraint `unique_sku`). These 497 are likely duplicate product entries requiring manual review.
+- Also backfilled `style_number` field for 213 records that lacked it.
+
+**Validation CSVs generated (review gate before any LS API writes):**
+- `docs/fix_barcodes_lightspeed.csv` — 1,763 LS items missing barcode; our DB has the value. Confidence-scored (HIGH=22, MEDIUM=881, REVIEW=860).
+- `docs/fix_categories_lightspeed.csv` — 1,078 LS items missing category; our DB has the value. (HIGH=157, MEDIUM=537, REVIEW=384).
+- `docs/fix_barcodes_our_db.csv` — 73 products in our DB missing barcode; LS has it. (HIGH=69, MEDIUM=4).
+- Tags CSV not yet possible — requires LS tag UUID → name resolution first.
+
+**No data written to Lightspeed in this session.** All work was analysis + local DB SKU fixes. LS writes blocked on Corrinne's CSV review.
+
+**Commits:** `5fdce94` (SKU regen), `88f3c2f` (validation CSVs)
+
+---
 
 ### 2026-04-21 (Session 8) — Category JSON bug fix + Corrinne feedback triage
 
@@ -512,3 +566,56 @@ LS soft-delete (DELETE /products/{id}) does NOT release the product NAME for reu
 - Git commit [main 5d2526f]
 - Git push to main
 - Git commit [main 6032e51]
+
+### Mid-Session Checkpoint (2026-05-04T12:49:30Z — auto-compaction)
+**Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-04T12:52:14Z — auto-compaction)
+**Ledger stats:** 12 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-04T13:01:59Z — auto-compaction)
+**Ledger stats:** 20 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-04T13:14:22Z — auto-compaction)
+**Ledger stats:** 34 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-04T13:18:31Z — auto-compaction)
+**Ledger stats:** 34 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-04T13:20:29Z — auto-compaction)
+**Ledger stats:** 34 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-04T13:22:25Z — auto-compaction)
+**Ledger stats:** 36 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-04T13:33:58Z — auto-compaction)
+**Ledger stats:** 51 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 5fdce94]
+
+### Mid-Session Checkpoint (2026-05-04T13:36:51Z — auto-compaction)
+**Ledger stats:** 51 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 5fdce94]
+
+### Mid-Session Checkpoint (2026-05-04T13:41:35Z — auto-compaction)
+**Ledger stats:** 51 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 5fdce94]
+
+### Mid-Session Checkpoint (2026-05-04T13:51:16Z — auto-compaction)
+**Ledger stats:** 55 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 5fdce94]
+- Git commit [main 88f3c2f]
