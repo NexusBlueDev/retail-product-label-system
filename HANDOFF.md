@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-06 (Session 13) — Barcode SKU restored for 1,193 products (CUSTOM+UPC both present). Track inventory set on 5,002 our-created LS products. ls-upsert Edge Function updated to set track_inventory on creation. Two LS API gotchas documented.
+2026-05-06 (Session 14) — LS deduplication executed (530 duplicate LS products deleted, CUSTOM codes transferred to conflict products, Supabase records updated). 1,186 LS products tagged (Men/Women/Kids/etc. + Clearance for .97 prices). Clearance tag created in LS.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -39,28 +39,21 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## Next Up
 
-### Corrinne — Action Required (2 CSVs)
-1. **`docs/ls_dedupe_for_review.csv`** (532 rows) — LS duplicate product pairs. Fill in `keep_which`: "ours", "conflict", or "neither". Unblocks barcode assignment for 532 products.
-2. **`docs/fix_tags_lightspeed.csv`** (44 rows, one per category) — Approve or correct `suggested_tags` column, then fill `approved_tags`. We apply to all products in each category. Covers 15,024 untagged LS products. Tag names must exactly match LS tag names (see `docs/ls_tag_map.json` for full list of 132 valid tags).
+### NexusBlue — Next Session
+1. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
+2. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
+3. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
 
-**Corrinne has confirmed (S13):** Category updates look good. Barcode + track inventory issues reported and fixed in S13.
-
-### NexusBlue — Next Session (execute on Corrinne's responses)
-1. **LS dedupe execution** — once `ls_dedupe_for_review.csv` returns: DELETE the "lose" side from LS via v2.0 DELETE /products/{id}.
-2. **Tag write execution** — once `fix_tags_lightspeed.csv` returns: PUT v2.1 tag_ids to all products in each approved category.
-3. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
-4. **2,847 old-format SKUs** — these are unique (no duplicates), just in old naming convention. No cleanup urgently needed; these products were imported before the current SKU formula.
-
-### Current Gap Counts (as of 2026-05-06 Session 12)
+### Current Gap Counts (as of 2026-05-06 Session 14)
 | Gap | LS | Our DB | Status |
 |---|---|---|---|
-| Missing barcodes | ~8,364 remaining | — | Cannot fill — no source data. 532 blocked by duplicate products (Corrinne reviewing). |
-| Missing categories | ~1,082 remaining | — | Cannot fill — no source data. Done for all matched products. |
-| Missing tags | 15,024 products | — | CSV built — awaiting Corrinne approval of 44-row category mapping |
+| Missing barcodes | ~8,000 remaining | — | Cannot fill — no source data |
+| Missing categories | ~1,082 remaining | — | Cannot fill — no source data. Done for all matched. |
+| Missing tags | ~13,800 remaining | — | ✅ 1,186 updated S14 (demographic + clearance). Remainder are untagged LS products with no source in our DB. |
 | Ghost records | — | **0** (deleted 725) | ✅ Done |
-| Duplicate SKUs in DB | — | **0** | ✅ Done (resolved in prior sessions) |
+| Duplicate SKUs in DB | — | **0** | ✅ Done |
 | Duplicate barcodes in DB | — | **0** | ✅ Done |
-| LS duplicate products | 532 pairs | — | Corrinne reviewing `ls_dedupe_for_review.csv` |
+| LS duplicate products | **0** | — | ✅ Done S14 — 530 deleted, codes transferred |
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 21 modules
@@ -85,15 +78,46 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 | Set category | `PUT v2.1 /products/{id}` | `{"common": {"product_category_id": "type-uuid"}}` |
 | Set price | `PUT v2.1 /products/{id}` | `{"details": {"price_excluding_tax": value}}` |
 | Set supplier | `PUT v2.1 /products/{id}` | `{"common": {"product_suppliers": [{"supplier_id": "uuid", "price": 0}]}}` |
+| Set tags (full replacement) | `PUT v2.1 /products/{id}` | `{"common": {"tag_ids": ["uuid1", "uuid2"]}}` — FULL REPLACEMENT, always include existing UUIDs |
+| Create tag | `POST v2.0 /tags` | `{"name": "TagName"}` → `{"data": "new-uuid"}` |
 
 **Gotcha:** v2.0 products endpoint is READ-ONLY — PUT/PATCH return 404 "No route found". All writes go through v2.1.
 **Gotcha:** `product_category_id` (v2.1 write field) ≠ `product_type_id` (v2.0 read field) — different field names for same concept across API versions.
 **Gotcha:** `product_category_id` only appears in v2.1 `common` schema probe when the product already has a category. New category assignment still works via PUT.
 **Gotcha:** `product_codes` in v2.1 PUT is a FULL ARRAY REPLACEMENT — always include ALL codes (CUSTOM + UPC). Sending only UPC removes the CUSTOM (SKU) code and changes the product's sku field to the barcode value.
 **Gotcha:** `track_inventory` defaults to `false` for all products created via API. Must be explicitly set via `{"common": {"track_inventory": true}}` on creation or in a follow-up write.
+**Gotcha:** CUSTOM product codes are globally unique across ALL LS products (including soft-deleted). Cannot assign a CUSTOM code to a product while another (even deleted) product holds it. In dedupe flows: DELETE the source product FIRST, then assign its CUSTOM code to the target.
+**Gotcha:** `tag_ids` in v2.1 PUT is a FULL ARRAY REPLACEMENT — always GET existing tag_ids and merge before sending.
 **Category map:** `scripts/write_categories_to_ls.py` CATEGORY_MAP (131 categories, from `GET /api/2.0/product_types`).
 
 ## Session Log
+
+### 2026-05-06 (Session 14) — LS deduplication + tag write
+
+**Trigger:** Corrinne's new data management instructions: (1) execute dedupe on `ls_dedupe_for_review.csv`, (2) replace category-based tag CSV approach with product-level demographic tags.
+
+**Dedupe (`scripts/ls_dedupe_execute.py` + `scripts/ls_dedupe_fix_codes.py`):**
+- Source: `docs/ls_dedupe_for_review.csv` — 532 rows; 530 actionable (2 missing conflict_product_id).
+- Rule: keep conflict product (pre-existing LS), delete our product.
+- Per row: GET conflict's product_codes → append our_sku as CUSTOM → PUT codes to conflict → sync price if > 0 → DELETE our LS product → UPDATE Supabase `lightspeed_product_id` → conflict's UUID.
+- **Key gotcha discovered:** LS enforces global uniqueness on CUSTOM codes across ALL products. Cannot add a CUSTOM code to the conflict product while our product still holds it. Fix: DELETE our product FIRST, then add the code to conflict. First run failed on all 530 codes PUTs (422 "Product codes must be unique"), but DELETEs and Supabase UPDATEs completed successfully. Remediation script (`ls_dedupe_fix_codes.py`) retried just the codes PUT after deletion.
+- **Results:** 530/530 LS products deleted ✅ | 530/530 Supabase records updated ✅ | 530/530 CUSTOM codes transferred to conflict products ✅ | 2 skipped (no conflict_product_id) | Price synced for all rows with `retail_price > 0`.
+
+**Tags (`scripts/write_tags_to_ls.py`):**
+- Abandoned `fix_tags_lightspeed.csv` category-based approach per Corrinne's instruction.
+- New approach: product-level demographic tags from our `products.tags` field + price .97 → Clearance.
+- Clearance tag created in LS: `9a915378-5288-420b-8902-50963d08b68c`.
+- Normalization: Men/Mens/MNS → Men, Women/Woman/Womens/Ladies/WMS → Women, Kids/Kid's → Kids, Boys → BOYS, Girls → GIRLS, Adult/Adults → Adult, Youth/YTH → Youth, Infant/Infants/Toddler → Infant/Toddler, Unisex → Unisex. Dropped: F, Tack, Tall, Big, Earrings, Bracelet, and any unrecognized tokens.
+- Operation: ADDITIVE — GET existing LS `tag_ids`, merge with our computed UUIDs, PUT only if there's something new.
+- **Results:** 2,889 products with resolvable LS IDs | Updated: **1,186** | Skipped (already had correct tags): **1,701** | Failed: **2** (both: deleted LS products — benign).
+
+**LS API gotcha (new — dedupe ordering):** Always DELETE our product BEFORE adding its CUSTOM code to another product. LS blocks the PUT with 422 "Product codes must be unique" if the code still exists on any active or soft-deleted product.
+
+**LS API reference additions:**
+- Tags: `PUT v2.1 /products/{id}` `{"common": {"tag_ids": ["uuid1", "uuid2"]}}` — FULL REPLACEMENT of tag array, must include all existing + new UUIDs.
+- Create tag: `POST v2.0 /api/2.0/tags` `{"name": "TagName"}` → returns `{"data": "uuid"}`.
+
+---
 
 ### 2026-05-06 (Session 13) — Barcode SKU restore + Track Inventory bulk fix
 
@@ -791,3 +815,43 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
 **Actions completed:**
 - Edge function deployed: ls-upsert
+
+### Mid-Session Checkpoint (2026-05-06T16:52:16Z — auto-compaction)
+**Ledger stats:** 26 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main 0039431]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-06T16:59:06Z — auto-compaction)
+**Ledger stats:** 29 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main 0039431]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-06T17:00:33Z — auto-compaction)
+**Ledger stats:** 29 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main 0039431]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-06T17:21:37Z — auto-compaction)
+**Ledger stats:** 35 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main 0039431]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-06T17:27:23Z — auto-compaction)
+**Ledger stats:** 35 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main 0039431]
+- Git push to main

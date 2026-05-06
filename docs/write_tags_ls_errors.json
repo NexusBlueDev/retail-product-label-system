@@ -1,0 +1,14 @@
+[
+  {
+    "sku": "M-KON-112378949-BAB-XLT",
+    "ls_id": "c495c35f-c7bb-4989-b71e-1c2e194f3c06",
+    "tags": "Men, Tall",
+    "error": "PUT failed: {'status': 404, 'body': '{\\n  \"error\": \"No product found\"\\n}'}"
+  },
+  {
+    "sku": "M-KON-112378949-XXL",
+    "ls_id": "c495c35f-c7bb-4989-b71e-1c2e194f3c06",
+    "tags": "Men",
+    "error": "PUT failed: {'status': 404, 'body': '{\\n  \"error\": \"No product found\"\\n}'}"
+  }
+]

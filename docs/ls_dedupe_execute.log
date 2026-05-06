@@ -1,0 +1,9 @@
+{
+  "total_rows": 532,
+  "actionable": 530,
+  "offset": 0,
+  "merged": 0,
+  "failed": 530,
+  "skipped_no_conflict": 2,
+  "skipped_other": 0
+}
