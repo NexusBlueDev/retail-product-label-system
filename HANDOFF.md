@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-06 (Session 10) — Corrinne's reviewed CSVs processed. 1,193 barcodes written to LS, 1,069 categories written to LS, 7 barcodes written to our DB. 532 LS barcode conflicts documented (duplicate products). Response drafted for Corrinne.
+2026-05-06 (Session 10/11) — Corrinne's reviewed CSVs processed. 1,193 barcodes written to LS, 1,069 categories written to LS, 7 barcodes written to our DB. 532 LS barcode conflicts documented. Dedupe review CSV built: `docs/ls_dedupe_for_review.csv` (530/532 rows fully named — both sides). Response drafted for Corrinne.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -39,18 +39,18 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## Next Up
 
-### Corrinne — No Action Required This Session
-All three reviewed CSVs processed. Response drafted (see Session 10 log). She may want to:
+### Corrinne — Action Required
+**`docs/ls_dedupe_for_review.csv`** (532 rows) — side-by-side duplicate product pairs in Lightspeed. For each row she fills in `keep_which`: "ours", "conflict", or "neither". This unblocks barcode cleanup for 532 products.
+
+Also may want to:
 1. **Spot-check LS** — verify barcodes and categories look correct on a few products in Lightspeed.
-2. **Duplicate product cleanup** — 532 LS products have barcode conflicts (same barcode on two different LS products). `docs/ls_barcode_conflicts.csv` is the list. These are LS duplicate entries that need one of the pair deleted/merged.
-3. **19 duplicate pairs in our DB** — same pattern: 19 of the 26 approved barcodes for our DB couldn't be written because the barcode exists on a sibling product. These need deduplication.
-4. **Carry-over:** Test ls-upsert in Enhanced Processor (expect `action: skipped` for existing, `created` for new). Watch console for `LS sync` log lines.
-5. **Carry-over:** 6 barcode-conflict products — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L. Search LS by name to find/verify.
+2. **Carry-over:** Test ls-upsert in Enhanced Processor (expect `action: skipped` for existing, `created` for new). Watch console for `LS sync` log lines.
+3. **Carry-over:** 6 barcode-conflict products — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L. Search LS by name to find/verify.
 
 ### NexusBlue — Next Session Implementation Plan
 **Immediate (data cleanup):**
+- Once Corrinne returns `ls_dedupe_for_review.csv`: execute deletions of the "lose" side from LS
 - Tag gap: Add `tag_ids` column to `lightspeed_index`, re-run `ls_index_refresh.py`, resolve LS tag UUIDs → names via `GET /tags`, build `fix_tags_lightspeed.csv` for Corrinne review
-- Duplicate LS products: 532 conflict list exists (`docs/ls_barcode_conflicts.csv`) — need dedup strategy (scan each pair, delete the empty shell)
 - Duplicate DB products: 19 pairs identified in Session 10; generate a dedupe CSV for Corrinne
 
 **Cleanup (Phase 3, carry-over):**
@@ -693,3 +693,30 @@ You approved 26 of the 73 rows. Of those, we updated **7** in our database. The 
 We're seeing a pattern of duplicate entries in both Lightspeed and our database — the same physical product has two records, and a barcode or scan gets attached to one but not the other. This caused the 532 LS write failures and the 19 DB write failures. We've saved a list of the Lightspeed conflicts (`docs/ls_barcode_conflicts.csv` — 532 rows) for future cleanup. Let us know if you'd like us to produce a similar list for the duplicates in our scanning database.
 
 Thank you again for the thorough review — this directly improves what Lightspeed shows at the register!
+
+### Mid-Session Checkpoint (2026-05-06T07:09:28Z — auto-compaction)
+**Ledger stats:** 13 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 673e1d6]
+- Git push to main
+- Git commit [main d45dcc1]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-06T11:46:02Z — auto-compaction)
+**Ledger stats:** 13 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 673e1d6]
+- Git push to main
+- Git commit [main d45dcc1]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-06T11:47:49Z — auto-compaction)
+**Ledger stats:** 13 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 673e1d6]
+- Git push to main
+- Git commit [main d45dcc1]
+- Git push to main
