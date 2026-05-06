@@ -1,0 +1,74 @@
+confidence,match_type,product_id,name,brand_name,our_sku,style_number,size_or_dimensions,tags,status,ls_barcode,ls_sku,Use to Update,Reason
+HIGH,direct_id,7233,Duplicate,,A-GEN-63-GG623-12,63-GG623-12,,,enhanced_complete,840862017927,A-GEN-63-GG623-12-BLU,no,duplicate item
+HIGH,direct_id,7098,Liberty Roper Men's Grey Crew Neck T-Shirt,,M-GEN-HT1680GY-GRA-XL,HT1680GY,XL,Men,enhanced_complete,810113948768,10797,no,doesn’t match
+HIGH,direct_id,7824,Stars and Stripes,,A-GEN-CST1102-56,CST1102-56,,,enhanced_complete,840995045057,SMB-3800T-VBR-8,no,doesn’t match
+HIGH,direct_id,7506,3D Bi-Fold Wallet,3D Belt Company,M-GEN-D250008502-BRO-BIFOLD,D250008502,Bifold,Men,enhanced_complete,701340737808,A-GEN-D250008502-BIFOLD,ok,
+HIGH,direct_id,7157,Ariat Casanova Sling Brown,Ariat,W-ARI-A770019702,A770019702,,Women,enhanced_complete,701340787803,A770019702,ok,
+HIGH,direct_id,6747,MNS TEAM LOGO TWILL FTD LS SHRT BURG/WHT,Ariat,M-ARI-10034233-WIN-XXL,10034233,XXL,Men,enhanced_complete,192904526301,10034233,ok,
+HIGH,direct_id,7221,BR HairTieBarbwireCncho,Blazin Roxx,,30474,OS,Women,enhanced_complete,701340711556,30474,ok,
+HIGH,direct_id,7220,BR HairTieBarbwireCncho,Blazin Roxx,,30474,OS,Women,enhanced_complete,701340711556,30474,ok,
+HIGH,direct_id,7028,MENS CC BONDED VEST AO,Cinch,M-MIN-MWV1082001-BLA-XS,MWV1082001,XS,Men,enhanced_complete,192584038880,MWV1082001-BLK-XXL,no,size mismatch
+HIGH,direct_id,6753,MENS L/S PRINT 9/25,Cinch,M-MIN-MTW105974X-PUR-3XL,MTW105974X,3XL,Men,enhanced_complete,192584590982,MTW1105972-PUR-XXL,no,size mismatch
+HIGH,direct_id,6754,MENS L/S PRINT 9/25a,Cinch,M-MIN-MTW1105974-PUR-XS,MTW1105974,XS,Men,enhanced_complete,192584590487,MTW1105974-PUR-L,no,size mismatch
+HIGH,direct_id,6752,MENS L/S PRINT 9/25a,Cinch,M-MIN-MTW1105974-PUR-S,MTW1105974,S,Men,enhanced_complete,192584590487,MTW1105974-PUR-L,no,size mismatch
+HIGH,direct_id,6836,MENS L/S SOLID 4/25,Cinch,M-MIN-MTW1105903-TUR-TUR-XXL,MTW1105903,XXL,Men,enhanced_complete,192584539172,MTW1105903,ok,
+HIGH,direct_id,6935,Men's Solid Classic Fit Button-Down Western Shirt,Cinch,M-MIN-MT10320020-WHI-L,MT10320020,L,Men,enhanced_complete,192584059847,M-MIN-MTW1104238-GRY-GRA-XS,no,size mismatch
+HIGH,direct_id,6922,Men's Solid Classic Fit Button-Down Western Shirt,Cinch,M-MIN-MTW1104238-GRA-XS,MTW1104238,XS,Men,enhanced_complete,192584059847,M-MIN-MTW1104238-GRY-GRA-XS,ok,
+HIGH,direct_id,6884,WHITE LABEL DARK STONE,Cinch,M-MIN-MB92834019-IND-38-38,MB92834019,38 x 38,Men,enhanced_complete,192584031478,M-MIN-MB92834019-IND-38-38,ok,
+HIGH,direct_id,6820,Circle S Ranch Pant,Circle S,M-GEN-CP6729-BO-41-32,CP6729,32,Men,enhanced_complete,013599022100,M-GEN-CP6729-BO-41-38-X-34,no,size mismatch
+HIGH,direct_id,6823,Circle S Ranch Pant,Circle S,M-CIS-CP6729-41-36,CP6729,36,Men,enhanced_complete,013599022100,M-GEN-CP6729-BO-41-38-X-34,no,size mismatch
+HIGH,direct_id,6954,Circle S Ranch Pant,Circle S,M-GEN-CP6740-42-42,CP6740,42,Men,enhanced_complete,013599022100,M-GEN-CP6729-BO-41-38-X-34,no,doesn’t match
+HIGH,direct_id,7156,WOMENS BELT BAG 2/26,Cruel Denim,W-CRU-CXX7504003-MUL-One-Size,CXX7504003,One Size,Women,enhanced_complete,192584648201,CXX7504003,ok,
+HIGH,direct_id,7799,HIGHLANDER GIRL WILD RAG,Cruel Girl,K-CRU-CXX8003001-OS,CXX8003001,OS,"Kids, Girls",enhanced_complete,192584523768,K-CRU-CXX8003001-ORG-OS,ok,
+HIGH,direct_id,7208,Equi-Star Classic Show Bow w-Net,Equi-Star,,464105,OS,Women,enhanced_complete,840031328946,W-GEN-464105-BLA-ONE-SIZE,no,not enough information
+HIGH,direct_id,7085,Liberty Roper Men's Grey Crew Neck T-Shirt,Hooey,M-HBR-HY1680GY-S-GRA-S,HY1680GY-S,S,Men,enhanced_complete,810113948768,10797,no,doesn’t match
+HIGH,direct_id,7102,Liberty Roper Men's Grey Crew Neck T-Shirt,Hooey,M-HBR-HT1680GY-GRA-XXL,HT1680GY,XXL,Men,enhanced_complete,810113948768,10797,no,doesn’t match
+HIGH,direct_id,7095,Patriot Men's Black Crew Neck,Hooey,M-HBR-HT15444BK-XL-BLA-XL,HT15444BK-XL,XL,Men,enhanced_complete,810125581519,10799,no,doesn’t match
+HIGH,direct_id,7750,Heads Up Ceramic Coffee Mug,Lang,,10995021042,14 oz,Adult,enhanced_complete,739744180357,A-GEN-10995021042-14-OZ,ok,
+HIGH,direct_id,7201,M & F Western Leather Stampede String,M&F Western,,,OS,Adult,enhanced_complete,701340007390,A-MFW-TUR-OS,no,not enough information
+HIGH,direct_id,7202,Braided Vinyl Stampede String,M&F Western Products,,0296602,OS,Adult,enhanced_complete,701340282605,0296601,no,not enough information
+HIGH,direct_id,7203,Braided Vinyl Stampede String,M&F Western Products,A-MFW-0296602,0296602,,,enhanced_complete,701340282605,0296601,no,doesn’t match
+HIGH,direct_id,7199,M & F Western Leather Stampede String,M&F Western Products,,,OS,Adult,enhanced_complete,701340007390,A-MFW-TUR-OS,no,not enough information
+HIGH,direct_id,7774,Salt & Pepper Holder w/Shakers,M&F Western Products,A-MFW-94122,94122,,Clearance,enhanced_complete,701340606715,A-GEN-94122,ok,
+HIGH,direct_id,7557,Desert Sage Turquoise Bracelet,Montana Silversmiths,W-GEN-BC6116,BC6116,,"Women, Bracelet",enhanced_complete,730364842373,BC6116,ok,
+HIGH,direct_id,7267,FFA Emblem Pendant,Montana Silversmiths,,NC5883,,Necklace,enhanced_complete,730364836358,A-GEN-NC5883,ok,
+HIGH,direct_id,7251,Ivory Skies Beaded Bracelet,Montana Silversmiths,W-GEN-ABC6248,ABC6248,,"Women, Bracelet",enhanced_complete,730364844414,ABC6248,ok,
+HIGH,direct_id,7250,Southwestern Bangles Attitude Bracelet,Montana Silversmiths,W-GEN-ABC5579,ABC5579,,"Women, Earrings",enhanced_complete,730364358652,ABC5579,ok,
+HIGH,direct_id,7510,KnfShthUSA FlgBR,Nocona,,1805608,,Adult,enhanced_complete,701340671188,1805608,ok,
+HIGH,direct_id,7526,Ovation Premium Show Bow,Ovation,,467806,,Women,enhanced_complete,840031344397,W-JPC-467806-BLA,ok,
+HIGH,direct_id,6718,Mens LS 2Pkt Snap,Panhandle Slim,M-WMA-RMN2S07583-BLA-S,RMN2S07583,S,Men,enhanced_complete,1978157620220,PMN2S07493-27-XXL,no,size mismatch
+HIGH,direct_id,7296,83 Bronc,Resistol,A-RHE-RSBNC-83428175-NAT-7-5/8,RSBNC-83428175,7 5/8,Adult,enhanced_complete,195556115947,RSBRNC-83428167,no,size mismatch
+HIGH,direct_id,7772,Puzzle in Tin - 1000 Piece,River's Edge Products,A-GEN-2776,2776,,,enhanced_complete,643323927762,A-GEN-2776-20X23,ok,
+HIGH,direct_id,7763,3D Deluxe Ceramic Mug,Rivers Edge Products,,2448,15oz,,enhanced_complete,643323924488,A-GEN-2448-RUN-15OZ,ok,
+HIGH,direct_id,7189,RR Eight Seconds Graphic,Rock & Roll Denim,,BU21T08868,M,Men,enhanced_complete,197815977044,A-WMA-BB21T08868-RST-XXL,no,doesn’t match
+HIGH,direct_id,7187,RR Eight Seconds Graphic,Rock & Roll Denim,,BU21T08868,L,Men,enhanced_complete,197815977044,A-WMA-BB21T08868-RST-XXL,no,doesn’t match
+HIGH,direct_id,7194,RR Eight Seconds Graphic,Rock & Roll Denim,,BU21T08868,XS,Men,enhanced_complete,197815977044,A-WMA-BB21T08868-RST-XXL,no,doesn’t match
+HIGH,direct_id,7191,RR Eight Seconds Graphic,Rock & Roll Denim,,BU21T08868,S,Men,enhanced_complete,197815977044,A-WMA-BB21T08868-RST-XXL,no,doesn’t match
+HIGH,direct_id,7181,RR Eight Seconds Graphic Tee,Rock & Roll Denim,M-WMA-BU21T08868-RST-XXL,BU21T08868,XXL,Men,enhanced_complete,197815963627,A-WMA-BB21T08868-RST-XL,no,doesn’t match
+HIGH,direct_id,6652,Roper Shirt,Roper,M-KAR-03-001-0722-1696-LT,03-001-0722-1696,LT,"Men, Tall",enhanced_complete,196070401400,10795,no,not enough information
+HIGH,direct_id,6651,Roper Shirt,Roper,M-KAR-03-001-0522-1696-XL,03-001-0522-1696,XL,"Men, Clearance",enhanced_complete,196070401400,10795,no,not enough information
+HIGH,direct_id,7205,ShowQuest Bun Net,ShowQuest,A-GEN-BLA-LARGE,,Large,,enhanced_complete,5035330552061,W-GEN-BLA-LARGE,no,not enough information
+HIGH,direct_id,6552,Pony Turnout Blanket,Tough 1,A-JTI-32-9123P-BLA-57,32-9123P,57,Tack,enhanced_complete,688499651899,T-JTI-32-9123P-TUR-63,no,doesn’t match
+HIGH,direct_id,6501,Tough1 Extreme Vented Sport Boots - Front,Tough1,T-GEN-64-18000F-11-103-PNK-LARGE,64-18000F-11-103,Large,Tack,enhanced_complete,688499465403,64-18000F-11-102,no,doesn’t match
+HIGH,direct_id,7821,Turquoise Arrow Frame,Tough1,,87-97257,,,enhanced_complete,688499642460,87-97257-0-0,ok,
+HIGH,direct_id,6844,10X Shantung Hat,Twister,A-MFW-T70590SS-NA-7,T70590SS,7,Adult,enhanced_complete,701340812741,T70590SS-7.375,no,doesn’t match
+HIGH,direct_id,7319,The Original Whiskey Bent Knives,Whiskey Bent Knives,A-GEN-WB13-04,WB13-04,,,enhanced_complete,650380056052,A-GEN-WB13-04-MUL,ok,
+HIGH,direct_id,6778,"Dress Western Basic Shirt, Long Sleeves",Wrangler,M-KON-1071130CS-16-X-36,1071130CS,16 x 36,Men,enhanced_complete,760609129952,M-KON-1071130CS-16-1/2-X-37-TALL,no,doesn’t match
+HIGH,direct_id,6620,Wrangler Cowboy Cut Jeans,Wrangler,M-KON-937ATW-32-34,937ATW,32-34,Men,enhanced_complete,084084240514,M-KON-936-GBK-32-38,no,doesn’t match
+HIGH,direct_id,6771,Wrangler Men's Long Sleeve Basic Western Shirt,Wrangler,M-KON-1071130CS-17-1/2-X-36-TALL,1071130CS,17 1/2 x 36 TALL,Men,enhanced_complete,760609130002,M-KON-1071130CS-20X37-TALL,no,doesn’t match
+HIGH,direct_id,6760,Wrangler Men's Long Sleeve Basic Western Shirt,Wrangler,M-KON-1071130CS-20X36-TALL,1071130CS,20x36 Tall,Men,enhanced_complete,760609130002,M-KON-1071130CS-20X37-TALL,no,doesn’t match
+HIGH,direct_id,6764,Wrangler Men's Long Sleeve Basic Western Shirt,Wrangler,M-KON-1071130CS-18X36-TALL,1071130CS,18x36 Tall,Men,enhanced_complete,760609130002,M-KON-1071130CS-20X37-TALL,no,doesn’t match
+HIGH,direct_id,6696,Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt,Wrangler,M-KON-112375916-BLU-2XT,112375916,2XT,"Men, Tall",enhanced_complete,197150445017,M-KON-112379230-BLU-XXL,no,doesn’t match
+HIGH,direct_id,6698,Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt,Wrangler,M-KON-112375916-BLU-XLT,112375916,XLT,"Men, Tall",enhanced_complete,197150445017,M-KON-112379230-BLU-XXL,no,doesn’t match
+HIGH,direct_id,6700,Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt,Wrangler,M-KON-112375916-BLU-LT,112375916,LT,"Men, Tall",enhanced_complete,197150445017,M-KON-112379230-BLU-XXL,no,doesn’t match
+HIGH,direct_id,6704,Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt,Wrangler,M-KON-112379229-BLU-XL,112379229,XL,Men,enhanced_complete,197150445017,M-KON-112379230-BLU-XXL,no,doesn’t match
+HIGH,direct_id,6633,Wrangler Retro Shirt,Wrangler,M-KON-112368072,112368072,,Men,enhanced_complete,196458371356,10796,no,not enough information
+HIGH,direct_id,6647,Wrangler Retro Shirt,Wrangler,M-KON-112368072-XL,112368072,XL,Men,enhanced_complete,196458371356,10796,no,not enough information
+HIGH,direct_id,6646,Wrangler Retro Shirt,Wrangler,M-KON-112368072-XLT,112368072,XLT,"Men, Tall",enhanced_complete,196458371356,10796,no,not enough information
+HIGH,direct_id,6610,Wrangler Shirt,Wrangler,M-KON-1075098AA-3XT,1075098AA,3XT,"Men, Tall",enhanced_complete,084084090782,10792,no,not enough information
+HIGH,direct_id,6642,Wrangler Shirt,Wrangler,M-KON-75098AA-XLT,75098AA,XLT,"Men, Tall",enhanced_complete,084084090782,10792,no,not enough information
+HIGH,direct_id,6640,Wrangler Shirt,Wrangler,M-KON-75098AS-XLT,75098AS,XLT,"Men, Tall",enhanced_complete,084084090782,10792,no,not enough information
+MEDIUM,sku_match,5994,Ariat Kid's Active Fish Crew Socks,Ariat,AR4378-981-S/M,10055382,S/M,"Kids, Clearance",complete,606902841323,AR4378-981-S/M,ok,
+MEDIUM,sku_match,1013,Cinch Jacket,Cinch,M-MIN-MWV159205X-GRA-4XL,MWV159205X,4XL,"Men, F",complete,192584600728,M-MIN-MWV159205X-GRA-4XL,ok,
+MEDIUM,sku_match,6109,Cinch Shirt,Cinch,K-MIN-MTW7061390-PUR-4T,MTW7061390,4T,Kids,complete,192584576870,K-MIN-MTW7061390-PUR-4T,ok,
+MEDIUM,sku_match,1446,Cinch Woven Shirt,Cinch,M-MIN-MTW1105991-RED-XXL,MTW1105991,XXL,"Men, F",complete,192584591484,M-MIN-MTW1105991-RED-XXL,ok,

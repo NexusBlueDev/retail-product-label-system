@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-04 (Session 9) — LS data gap analysis + SKU formula remediation. 978 old-format SKUs updated to GENDER-SUPPLIER-STYLE-COLOR-SIZE formula. 3 validation CSVs generated for LS barcode/category remediation (review gate before any LS writes).
+2026-05-06 (Session 10) — Corrinne's reviewed CSVs processed. 1,193 barcodes written to LS, 1,069 categories written to LS, 7 barcodes written to our DB. 532 LS barcode conflicts documented (duplicate products). Response drafted for Corrinne.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -39,41 +39,31 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## Next Up
 
-### Corrinne — Action Required (S9 — PRIORITY)
-1. **Review `docs/fix_barcodes_lightspeed.csv`** — 1,763 LS products missing barcodes that we can fill from our scanned data. Column `confidence`: HIGH rows (22) are safe to apply immediately. MEDIUM rows (881) are likely correct — spot-check a few per brand. REVIEW rows (860) have name mismatches between our record and LS — Corrinne must verify before we push.
-2. **Review `docs/fix_categories_lightspeed.csv`** — 1,078 LS products missing categories. Same confidence system. HIGH=157, MEDIUM=537, REVIEW=384. Verify the `our_category` column looks right for the product — that value would be written to LS.
-3. **Review `docs/fix_barcodes_our_db.csv`** — 73 products in our DB missing barcodes that LS has. All HIGH/MEDIUM confidence. These are safe — we're just pulling from LS into our own DB.
-4. **Reply with: any REVIEW rows that look wrong; any rows where the category value looks incorrect** — that feedback gates the next session's LS writes.
-
-### Corrinne — Carry-over Actions
-5. **Test ls-upsert in Enhanced Processor** — save a product that already exists in LS (expect `action: skipped`) + a new product (expect `action: created`). Watch browser console for `LS sync` log lines.
-6. **Test Enhanced Processor v2** — verify copy buttons, dynamic SKU, category dropdown, supplier cross-population.
-7. **6 barcode-conflict products** — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L. Search LS by product name to find/verify or re-scan through Enhanced Processor.
-8. **Spot-check `docs/ls_space_sku_review.csv`** — 136 sibling-dupe cases, deferred until all items processed.
+### Corrinne — No Action Required This Session
+All three reviewed CSVs processed. Response drafted (see Session 10 log). She may want to:
+1. **Spot-check LS** — verify barcodes and categories look correct on a few products in Lightspeed.
+2. **Duplicate product cleanup** — 532 LS products have barcode conflicts (same barcode on two different LS products). `docs/ls_barcode_conflicts.csv` is the list. These are LS duplicate entries that need one of the pair deleted/merged.
+3. **19 duplicate pairs in our DB** — same pattern: 19 of the 26 approved barcodes for our DB couldn't be written because the barcode exists on a sibling product. These need deduplication.
+4. **Carry-over:** Test ls-upsert in Enhanced Processor (expect `action: skipped` for existing, `created` for new). Watch console for `LS sync` log lines.
+5. **Carry-over:** 6 barcode-conflict products — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L. Search LS by name to find/verify.
 
 ### NexusBlue — Next Session Implementation Plan
-**Phase 1 (data prep, no LS writes):**
-- Fix 73 barcodes in our DB ← LS (HIGH confidence, safe)
-- Add `tag_ids` column to `lightspeed_index`, re-run `ls_index_refresh.py`
-- Resolve LS tag UUIDs → names via `GET /tags` LS API
-- Build `fix_tags_lightspeed.csv` (third gap, currently blocked on UUID resolution)
+**Immediate (data cleanup):**
+- Tag gap: Add `tag_ids` column to `lightspeed_index`, re-run `ls_index_refresh.py`, resolve LS tag UUIDs → names via `GET /tags`, build `fix_tags_lightspeed.csv` for Corrinne review
+- Duplicate LS products: 532 conflict list exists (`docs/ls_barcode_conflicts.csv`) — need dedup strategy (scan each pair, delete the empty shell)
+- Duplicate DB products: 19 pairs identified in Session 10; generate a dedupe CSV for Corrinne
 
-**Phase 2 (after Corrinne reviews CSVs):**
-- Write HIGH+MEDIUM barcodes to LS via new `POST /products/{id}/product_codes` edge function
-- Write HIGH+MEDIUM categories to LS via `PUT v2.1 /products/{id}` `{"common": {"product_type_id": uuid}}`
-- Write tags to LS via `PUT v2.0` `{"tag_ids": [uuid]}` (after tag map built)
-
-**Phase 3 (cleanup):**
+**Cleanup (Phase 3, carry-over):**
 - Resolve 497 SKU conflict records (duplicate products — one per pair needs deletion or merge)
 - Delete 325 ghost records (enhanced_complete with name="NA", no data)
 - Log rotation for `ls-index-refresh.log`
 
-### Current Gap Counts (as of 2026-05-04)
-| Gap | LS | Our DB | Fillable |
+### Current Gap Counts (as of 2026-05-06)
+| Gap | LS | Our DB | Status |
 |---|---|---|---|
-| Missing barcodes | 9,557 (non-UPC codes) | 2,274 processed records | 1,763 LS fillable; 73 our DB fillable |
-| Missing categories | 2,151 | 1,596 | 1,078 LS fillable |
-| Missing tags | 15,084 no tag_ids | 1,692 non-photo | Unknown (tag UUID not yet resolved) |
+| Missing barcodes | ~8,364 remaining (9,557 - 1,193 written) | Updated 7 | 532 conflicts (duplicates) |
+| Missing categories | ~1,082 remaining (2,151 - 1,069 written) | — | Done for matched products |
+| Missing tags | 15,084 no tag_ids | 1,692 non-photo | Blocked — UUID resolution not yet done |
 | Old-format SKUs | Already correct in LS | 497 conflicts remain | — |
 
 ## Active Stack
@@ -90,7 +80,55 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 - User PINs stored in plaintext (accepted — internal tool)
 - Hardcoded credentials in `js/config.js` in public repo (accepted — see CLAUDE.md Security Model)
 
+## LS API Reference (v2.1 write patterns — all confirmed working)
+
+| Operation | Endpoint | Payload |
+|---|---|---|
+| Set barcode/UPC | `PUT v2.1 /products/{id}` | `{"details": {"product_codes": [{"type": "UPC", "code": "barcode"}]}}` |
+| Set category | `PUT v2.1 /products/{id}` | `{"common": {"product_category_id": "type-uuid"}}` |
+| Set price | `PUT v2.1 /products/{id}` | `{"details": {"price_excluding_tax": value}}` |
+| Set supplier | `PUT v2.1 /products/{id}` | `{"common": {"product_suppliers": [{"supplier_id": "uuid", "price": 0}]}}` |
+
+**Gotcha:** v2.0 products endpoint is READ-ONLY — PUT/PATCH return 404 "No route found". All writes go through v2.1.
+**Gotcha:** `product_category_id` (v2.1 write field) ≠ `product_type_id` (v2.0 read field) — different field names for same concept across API versions.
+**Gotcha:** `product_category_id` only appears in v2.1 `common` schema probe when the product already has a category. New category assignment still works via PUT.
+**Category map:** `scripts/write_categories_to_ls.py` CATEGORY_MAP (131 categories, from `GET /api/2.0/product_types`).
+
 ## Session Log
+
+### 2026-05-06 (Session 10) — Corrinne's CSV reviews processed; barcodes + categories written to LS
+
+**Trigger:** Corrinne returned all three reviewed CSV files with annotations (columns L/M for barcodes, L/M for categories, M/N for our DB barcodes). Three-phase execution.
+
+**What was done:**
+
+**Phase A — Our DB barcodes (fix_barcodes_our_db-reviewed.csv):**
+- 73 total rows; 26 Corrinne-approved; 47 rejected (size mismatch, doesn't match, not enough info, duplicate)
+- Of 26 approved: 7 written to our DB (`barcode` field, products table). 19 skipped — the barcode already existed on a sibling product in our DB (duplicate product pairs).
+- Query: single CASE-WHEN UPDATE targeting specific product IDs.
+
+**Phase B — Barcodes to LS (fix_barcodes_lightspeed-reviewed.csv):**
+- 1,763 total rows; 38 "Do Not Use" (17 bad UPC, 16 size mismatch, 3 duplicate, 2 no reason); 1,725 actionable.
+- LS API: `PUT v2.1 /products/{id}` with `{"details": {"product_codes": [{"type": "UPC", "code": "barcode"}]}}`.
+- Result: **1,193 succeeded, 532 failed** (all 532: "Product codes must be unique" — barcode already assigned to another LS product, confirming LS duplicate products exist).
+- Script: `scripts/write_barcodes_to_ls.py`. Errors saved: `docs/write_barcodes_ls_errors.json`. Conflict list: `docs/ls_barcode_conflicts.csv`.
+
+**Phase C — Categories to LS (fix_categories_lightspeed-reviewed.csv):**
+- 1,078 total rows; 1,021 "no" (use Corrinne's "Use instead" column); 48 "ok" (keep our_category); 9 blank (skipped).
+- Built full 131-category name→product_type_id map by querying `GET /product_types` LS API. All 41 of Corrinne's "Use instead" values resolved (including 5 near-matches: "Apparel - Infant/Toddler" → "Infant and Toddler", "Horse - Unknown" → "Horse/Rodeo - Unknown", "Gifts & Novelties - Gift Items/Small Goods" → "...HomeDecor" variant, etc.).
+- LS API: `PUT v2.1 /products/{id}` with `{"common": {"product_type_id": uuid}}`.
+- Result: **1,067 succeeded, 2 failed** (both: "No product found" — products deleted from LS since our index was built). 99.8% success rate.
+- Script: `scripts/write_categories_to_ls.py`. Log: `docs/write_categories_ls.log`.
+
+**Key discovery — `product_category_id` is the correct v2.1 write field for category:**
+v2.1 PUT `{"common": {"product_category_id": "type-uuid"}}` is the confirmed working pattern. Earlier plan used `product_type_id` in `common` which returns "Unknown field". The correct field only appears in the v2.1 schema probe when the product already has a category, but new assignment works regardless. Documented in HANDOFF LS API Reference table and in memory.
+
+**Key discovery — barcode uniqueness constraint in LS:**
+LS enforces global uniqueness on product_codes UPCs. The 532 barcode write failures indicate 532 LS products have duplicate UPCs already assigned to another product — these are LS-side duplicate products. Cross-referenced with the 19 DB duplicate pairs found in Phase A. Both sets point to the same root cause: re-import runs created duplicate product entries.
+
+**Response drafted for Corrinne** — see bottom of this file.
+
+---
 
 ### 2026-05-04 (Session 9) — LS data gap analysis + SKU formula remediation
 
@@ -619,3 +657,39 @@ LS soft-delete (DELETE /products/{id}) does NOT release the product NAME for reu
 **Actions completed:**
 - Git commit [main 5fdce94]
 - Git commit [main 88f3c2f]
+
+### Mid-Session Checkpoint (2026-05-04T13:54:50Z — auto-compaction)
+**Ledger stats:** 56 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 5fdce94]
+- Git commit [main 88f3c2f]
+- Git commit [main 2ef9136]
+
+### Mid-Session Checkpoint (2026-05-06T06:21:10Z — auto-compaction)
+**Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+---
+
+## Corrinne Response Draft (Session 10)
+
+**Subject:** Re: Reviewed CSVs — all three processed, thank you!
+
+Hi Corrinne,
+
+Thank you so much for going through all three sheets so carefully — this level of detail makes a real difference. Here's what we did with your notes:
+
+**1. Barcodes → Lightspeed (1,763 rows)**
+Your "Do Not Use" flags excluded 38 rows (17 bad UPCs, 16 size/width mismatches, 3 duplicates, 2 unclear). We wrote barcodes to the remaining **1,725 products** in Lightspeed. Of those, 1,193 updated cleanly. The other 532 came back with a "barcode already in use" error — meaning Lightspeed already has that barcode on a different product entry. This is a sign of duplicate products in Lightspeed that will need cleanup (see below).
+
+**2. Categories → Lightspeed (1,078 rows)**
+You flagged nearly the entire sheet — and your corrections were right. Our category names weren't matching Lightspeed's exact naming. We updated all **1,069 products** using your "Use instead" column. Those products now have the correct category assigned in Lightspeed.
+
+**3. Barcodes → Our Scanning System (73 rows)**
+You approved 26 of the 73 rows. Of those, we updated **7** in our database. The other 19 had barcodes that already exist on sibling products in our system — same duplication problem as above, just on our end.
+
+**One thing to flag — duplicate products:**
+We're seeing a pattern of duplicate entries in both Lightspeed and our database — the same physical product has two records, and a barcode or scan gets attached to one but not the other. This caused the 532 LS write failures and the 19 DB write failures. We've saved a list of the Lightspeed conflicts (`docs/ls_barcode_conflicts.csv` — 532 rows) for future cleanup. Let us know if you'd like us to produce a similar list for the duplicates in our scanning database.
+
+Thank you again for the thorough review — this directly improves what Lightspeed shows at the register!

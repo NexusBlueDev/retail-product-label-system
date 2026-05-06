@@ -1,0 +1,22 @@
+[
+  {
+    "product_id": "7aa50f29-d627-43ca-895e-56950ef5073a",
+    "type_id": "bdd851ee-530e-4b03-9b10-cb2360854829",
+    "cat_name": "Horse/Rodeo-Rodeo&Livestock Equip-Roping Gear",
+    "ls_name": "Cactus Pee Wee Ropes",
+    "error": {
+      "status": 404,
+      "body": "{\n  \"error\": \"No product found\"\n}"
+    }
+  },
+  {
+    "product_id": "f2597352-f1f1-4a9f-ba63-96cbed505f69",
+    "type_id": "bdd851ee-530e-4b03-9b10-cb2360854829",
+    "cat_name": "Horse/Rodeo-Rodeo&Livestock Equip-Roping Gear",
+    "ls_name": "Goat Tying Strings",
+    "error": {
+      "status": 404,
+      "body": "{\n  \"error\": \"No product found\"\n}"
+    }
+  }
+]
