@@ -1,0 +1,18 @@
+{
+  "phase": "1A",
+  "ghost_records_deleted": 725,
+  "storage_orphans_remaining": 953,
+  "note": "Storage objects could not be deleted \u2014 sb_secret key not accepted as JWT by Storage API. Orphaned objects are wasted space only, no functional impact.",
+  "storage_paths": [
+    "products/22c826dd-5065-416c-966b-5b755e218fc7/0.webp",
+    "products/cd3d575b-0a56-490c-852d-7a1fcea01d1a/0.webp",
+    "products/c518b3e3-e525-4c41-b0ee-bbdaf75be679/0.webp",
+    "products/4e71955a-b9c4-4daf-81e6-86396e4c4440/0.webp",
+    "products/2463764d-6e48-4333-84f6-d937dfb3288a/0.webp",
+    "products/3abf0863-97a0-476f-9368-0db3f1351429/0.webp",
+    "products/7a320088-dfe1-43a1-87f0-4cb3fcb80446/0.webp",
+    "products/22044fa8-ce71-4b4e-9a95-7386ca268a20/0.webp",
+    "products/d23dd423-0692-49c3-bfeb-08ed76efccd3/0.webp",
+    "products/b2419c77-df1d-488e-97e2-ea1bebb69165/0.webp"
+  ]
+}

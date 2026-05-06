@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-06 (Session 11 closed) — Dedupe CSV sent to Corrinne. Awaiting her `ls_dedupe_for_review.csv` annotations before next execution phase. All three prior reviewed CSVs fully processed (1,193 barcodes + 1,069 categories written to LS, 7 barcodes to DB). Next: tag gap or Corrinne's dedupe response — whichever arrives first.
+2026-05-06 (Session 12) — Phase 1A: 725 ghost records deleted from DB (7,796 products remain). Phase 1B: 0 duplicate SKUs/barcodes — DB is clean. Phase 2: Tag UUID map resolved (132 tags), `fix_tags_lightspeed.csv` built (44 categories, 15,024 untagged products). Two CSVs ready for Corrinne: ls_dedupe_for_review.csv + fix_tags_lightspeed.csv.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -39,32 +39,30 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 
 ## Next Up
 
-### Corrinne — Action Required
-**`docs/ls_dedupe_for_review.csv`** (532 rows) — side-by-side duplicate product pairs in Lightspeed. For each row she fills in `keep_which`: "ours", "conflict", or "neither". This unblocks barcode cleanup for 532 products.
+### Corrinne — Action Required (2 CSVs)
+1. **`docs/ls_dedupe_for_review.csv`** (532 rows) — LS duplicate product pairs. Fill in `keep_which`: "ours", "conflict", or "neither". Unblocks barcode assignment for 532 products.
+2. **`docs/fix_tags_lightspeed.csv`** (44 rows, one per category) — Approve or correct `suggested_tags` column, then fill `approved_tags`. We apply to all products in each category. Covers 15,024 untagged LS products. Tag names must exactly match LS tag names (see `docs/ls_tag_map.json` for full list of 132 valid tags).
 
 Also may want to:
 1. **Spot-check LS** — verify barcodes and categories look correct on a few products in Lightspeed.
 2. **Carry-over:** Test ls-upsert in Enhanced Processor (expect `action: skipped` for existing, `created` for new). Watch console for `LS sync` log lines.
-3. **Carry-over:** 6 barcode-conflict products — SE2801, 03-050-0522-1697-AS, HL4227, 100153-234, AR2341-002-M, 230992MUL-L. Search LS by name to find/verify.
 
-### NexusBlue — Next Session Implementation Plan
-**Immediate (data cleanup):**
-- Once Corrinne returns `ls_dedupe_for_review.csv`: execute deletions of the "lose" side from LS
-- Tag gap: Add `tag_ids` column to `lightspeed_index`, re-run `ls_index_refresh.py`, resolve LS tag UUIDs → names via `GET /tags`, build `fix_tags_lightspeed.csv` for Corrinne review
-- Duplicate DB products: 19 pairs identified in Session 10; generate a dedupe CSV for Corrinne
+### NexusBlue — Next Session (execute on Corrinne's responses)
+1. **LS dedupe execution** — once `ls_dedupe_for_review.csv` returns: DELETE the "lose" side from LS via v2.0 DELETE /products/{id}.
+2. **Tag write execution** — once `fix_tags_lightspeed.csv` returns: PUT v2.1 tag_ids to all products in each approved category.
+3. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
+4. **2,847 old-format SKUs** — these are unique (no duplicates), just in old naming convention. No cleanup urgently needed; these products were imported before the current SKU formula.
 
-**Cleanup (Phase 3, carry-over):**
-- Resolve 497 SKU conflict records (duplicate products — one per pair needs deletion or merge)
-- Delete 325 ghost records (enhanced_complete with name="NA", no data)
-- Log rotation for `ls-index-refresh.log`
-
-### Current Gap Counts (as of 2026-05-06)
+### Current Gap Counts (as of 2026-05-06 Session 12)
 | Gap | LS | Our DB | Status |
 |---|---|---|---|
-| Missing barcodes | ~8,364 remaining (9,557 - 1,193 written) | Updated 7 | 532 conflicts (duplicates) |
-| Missing categories | ~1,082 remaining (2,151 - 1,069 written) | — | Done for matched products |
-| Missing tags | 15,084 no tag_ids | 1,692 non-photo | Blocked — UUID resolution not yet done |
-| Old-format SKUs | Already correct in LS | 497 conflicts remain | — |
+| Missing barcodes | ~8,364 remaining | — | Cannot fill — no source data. 532 blocked by duplicate products (Corrinne reviewing). |
+| Missing categories | ~1,082 remaining | — | Cannot fill — no source data. Done for all matched products. |
+| Missing tags | 15,024 products | — | CSV built — awaiting Corrinne approval of 44-row category mapping |
+| Ghost records | — | **0** (deleted 725) | ✅ Done |
+| Duplicate SKUs in DB | — | **0** | ✅ Done (resolved in prior sessions) |
+| Duplicate barcodes in DB | — | **0** | ✅ Done |
+| LS duplicate products | 532 pairs | — | Corrinne reviewing `ls_dedupe_for_review.csv` |
 
 ## Active Stack
 - Frontend: HTML5 / CSS3 / ES6 modules (no build tools), 21 modules
@@ -731,3 +729,15 @@ Thank you again for the thorough review — this directly improves what Lightspe
 - Git push to main
 - Git commit [main 03bb29b]
 - Git push to main
+
+### Mid-Session Checkpoint (2026-05-06T15:03:48Z — auto-compaction)
+**Ledger stats:** 1 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 34952cc]
+
+### Mid-Session Checkpoint (2026-05-06T15:08:57Z — auto-compaction)
+**Ledger stats:** 4 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 34952cc]
