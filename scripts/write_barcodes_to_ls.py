@@ -27,9 +27,13 @@ def load_token():
             return line.split('=', 1)[1].strip()
     raise ValueError("LIGHTSPEED_TOKEN not found in .env.local")
 
-def put_barcode(product_id, barcode):
+def put_barcode(product_id, barcode, custom_sku):
+    # product_codes is a FULL ARRAY REPLACEMENT — must include CUSTOM (SKU) or it gets wiped.
     url = f"{BASE_URL}/products/{product_id}"
-    payload = json.dumps({"details": {"product_codes": [{"type": "UPC", "code": barcode}]}}).encode()
+    payload = json.dumps({"details": {"product_codes": [
+        {"type": "CUSTOM", "code": custom_sku},
+        {"type": "UPC", "code": barcode},
+    ]}}).encode()
     req = urllib.request.Request(url, data=payload, method='PUT', headers={
         'Authorization': f'Bearer {LS_TOKEN}',
         'Content-Type': 'application/json',
@@ -65,13 +69,14 @@ def main():
     for i, row in enumerate(actionable):
         product_id = row['ls_product_id'].strip()
         barcode = row['our_barcode'].strip()
+        custom_sku = row['ls_sku'].strip()
         name = row['ls_name'].strip()
 
-        if not product_id or not barcode:
+        if not product_id or not barcode or not custom_sku:
             skipped += 1
             continue
 
-        success, resp = put_barcode(product_id, barcode)
+        success, resp = put_barcode(product_id, barcode, custom_sku)
         if success:
             ok += 1
         else:

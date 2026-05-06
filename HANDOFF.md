@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-06 (Session 12) — Phase 1A: 725 ghost records deleted from DB (7,796 products remain). Phase 1B: 0 duplicate SKUs/barcodes — DB is clean. Phase 2: Tag UUID map resolved (132 tags), `fix_tags_lightspeed.csv` built (44 categories, 15,024 untagged products). Two CSVs ready for Corrinne: ls_dedupe_for_review.csv + fix_tags_lightspeed.csv.
+2026-05-06 (Session 13) — Barcode SKU restored for 1,193 products (CUSTOM+UPC both present). Track inventory set on 5,002 our-created LS products. ls-upsert Edge Function updated to set track_inventory on creation. Two LS API gotchas documented.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -43,9 +43,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 1. **`docs/ls_dedupe_for_review.csv`** (532 rows) — LS duplicate product pairs. Fill in `keep_which`: "ours", "conflict", or "neither". Unblocks barcode assignment for 532 products.
 2. **`docs/fix_tags_lightspeed.csv`** (44 rows, one per category) — Approve or correct `suggested_tags` column, then fill `approved_tags`. We apply to all products in each category. Covers 15,024 untagged LS products. Tag names must exactly match LS tag names (see `docs/ls_tag_map.json` for full list of 132 valid tags).
 
-Also may want to:
-1. **Spot-check LS** — verify barcodes and categories look correct on a few products in Lightspeed.
-2. **Carry-over:** Test ls-upsert in Enhanced Processor (expect `action: skipped` for existing, `created` for new). Watch console for `LS sync` log lines.
+**Corrinne has confirmed (S13):** Category updates look good. Barcode + track inventory issues reported and fixed in S13.
 
 ### NexusBlue — Next Session (execute on Corrinne's responses)
 1. **LS dedupe execution** — once `ls_dedupe_for_review.csv` returns: DELETE the "lose" side from LS via v2.0 DELETE /products/{id}.
@@ -82,7 +80,8 @@ Also may want to:
 
 | Operation | Endpoint | Payload |
 |---|---|---|
-| Set barcode/UPC | `PUT v2.1 /products/{id}` | `{"details": {"product_codes": [{"type": "UPC", "code": "barcode"}]}}` |
+| Set barcode/UPC (correct) | `PUT v2.1 /products/{id}` | `{"details": {"product_codes": [{"type": "CUSTOM", "code": "sku"}, {"type": "UPC", "code": "barcode"}]}}` |
+| Enable inventory tracking | `PUT v2.1 /products/{id}` | `{"common": {"track_inventory": true}}` |
 | Set category | `PUT v2.1 /products/{id}` | `{"common": {"product_category_id": "type-uuid"}}` |
 | Set price | `PUT v2.1 /products/{id}` | `{"details": {"price_excluding_tax": value}}` |
 | Set supplier | `PUT v2.1 /products/{id}` | `{"common": {"product_suppliers": [{"supplier_id": "uuid", "price": 0}]}}` |
@@ -90,9 +89,37 @@ Also may want to:
 **Gotcha:** v2.0 products endpoint is READ-ONLY — PUT/PATCH return 404 "No route found". All writes go through v2.1.
 **Gotcha:** `product_category_id` (v2.1 write field) ≠ `product_type_id` (v2.0 read field) — different field names for same concept across API versions.
 **Gotcha:** `product_category_id` only appears in v2.1 `common` schema probe when the product already has a category. New category assignment still works via PUT.
+**Gotcha:** `product_codes` in v2.1 PUT is a FULL ARRAY REPLACEMENT — always include ALL codes (CUSTOM + UPC). Sending only UPC removes the CUSTOM (SKU) code and changes the product's sku field to the barcode value.
+**Gotcha:** `track_inventory` defaults to `false` for all products created via API. Must be explicitly set via `{"common": {"track_inventory": true}}` on creation or in a follow-up write.
 **Category map:** `scripts/write_categories_to_ls.py` CATEGORY_MAP (131 categories, from `GET /api/2.0/product_types`).
 
 ## Session Log
+
+### 2026-05-06 (Session 13) — Barcode SKU restore + Track Inventory bulk fix
+
+**Trigger:** Corrinne's spot-check feedback: (1) barcode write had replaced the CUSTOM (SKU) code with the UPC; (2) all our-created products were missing "Track Inventory" checkbox.
+
+**Root cause — barcode issue:**
+`write_barcodes_to_ls.py` sent `product_codes: [{"type": "UPC", ...}]` as a single-element array. LS treats this as a full replacement — it removed the existing CUSTOM code and also changed the product's `sku` field to the barcode value (LS mirrors the CUSTOM code into sku). Affected: all 1,193 products that had barcodes written in Session 10.
+
+**Fix 1 — Restore product codes (`scripts/fix_product_codes_ls.py`):**
+- Read `fix_barcodes_lightspeed-reviewed.csv` (already had `ls_sku` column with the original CUSTOM code)
+- PUT `{"details": {"product_codes": [{"type": "CUSTOM", "code": ls_sku}, {"type": "UPC", "code": barcode}]}}` for all 1,193 products
+- Result: **1,193/1,193 succeeded, 0 failed**
+
+**Root cause — track inventory issue:**
+All products created via LS API default to `track_inventory: false`. Our creation scripts (ls_backfill, ls-upsert, April cleanup scripts) never set this field. Discovered via v2.1 PUT schema probe: field is `{"common": {"track_inventory": true}}`.
+
+**Fix 2 — Set track inventory (`scripts/fix_track_inventory_ls.py`):**
+- Queried `lightspeed_index` for all products matching our SKU pattern (`^[MWKALU]-[A-Z]{2,4}-`): **5,002 products**
+- PUT `{"common": {"track_inventory": true}}` for each
+- Result: **5,002/5,002 succeeded, 0 failed** (two passes — first pass ~4,668 products, resume pass 352 remaining; all confirmed via spot checks)
+
+**Also updated `write_barcodes_to_ls.py`** — future barcode writes must always include CUSTOM + UPC in the array. Two new Gotchas documented in LS API Reference above.
+
+**Corrinne also confirmed:** category updates look good. Tags CSV (`fix_tags_lightspeed.csv`) still awaiting her `approved_tags` column (0/44 filled).
+
+---
 
 ### 2026-05-06 (Session 10) — Corrinne's CSV reviews processed; barcodes + categories written to LS
 
@@ -741,3 +768,26 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
 **Actions completed:**
 - Git commit [main 34952cc]
+
+### Mid-Session Checkpoint (2026-05-06T15:35:17Z — auto-compaction)
+**Ledger stats:** 21 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 34952cc]
+- Git commit [main d1e3e39]
+
+### Mid-Session Checkpoint (2026-05-06T16:06:47Z — auto-compaction)
+**Ledger stats:** 7 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-06T16:13:23Z — auto-compaction)
+**Ledger stats:** 8 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+
+### Mid-Session Checkpoint (2026-05-06T16:39:01Z — auto-compaction)
+**Ledger stats:** 8 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert

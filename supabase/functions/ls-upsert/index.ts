@@ -265,6 +265,12 @@ async function createProduct(token: string, req: UpsertRequest): Promise<UpsertR
     // POST v2.0 returns { data: ["family-uuid"] } — a string array, not object array
     const uuids = ((data as { data?: unknown[] })?.data ?? []) as string[]
     const createdId = uuids[0] ?? null
+
+    // v2.0 POST does not set track_inventory — it defaults to false. Set it via v2.1 PUT immediately.
+    if (createdId) {
+      await lsPut(token, createdId, { common: { track_inventory: true } })
+    }
+
     return {
       action: 'created',
       lightspeed_id: createdId,
