@@ -19,9 +19,54 @@ const corsHeaders = {
 const LS_BASE_V20 = 'https://therodeoshop.retail.lightspeed.app/api/2.0'
 const LS_BASE_V21 = 'https://therodeoshop.retail.lightspeed.app/api/2.1'
 
-// LS requires every variant to have at least one variant_definition.
-// Standalones (no size/color options) use a single "One Size" definition.
-const STANDALONE_VARIANT_DEF = [{ attribute_id: '8d72c173-2d55-4ef6-9813-d6bfbed613b2', value: 'One Size' }]
+// LS variant attribute IDs (stable for The Rodeo Shop production store)
+const ATTR_SIZE_ID  = '8d72c173-2d55-4ef6-9813-d6bfbed613b2'
+const ATTR_COLOR_ID = 'c67f4856-9113-4447-aea0-6a4d9cafb176'
+
+// Fallback variant def when neither size nor color is provided
+const STANDALONE_VARIANT_DEF = [{ attribute_id: ATTR_SIZE_ID, value: 'One Size' }]
+
+// Demographic + clearance tag name → LS UUID (production store)
+const TAG_NAME_TO_UUID: Record<string, string> = {
+  'men':       '95f3fa5b-4ab0-452f-982a-026f9a738fa5',
+  'women':     'd9ba208c-b139-45ac-998e-774dcea07449',
+  'kids':      '41a95de2-1c29-4bb7-ba04-78756cb2f139',
+  'unisex':    'cc0620e0-90bd-49b1-a6d1-24a6f2ae6aab',
+  'adult':     'e8071db8-4a36-4ede-8383-0c3dd83567c5',
+  'youth':     'f77cb111-92c5-4451-a22e-528fd5f8255c',
+  'clearance': '9a915378-5288-420b-8902-50963d08b68c',
+  'mens':      'b7155272-65fd-4ce7-8db7-6eb08eedfd5d',
+  'womens':    '8634387e-5a79-4000-9dbc-ad7500b6358b',
+  "women's":   'c8549b12-2cf0-4a45-af39-abdc7ab163ea',
+  "kid's":     '0e7a4d84-1706-4788-a2c5-e62ccf512899',
+  'ladies':    'dd30ccb7-fdf9-44d5-bee3-66ba21b54aae',
+}
+
+function resolveTagIds(tags: string | null, retail_price: number | null): string[] {
+  const ids = new Set<string>()
+  if (tags) {
+    for (const token of tags.split(/[,|]+/)) {
+      const key = token.trim().toLowerCase()
+      const uuid = TAG_NAME_TO_UUID[key]
+      if (uuid) ids.add(uuid)
+    }
+  }
+  if (retail_price !== null && retail_price !== undefined) {
+    if (Math.round(retail_price * 100) % 100 === 97) ids.add(TAG_NAME_TO_UUID['clearance'])
+  }
+  return [...ids]
+}
+
+function buildVariantDefs(size: string | null, color: string | null): Array<Record<string, string>> {
+  const defs: Array<Record<string, string>> = []
+  if (size && size.trim() && size.trim().toLowerCase() !== 'one size') {
+    defs.push({ attribute_id: ATTR_SIZE_ID, value: size.trim() })
+  }
+  if (color && color.trim()) {
+    defs.push({ attribute_id: ATTR_COLOR_ID, value: color.trim() })
+  }
+  return defs.length > 0 ? defs : STANDALONE_VARIANT_DEF
+}
 
 // Module-scope cache — lives for the isolate lifetime (typically minutes).
 // Good enough for brand/supplier lookups: small lists, rarely changes.
@@ -52,6 +97,9 @@ interface UpsertRequest {
   supply_price: number | null
   description: string | null
   gender: string | null
+  size_or_dimensions: string | null
+  color: string | null
+  tags: string | null
 }
 
 interface UpsertResult {
@@ -224,20 +272,16 @@ async function createProduct(token: string, req: UpsertRequest): Promise<UpsertR
   const supplierId = resolveId(supplierCache, req.supplier_name)
   const categoryId = resolveId(categoryCache, req.product_category)
 
-  // Build tags from gender
-  const tags: string[] = []
-  if (req.gender) tags.push(req.gender)
+  const tagIds = resolveTagIds(req.tags, req.retail_price)
 
-  // DESIGN INTENT: Creates a standalone product with a single "One Size" variant definition.
-  // LS requires at least 1 variant_definition per variant; standalones use the Size attribute
-  // with value "One Size" as a neutral placeholder. Variant family creation (grouping multiple
-  // sizes/colors under one parent) belongs to the bulk import pipeline
-  // (docs/ls_cleanup_phase2_final.py), not this per-product upsert. Changing this to
-  // auto-create families would recreate the 5K+ orphaned-standalone debt from April cleanup.
+  // Creates a standalone product — one parent, one variant.
+  // variant_definitions carry the actual size/color for this item.
+  // Variant family creation (multiple sizes under one parent) is handled by the
+  // bulk import pipeline (docs/ls_cleanup_phase2_final.py), not here.
   const variant: Record<string, unknown> = {
     price_excluding_tax: req.retail_price ?? 0,
     supply_price: req.supply_price ?? 0,
-    variant_definitions: STANDALONE_VARIANT_DEF,
+    variant_definitions: buildVariantDefs(req.size_or_dimensions ?? null, req.color ?? null),
   }
   if (req.sku) variant.sku = req.sku
 
@@ -257,7 +301,6 @@ async function createProduct(token: string, req: UpsertRequest): Promise<UpsertR
   if (brandId) payload.brand_id = brandId
   if (supplierId) payload.supplier_id = supplierId
   if (categoryId) payload.product_type_id = categoryId
-  if (tags.length > 0) payload.tags = tags
 
   const { data, status } = await lsPost(token, payload)
 
@@ -266,9 +309,11 @@ async function createProduct(token: string, req: UpsertRequest): Promise<UpsertR
     const uuids = ((data as { data?: unknown[] })?.data ?? []) as string[]
     const createdId = uuids[0] ?? null
 
-    // v2.0 POST does not set track_inventory — it defaults to false. Set it via v2.1 PUT immediately.
+    // Set track_inventory (v2.0 POST defaults to false) and tag_ids in one PUT.
     if (createdId) {
-      await lsPut(token, createdId, { common: { track_inventory: true } })
+      const common: Record<string, unknown> = { track_inventory: true }
+      if (tagIds.length > 0) common.tag_ids = tagIds
+      await lsPut(token, createdId, { common })
     }
 
     return {
