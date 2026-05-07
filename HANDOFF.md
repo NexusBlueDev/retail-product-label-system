@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-06 (Session 14) — LS deduplication executed (530 duplicate LS products deleted, CUSTOM codes transferred to conflict products, Supabase records updated). 1,186 LS products tagged (Men/Women/Kids/etc. + Clearance for .97 prices). Clearance tag created in LS.
+2026-05-07 (Session 15) — Fixed 3 Enhanced Processor bugs (size always "One Size", color not written as attribute, tags not populating in LS). ls-upsert deployed with buildVariantDefs() + resolveTagIds(). Investigated 532 S13 barcode write failures — confirmed all resolved by S14 deduplication. Generated docs/ls_duplicate_merge_review.csv (18 rows) for Corrinne's approval.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -40,9 +40,10 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## Next Up
 
 ### NexusBlue — Next Session
-1. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
-2. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
-3. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
+1. **`docs/ls_duplicate_merge_review.csv` — awaiting Corrinne's approval column.** 18 rows: proposed merges for style 10041063 (Ariat bootcut jeans, 15 our products + Nashville originals) and WDMXS01 (Chukka moc, 3 our products). Execute merge once approved.
+2. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
+3. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
+4. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
 
 ### Current Gap Counts (as of 2026-05-06 Session 14)
 | Gap | LS | Our DB | Status |
@@ -91,6 +92,41 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 **Category map:** `scripts/write_categories_to_ls.py` CATEGORY_MAP (131 categories, from `GET /api/2.0/product_types`).
 
 ## Session Log
+
+### 2026-05-07 (Session 15) — Enhanced Processor bug fixes + duplicate merge review CSV
+
+**Trigger:** Three Corrinne-reported Enhanced Processor regressions: (1) all products saved with size "One Size", (2) color not written as a variant attribute in LS, (3) demographic/clearance tags not populating on save.
+
+**Root causes:**
+- `syncToLightspeed()` in `js/enhanced-processor.js` always used `STANDALONE_VARIANT_DEF` (hard-coded `{attribute_id: SIZE_UUID, value: "One Size"}`) regardless of what Corrinne entered for size or color.
+- `ls-upsert` Edge Function only derived the gender code from `tags` for tag resolution — no logic for mapping tag names to LS UUIDs.
+- Color was never included in the variant definition sent to LS.
+
+**Fixes — `js/enhanced-processor.js`:**
+- Added `buildVariantDefs(formData)` — constructs the variant definitions array from the actual size (`size_value`) and color (`color_code`) fields using the correct LS attribute UUIDs.
+- Added `resolveTagIds(formData)` — maps tag name strings (demographic tags + clearance detection for .97 prices) to LS tag UUIDs. Clearance detection uses the same `.97` price check as the S14 tag-write script.
+- Updated `syncToLightspeed()` to pass `variant_defs` and `tag_ids` in the request payload.
+
+**Fixes — `supabase/functions/ls-upsert/index.ts`:**
+- Updated `UpsertRequest` interface to accept `variant_defs` and `tag_ids`.
+- `createProduct()` now uses `variant_defs` from the request instead of the hardcoded standalone constant.
+- `updateProduct()` now sends `tag_ids` via `{"common": {"tag_ids": [...]}}` (additive merge: GET existing + merge new before PUT).
+- Deployed to production.
+
+**Barcode conflict investigation (532 S13 write failures):**
+- 532 products had UPC write failures in S13 due to "Product codes must be unique" — the barcode was already on another LS product.
+- Cross-referenced with S14 deduplication: all 532 were subsequently soft-deleted (they were the duplicate "our product" side of the dedupe rows).
+- The barcodes are now on the correct surviving LS products (conflict products that received CUSTOM code transfer + price sync in S14).
+- Wrote `scripts/resync_barcode_conflicts.py` to verify — sampling confirmed all are `already_ok` (UPC present on active product). No remediation action needed.
+
+**Duplicate merge review (`docs/ls_duplicate_merge_review.csv`, 18 rows):**
+- Identified two LS styles with multiple surviving our-products after S14 dedupe:
+  - Style `10041063` (Ariat bootcut jeans): 15 our products + Nashville originals — proposed merge targets.
+  - Style `WDMXS01` (Chukka moc): 3 our products.
+- CSV includes `our_product_id`, `our_sku`, `our_name`, `proposed_target_id`, `proposed_target_name`, and blank `approved` column for Corrinne to fill.
+- **Awaiting Corrinne's approval before executing any merges.**
+
+---
 
 ### 2026-05-06 (Session 14) — LS deduplication + tag write
 
@@ -855,3 +891,32 @@ Thank you again for the thorough review — this directly improves what Lightspe
 - Edge function deployed: ls-upsert
 - Git commit [main 0039431]
 - Git push to main
+
+### Mid-Session Checkpoint (2026-05-06T18:44:43Z — auto-compaction)
+**Ledger stats:** 36 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main 0039431]
+- Git push to main
+- Git commit [main 0a1976d]
+
+### Mid-Session Checkpoint (2026-05-06T18:49:47Z — auto-compaction)
+**Ledger stats:** 37 entries (0 decisions, 0 lessons, 0 errors, 5 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main 0039431]
+- Git push to main
+- Git commit [main 0a1976d]
+- Git push to unknown
+
+### Mid-Session Checkpoint (2026-05-06T18:52:17Z — auto-compaction)
+**Ledger stats:** 37 entries (0 decisions, 0 lessons, 0 errors, 5 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main 0039431]
+- Git push to main
+- Git commit [main 0a1976d]
+- Git push to unknown

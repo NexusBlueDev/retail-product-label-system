@@ -1,0 +1,6 @@
+old_ls_id,active_ls_id,barcode,name,outcome,detail,db_note
+e52ca6cc-263b-47ae-abeb-adba34f2434e,,701340756298,Twister Pink Youth Hat,manual_review,No active LS product found,
+2028e66a-cb19-4ba2-a416-4ceeb513d2ea,6368acc2-b9ef-4d91-8e9b-13530783bc64,701340476424,Brown Boot (A-MFW-A2301602-48-BRO-48),conflict,"PUT 422: {""error"": ""Product codes must be unique."", ""fields"": {""duplicate_product_codes"": ""701340476424""}}",
+f9d113d7-e301-4279-85b3-612cb2c74dfa,32cd14be-5f7b-4eab-8be1-97305acb04d1,701340476455,Brown Boot (A-MFW-A2301602-63-BRO),conflict,"PUT 422: {""error"": ""Product codes must be unique."", ""fields"": {""duplicate_product_codes"": ""701340476455""}}",
+96c59c09-b0b6-430a-926f-e616bc2664e4,,719280476886,Straw Hat (A-GEN-719280476886-BLA-L) [A-GEN-719280476886-BLA-L],manual_review,No active LS product found,
+e5d32edc-e16d-4db0-acd8-43919ac660e1,,719280476893,Straw Hat (A-GEN-719280476893-BLA-XL) [A-GEN-719280476893-BLA-XL],manual_review,No active LS product found,
