@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-08 (Session 16) — Fixed EP Brand/Manufacturer not writing to LS on existing products (updateProduct() now resolves brand_id via common key alongside supplier). Deployed ls-upsert. Executed ls_duplicate_merge_review-REVIEWED.csv: 18 deletes, 13 CUSTOM code updates applied, 4 SKU updates held pending Corrinne confirmation (16W-L/16W-R/18W-L Ariat SKU assignments appear to be a cyclic shift; 33-X-L→28-XL is a size discrepancy). resync_manual_review.csv — awaiting clarification from Corrinne on what corrections were made.
+2026-05-08 (Session 17) — Corrinne confirmed all 4 held SKU updates from S16 were her spreadsheet error (corrected directly in LS). resync_manual_review.csv also closed — all 5 rows corrected directly in LS by Corrinne, no action needed. The S15 barcode resync is now fully complete.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -40,11 +40,9 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## Next Up
 
 ### NexusBlue — Next Session
-1. **4 held SKU updates — needs Corrinne to confirm.** See `docs/ls_merge_reviewed.log`. The "Do this" SKUs for the 3 Ariat 16W-L / 16W-R / 18W-L Nashville products form a 3-way cyclic swap — likely a spreadsheet data entry shift. 33-X-L Nashville → "28-XL" is also suspicious. Confirm the correct intended SKU for each and re-run `scripts/ls_merge_reviewed.py` with those corrections manually applied. Keep IDs: `2f0852cd` (16W-L), `f3dbd2d8` (16W-R), `7d1b6dea` (18W-L), `7214c374` (33-X-L).
-2. **resync_manual_review.csv — awaiting Corrinne's corrections.** Corrinne said corrections were made but the file has no corrections column. 5 rows: 3 manual_review (no active LS product found), 2 conflict (barcode already on another LS product with active_ls_id). Need to know: for the 3 manual_review rows, skip or re-create? For the 2 conflict rows, update Supabase lightspeed_product_id to the active_ls_id?
-3. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
-4. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
-5. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
+1. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
+2. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
+3. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
 
 ### Current Gap Counts (as of 2026-05-06 Session 14)
 | Gap | LS | Our DB | Status |
@@ -93,6 +91,23 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 **Category map:** `scripts/write_categories_to_ls.py` CATEGORY_MAP (131 categories, from `GET /api/2.0/product_types`).
 
 ## Session Log
+
+### 2026-05-08 (Session 17) — All S15/S16 ops items closed via Corrinne confirmation
+
+**Item 1 — 4 held SKU updates (S16):** Corrinne confirmed (via ls_duplicate_merge_review-REVIEWED-2) all 4 were her spreadsheet data entry errors. She corrected them directly in Lightspeed. S16 merge execution fully complete.
+- `2f0852cd` (10041063-16W-L-Nashville) — corrected by Corrinne in LS ✅
+- `f3dbd2d8` (10041063-16W-R-Nashville) — corrected by Corrinne in LS ✅
+- `7d1b6dea` (10041063-18W-L-Nashville) — corrected by Corrinne in LS ✅
+- `7214c374` (10041063-33-X-L-Nashville) — corrected by Corrinne in LS ✅
+
+**Item 2 — resync_manual_review.csv (S15, 5 rows):** Corrinne confirmed no action needed — she corrected all 5 items directly in Lightspeed. S15 barcode resync is now fully complete.
+- Twister Pink Youth Hat (701340756298) — handled by Corrinne ✅
+- Straw Hat BLA-L (719280476886) — handled by Corrinne ✅
+- Straw Hat BLA-XL (719280476893) — handled by Corrinne ✅
+- Brown Boot 48 (701340476424) — handled by Corrinne ✅
+- Brown Boot no-size (701340476455) — handled by Corrinne ✅
+
+---
 
 ### 2026-05-08 (Session 16) — EP brand/manufacturer fix + Corrinne-approved merges executed
 
@@ -974,3 +989,43 @@ Thank you again for the thorough review — this directly improves what Lightspe
 - Git commit [main 6779698]
 - Git commit [main 1c783db]
 - Git push to main
+
+### Mid-Session Checkpoint (2026-05-08T15:35:53Z — auto-compaction)
+**Ledger stats:** 3 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main e028f81]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-08T15:37:11Z — auto-compaction)
+**Ledger stats:** 3 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main e028f81]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-08T15:45:18Z — auto-compaction)
+**Ledger stats:** 18 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main e028f81]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-08T16:17:00Z — auto-compaction)
+**Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-08T16:23:45Z — auto-compaction)
+**Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-08T16:33:43Z — auto-compaction)
+**Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-08T16:35:39Z — auto-compaction)
+**Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
