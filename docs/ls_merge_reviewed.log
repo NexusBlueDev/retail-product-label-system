@@ -1,0 +1,178 @@
+ls_merge_reviewed.py — LIVE — 18 rows
+
+
+--- Row 1: keep=WDMXS01-M-05.5 | delete=W-TWX-WDMXS01-NA-5.5-M ---
+  [OK ] keep=WDMXS01-M-05.5 | delete=W-TWX-WDMXS01-NA-5.5-M
+       DELETE LS 1e3db986-30bd-4099-aa04-f90b07c64587 (W-TWX-WDMXS01-NA-5.5-M)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 1e3db986-30bd-4099-aa04-f90b07c64587 → 85d2d402-d07c-4ccc-be23-79a54d4c776a
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-TWX-WDMXS01-5.5-M' on keep 85d2d402-d07c-4ccc-be23-79a54d4c776a
+         PUT OK — CUSTOM='W-TWX-WDMXS01-5.5-M', total 2 code(s)
+
+--- Row 2: keep=WDMXS01-W-08.5 | delete=W-TWX-WDMXS01-NA-8.5-W ---
+  [OK ] keep=WDMXS01-W-08.5 | delete=W-TWX-WDMXS01-NA-8.5-W
+       DELETE LS 9243d105-de8b-4170-a5c8-4fabd78e84a8 (W-TWX-WDMXS01-NA-8.5-W)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 9243d105-de8b-4170-a5c8-4fabd78e84a8 → 9754394e-3c4f-4e93-9219-5f3dfbd8f909
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-TWX-WDMXS01-8.5-W' on keep 9754394e-3c4f-4e93-9219-5f3dfbd8f909
+         PUT OK — CUSTOM='W-TWX-WDMXS01-8.5-W', total 2 code(s)
+
+--- Row 3: keep=WDMXS01-M-09.5 | delete=W-TWX-WDMXS01-NA-9.5-M ---
+  [OK ] keep=WDMXS01-M-09.5 | delete=W-TWX-WDMXS01-NA-9.5-M
+       DELETE LS 57c390e3-b23f-4824-be21-040951a4a7f6 (W-TWX-WDMXS01-NA-9.5-M)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 57c390e3-b23f-4824-be21-040951a4a7f6 → 8a4ff443-670e-407d-8275-10c838506aec
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-TWX-WDMXS01-9.5-M' on keep 8a4ff443-670e-407d-8275-10c838506aec
+         PUT OK — CUSTOM='W-TWX-WDMXS01-9.5-M', total 2 code(s)
+
+--- Row 4: keep=10041063-26W-R-Nashville | delete=A-ARI-10041063-26-NA ---
+  [OK ] keep=10041063-26W-R-Nashville | delete=A-ARI-10041063-26-NA
+       DELETE LS 9f67a1da-7dec-4f2d-9ae9-d104865973db (A-ARI-10041063-26-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 9f67a1da-7dec-4f2d-9ae9-d104865973db → 22853363-c00b-4aea-951c-105b7adc529d
+         Updated 0 row(s): []
+
+--- Row 5: keep=10041063-16W-L-Nashville | delete=W-ARI-10041063-16WL-NA ---
+  [OK ] keep=10041063-16W-L-Nashville | delete=W-ARI-10041063-16WL-NA
+       DELETE LS ecaf5374-0a54-4964-be64-33a9b5f06d7f (W-ARI-10041063-16WL-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: ecaf5374-0a54-4964-be64-33a9b5f06d7f → 2f0852cd-21e2-4386-805a-55c00439e5d3
+         Updated 0 row(s): []
+         HELD — suspicious SKU: '10041063-16W-L-Nashville' → 'W-ARI-10041063-Nashville-16W-R'
+           Looks like a spreadsheet shift or size mismatch — confirm before applying.
+
+--- Row 6: keep=10041063-16W-R-Nashville | delete=W-ARI-10041063-16WR-NA ---
+  [OK ] keep=10041063-16W-R-Nashville | delete=W-ARI-10041063-16WR-NA
+       DELETE LS 6c1f997b-dc73-43a6-9ece-89215801755b (W-ARI-10041063-16WR-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 6c1f997b-dc73-43a6-9ece-89215801755b → f3dbd2d8-489b-4b4e-aa0e-5e9004846395
+         Updated 0 row(s): []
+         HELD — suspicious SKU: '10041063-16W-R-Nashville' → 'W-ARI-10041063-Nashville-18W-L'
+           Looks like a spreadsheet shift or size mismatch — confirm before applying.
+
+--- Row 7: keep=10041063-18W-L-Nashville | delete=W-ARI-10041063-18-NA ---
+  [OK ] keep=10041063-18W-L-Nashville | delete=W-ARI-10041063-18-NA
+       DELETE LS 362ef7a1-dfff-4eaf-98d7-13be11f94c73 (W-ARI-10041063-18-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 362ef7a1-dfff-4eaf-98d7-13be11f94c73 → 7d1b6dea-4919-4b49-b06c-920b3a7ea0ba
+         Updated 0 row(s): []
+         HELD — suspicious SKU: '10041063-18W-L-Nashville' → 'W-ARI-10041063-Nashville-16W-L'
+           Looks like a spreadsheet shift or size mismatch — confirm before applying.
+
+--- Row 8: keep=10041063-20W-R-Nashville | delete=W-ARI-10041063-20-NA ---
+  [OK ] keep=10041063-20W-R-Nashville | delete=W-ARI-10041063-20-NA
+       DELETE LS 8862a66d-a114-4e37-90da-26286f3f96e8 (W-ARI-10041063-20-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 8862a66d-a114-4e37-90da-26286f3f96e8 → e71d7365-e490-4376-bfaf-b783d538c47e
+         Updated 0 row(s): []
+
+--- Row 9: keep=10041063-20W-R-Nashville | delete=W-ARI-10041063-20WR-NA ---
+  [OK ] keep=10041063-20W-R-Nashville | delete=W-ARI-10041063-20WR-NA
+       DELETE LS 0e83d1a7-0976-4690-b673-7d01baa63fec (W-ARI-10041063-20WR-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 0e83d1a7-0976-4690-b673-7d01baa63fec → e71d7365-e490-4376-bfaf-b783d538c47e
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-ARI 10041063-Nashville-20W-R' on keep e71d7365-e490-4376-bfaf-b783d538c47e
+         PUT OK — CUSTOM='W-ARI 10041063-Nashville-20W-R', total 2 code(s)
+
+--- Row 10: keep=10041063-22W-L-Nashville | delete=W-ARI-10041063-22-NA ---
+  [OK ] keep=10041063-22W-L-Nashville | delete=W-ARI-10041063-22-NA
+       DELETE LS bae53ed6-d109-4a4a-81e0-bb2118295d87 (W-ARI-10041063-22-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: bae53ed6-d109-4a4a-81e0-bb2118295d87 → 64e7a94e-8899-4611-8c1e-2c76ea03cf25
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-ARI 10041063-Nashville-22W-L' on keep 64e7a94e-8899-4611-8c1e-2c76ea03cf25
+         PUT OK — CUSTOM='W-ARI 10041063-Nashville-22W-L', total 2 code(s)
+
+--- Row 11: keep=10041063-22W-R-Nashville | delete=W-ARI-10041063-22WR-NA ---
+  [OK ] keep=10041063-22W-R-Nashville | delete=W-ARI-10041063-22WR-NA
+       DELETE LS e3f084a3-595d-41e7-8f27-409000fa27d9 (W-ARI-10041063-22WR-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: e3f084a3-595d-41e7-8f27-409000fa27d9 → 00269486-dd27-4c07-a5e5-1121e91ab6b3
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-ARI 10041063-Nashville-22W-R' on keep 00269486-dd27-4c07-a5e5-1121e91ab6b3
+         PUT OK — CUSTOM='W-ARI 10041063-Nashville-22W-R', total 2 code(s)
+
+--- Row 12: keep=10041063-24W-R-Nashville | delete=W-ARI-10041063-24WR-NA ---
+  [OK ] keep=10041063-24W-R-Nashville | delete=W-ARI-10041063-24WR-NA
+       DELETE LS c4d9cccf-16ba-4363-80ec-80cfa445ecd5 (W-ARI-10041063-24WR-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: c4d9cccf-16ba-4363-80ec-80cfa445ecd5 → cc00c64e-2b2d-42de-946d-4709d52b9011
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-ARI 10041063-Nashville-24W-R' on keep cc00c64e-2b2d-42de-946d-4709d52b9011
+         PUT OK — CUSTOM='W-ARI 10041063-Nashville-24W-R', total 2 code(s)
+
+--- Row 13: keep=10041063-25-X-L-Nashville | delete=W-ARI-10041063-25-S ---
+  [OK ] keep=10041063-25-X-L-Nashville | delete=W-ARI-10041063-25-S
+       DELETE LS 59c96217-ba74-483c-b21d-9940ca19bcc2 (W-ARI-10041063-25-S)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 59c96217-ba74-483c-b21d-9940ca19bcc2 → a91a6118-033d-4abb-bfee-393c01794e43
+         Updated 0 row(s): []
+
+--- Row 14: keep=10041063-25-X-L-Nashville | delete=W-ARI-10041063-25-XL ---
+  [OK ] keep=10041063-25-X-L-Nashville | delete=W-ARI-10041063-25-XL
+       DELETE LS be212d2b-4b45-4553-866e-1f5f4973877e (W-ARI-10041063-25-XL)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: be212d2b-4b45-4553-866e-1f5f4973877e → a91a6118-033d-4abb-bfee-393c01794e43
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-ARI 10041063-Nashville-25-XL' on keep a91a6118-033d-4abb-bfee-393c01794e43
+         PUT OK — CUSTOM='W-ARI 10041063-Nashville-25-XL', total 2 code(s)
+
+--- Row 15: keep=10041063-27-X-L-Nashville | delete=W-ARI-10041063-27-XL ---
+  [OK ] keep=10041063-27-X-L-Nashville | delete=W-ARI-10041063-27-XL
+       DELETE LS 36a1636a-585f-40b1-b7db-94eba415059d (W-ARI-10041063-27-XL)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 36a1636a-585f-40b1-b7db-94eba415059d → 6a4f6796-9017-40e5-a535-759ec19b854d
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-ARI 10041063-Nashville-27-XL' on keep 6a4f6796-9017-40e5-a535-759ec19b854d
+         PUT OK — CUSTOM='W-ARI 10041063-Nashville-27-XL', total 2 code(s)
+
+--- Row 16: keep=10041063-28-L-Nashville | delete=W-ARI-10041063-28-NA ---
+  [OK ] keep=10041063-28-L-Nashville | delete=W-ARI-10041063-28-NA
+       DELETE LS fe06cfa7-539a-4de4-a503-ff4fd59e3378 (W-ARI-10041063-28-NA)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: fe06cfa7-539a-4de4-a503-ff4fd59e3378 → f93c6805-1607-4b47-8351-78b1e461ae4d
+         Updated 0 row(s): []
+       PUT CUSTOM code 'W-ARI 10041063-Nashville-28-L' on keep f93c6805-1607-4b47-8351-78b1e461ae4d
+         PUT OK — CUSTOM='W-ARI 10041063-Nashville-28-L', total 2 code(s)
+
+--- Row 17: keep=10041063-33-X-L-Nashville | delete=W-ARI-10041063-33-L ---
+  [OK ] keep=10041063-33-X-L-Nashville | delete=W-ARI-10041063-33-L
+       DELETE LS 25a6f5fa-325f-42a1-a6a4-4c7b9d4660f6 (W-ARI-10041063-33-L)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: 25a6f5fa-325f-42a1-a6a4-4c7b9d4660f6 → 7214c374-c764-4c10-b11f-189284326477
+         Updated 0 row(s): []
+
+--- Row 18: keep=10041063-33-X-L-Nashville | delete=W-ARI-10041063-33-XL ---
+  [OK ] keep=10041063-33-X-L-Nashville | delete=W-ARI-10041063-33-XL
+       DELETE LS fd74fac3-6040-4068-bcf4-30918276d386 (W-ARI-10041063-33-XL)
+         DELETE OK (status=200)
+       Supabase UPDATE lp_id: fd74fac3-6040-4068-bcf4-30918276d386 → 7214c374-c764-4c10-b11f-189284326477
+         Updated 0 row(s): []
+         HELD — suspicious SKU: '10041063-33-X-L-Nashville' → 'W-ARI 10041063-Nashville-28-XL'
+           Looks like a spreadsheet shift or size mismatch — confirm before applying.
+
+============================================================
+SUMMARY: OK=18 | Skipped=0 | Errors=0
+
+HELD SKU UPDATES (4) — needs Corrinne confirmation:
+  keep_id=2f0852cd-21e2-4386-805a-55c00439e5d3
+    current keep_sku : 10041063-16W-L-Nashville
+    requested new SKU: W-ARI-10041063-Nashville-16W-R
+  keep_id=f3dbd2d8-489b-4b4e-aa0e-5e9004846395
+    current keep_sku : 10041063-16W-R-Nashville
+    requested new SKU: W-ARI-10041063-Nashville-18W-L
+  keep_id=7d1b6dea-4919-4b49-b06c-920b3a7ea0ba
+    current keep_sku : 10041063-18W-L-Nashville
+    requested new SKU: W-ARI-10041063-Nashville-16W-L
+  keep_id=7214c374-c764-4c10-b11f-189284326477
+    current keep_sku : 10041063-33-X-L-Nashville
+    requested new SKU: W-ARI 10041063-Nashville-28-XL
+
+  Note: rows for 16W-L/16W-R/18W-L Nashville products have 'Do this' SKUs
+  that appear to be a 3-way cyclic shift (each product gets another's size).
+  Row for 33-X-L Nashville has 'Do this'='28-XL' — large size discrepancy.
+  Please confirm intended SKUs and re-run with --apply-held flag (to be added).

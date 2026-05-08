@@ -230,7 +230,7 @@ async function searchByName(token: string, name: string): Promise<LsProduct | nu
 async function updateProduct(token: string, product: LsProduct, req: UpsertRequest): Promise<UpsertResult> {
   // v2.1 PUT schema:
   //   "details" key — variant-level fields (price, supply_price, is_active)
-  //   "common" key  — product-level fields (product_suppliers, name)
+  //   "common" key  — product-level fields (brand_id, product_suppliers, name)
   // Flat top-level fields return 422 "Unknown field in payload".
   const details: Record<string, unknown> = { is_active: true }
 
@@ -243,14 +243,16 @@ async function updateProduct(token: string, product: LsProduct, req: UpsertReque
 
   const payload: Record<string, unknown> = { details }
 
-  // Set supplier via common key if we can resolve it — only when supplier_name is provided
-  // and resolves to a known LS UUID. Never sends empty supplier_id (would clear existing).
-  if (req.supplier_name) {
+  // Resolve brand + supplier via common key when either is provided.
+  // Never sends empty IDs (would clear existing values).
+  if (req.brand_name || req.supplier_name) {
     await ensureCaches(token)
+    const common: Record<string, unknown> = {}
+    const brandId = resolveId(brandCache, req.brand_name)
+    if (brandId) common.brand_id = brandId
     const supplierId = resolveId(supplierCache, req.supplier_name)
-    if (supplierId) {
-      payload.common = { product_suppliers: [{ supplier_id: supplierId, price: 0 }] }
-    }
+    if (supplierId) common.product_suppliers = [{ supplier_id: supplierId, price: 0 }]
+    if (Object.keys(common).length > 0) payload.common = common
   }
 
   const { status } = await lsPut(token, product.id, payload)
