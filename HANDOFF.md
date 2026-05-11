@@ -88,6 +88,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 | Create tag | `POST v2.0 /tags` | `{"name": "TagName"}` → `{"data": "new-uuid"}` |
 
 **Gotcha:** v2.0 products endpoint is READ-ONLY — PUT/PATCH return 404 "No route found". All writes go through v2.1.
+**Gotcha:** v2.1 does NOT support GET `/products/{id}` — returns "No route found". Always use v2.0 for reads (`GET /api/2.0/products/{id}`) and v2.1 for writes (`PUT /api/2.1/products/{id}`).
 **Gotcha:** `product_category_id` (v2.1 write field) ≠ `product_type_id` (v2.0 read field) — different field names for same concept across API versions.
 **Gotcha:** `product_category_id` only appears in v2.1 `common` schema probe when the product already has a category. New category assignment still works via PUT.
 **Gotcha:** `product_codes` in v2.1 PUT is a FULL ARRAY REPLACEMENT — always include ALL codes (CUSTOM + UPC). Sending only UPC removes the CUSTOM (SKU) code and changes the product's sku field to the barcode value.
@@ -1138,3 +1139,10 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
 **Actions completed:**
 - Git commit [main 43af450]
+
+### Mid-Session Checkpoint (2026-05-11T18:55:43Z — auto-compaction)
+**Ledger stats:** 14 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 43af450]
+- Git commit [main 95bdf85]
