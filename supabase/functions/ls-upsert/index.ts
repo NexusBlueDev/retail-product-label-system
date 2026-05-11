@@ -20,8 +20,11 @@ const LS_BASE_V20 = 'https://therodeoshop.retail.lightspeed.app/api/2.0'
 const LS_BASE_V21 = 'https://therodeoshop.retail.lightspeed.app/api/2.1'
 
 // LS variant attribute IDs (stable for The Rodeo Shop production store)
-const ATTR_SIZE_ID  = '8d72c173-2d55-4ef6-9813-d6bfbed613b2'
-const ATTR_COLOR_ID = 'c67f4856-9113-4447-aea0-6a4d9cafb176'
+// Order per Corrinne's standard: Color, Size, Length, Width, Fit
+const ATTR_COLOR_ID  = 'c67f4856-9113-4447-aea0-6a4d9cafb176'
+const ATTR_SIZE_ID   = '8d72c173-2d55-4ef6-9813-d6bfbed613b2'
+const ATTR_LENGTH_ID = '6c510e74-8d1d-4a3f-b948-7c78ad96d3f1'
+const ATTR_WIDTH_ID  = 'e7261267-9196-4701-88dd-1df8ffc374ec'
 
 // Fallback variant def when neither size nor color is provided
 const STANDALONE_VARIANT_DEF = [{ attribute_id: ATTR_SIZE_ID, value: 'One Size' }]
@@ -57,13 +60,25 @@ function resolveTagIds(tags: string | null, retail_price: number | null): string
   return [...ids]
 }
 
-function buildVariantDefs(size: string | null, color: string | null): Array<Record<string, string>> {
+function buildVariantDefs(
+  size: string | null,
+  color: string | null,
+  length: string | null = null,
+  width: string | null = null,
+): Array<Record<string, string>> {
   const defs: Array<Record<string, string>> = []
+  // Standard order: Color → Size → Length → Width → Fit
+  if (color && color.trim()) {
+    defs.push({ attribute_id: ATTR_COLOR_ID, value: color.trim() })
+  }
   if (size && size.trim() && size.trim().toLowerCase() !== 'one size') {
     defs.push({ attribute_id: ATTR_SIZE_ID, value: size.trim() })
   }
-  if (color && color.trim()) {
-    defs.push({ attribute_id: ATTR_COLOR_ID, value: color.trim() })
+  if (length && length.trim()) {
+    defs.push({ attribute_id: ATTR_LENGTH_ID, value: length.trim() })
+  }
+  if (width && width.trim()) {
+    defs.push({ attribute_id: ATTR_WIDTH_ID, value: width.trim() })
   }
   return defs.length > 0 ? defs : STANDALONE_VARIANT_DEF
 }
@@ -99,6 +114,8 @@ interface UpsertRequest {
   gender: string | null
   size_or_dimensions: string | null
   color: string | null
+  length: string | null
+  width: string | null
   tags: string | null
 }
 
@@ -283,7 +300,7 @@ async function createProduct(token: string, req: UpsertRequest): Promise<UpsertR
   const variant: Record<string, unknown> = {
     price_excluding_tax: req.retail_price ?? 0,
     supply_price: req.supply_price ?? 0,
-    variant_definitions: buildVariantDefs(req.size_or_dimensions ?? null, req.color ?? null),
+    variant_definitions: buildVariantDefs(req.size_or_dimensions ?? null, req.color ?? null, req.length ?? null, req.width ?? null),
   }
   if (req.sku) variant.sku = req.sku
 
