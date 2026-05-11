@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-08 (Session 17) — Corrinne confirmed all 4 held SKU updates from S16 were her spreadsheet error (corrected directly in LS). resync_manual_review.csv also closed — all 5 rows corrected directly in LS by Corrinne, no action needed. The S15 barcode resync is now fully complete.
+2026-05-11 (Session 19) — Corrinne provided `Wrangler 13MWZ.xlsx` (original import, 722 variants, corrected UPCs, NEW SKU column) + `product-export (11).xlsx` (199 currently-visible LS variants). Analysis revealed per-color families (585 variants across 10 colors) are already clean. Big-family UPC fix executed: 78 of 108 matched variants updated (56 ANTIQUE_WS + 19 SW_GLD_BKL + 3 RIGID), 30 were duplicate codes already on per-color families. 91 unmatched RIGID variants flagged for Corrinne review. 0013M confirmed same product (Cowboy Cut Original Fit Navy), 106 variants, no barcodes.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -33,16 +33,22 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - Menu badge shows photo-only queue count
 
 ## In Progress
-- **Enhanced Processor v2 deployed** — copy buttons, dynamic SKU, category dropdown, supplier cross-population, supplier name field. Awaiting Corrinne's testing.
-- **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Duplicate prevention active. Price sync active (v2.1 PUT `{"details": {...}}` schema confirmed working — Session 5).
+- **Issue A — Wrangler 13MWZ cleanup (PARTIALLY DONE):** Per-color families (585 variants, 10 colors) are clean — correct 12-digit UPCs and M-Kon-... CUSTOM SKUs already set. Big-family UPC fix applied to 78 matched variants (56 ANTIQUE_WS + 19 SW_GLD_BKL + 3 RIGID). Remaining work: (1) **91 unmatched RIGID** variants in the big family have no entry in Corrinne's file — need her review (see `docs/ls_13mwz_unmatched_rigid.csv`). (2) **0013M family** (106 Navy variants, no barcodes) — needs UPCs added, then decision on merging into PREWASHED_INDIGO family or leaving separate. (3) **ANTIQUE_WS needs a per-color family** — 56 variants updated with UPC/CUSTOM but still in the big mixed family. (4) **~501 hidden variants** in the big 700-variant family are not accessible without LS API pagination — future cleanup pass.
+- **Issue B — Data quality sweep (AFTER ISSUE A):** Three sub-tasks queued: (1) track_inventory sweep for any new API-created products missing the flag, (2) supplier_code backfill using style number, (3) Custom SKU addition for products missing it.
+- **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Duplicate prevention active. Price sync active (v2.1 PUT `{"details": {...}}` schema confirmed working — Session 5). Variant attribute order fixed S18: Color → Size → Length → Width. Length and Width fields now accepted in UpsertRequest.
 - **lightspeed_index refreshed** — 75,379 rows loaded with new columns: family_id, variant_parent_id, supplier_id, brand_id, product_type_id. Script: `docs/ls_index_refresh.py` (caches catalog, supports --dry-run/--validate-only).
 
 ## Next Up
 
 ### NexusBlue — Next Session
-1. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
-2. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
-3. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
+1. **Issue A — Corrinne review needed:** Send her `docs/ls_13mwz_unmatched_rigid.csv` (91 RIGID variants in big family, no match in her import file — sizes 27–54). Ask: keep, update, or delete? Also ask: should the 0013M family (106 Navy, no barcodes) be merged into PREWASHED_INDIGO or left as-is?
+2. **Issue A — 0013M UPC backfill:** After Corrinne confirms, match the 106 0013M variants by size+length to PREWASHED_INDIGO entries in her file, then PUT product_codes via v2.1. Script pattern: same as `docs/ls_13mwz_bigfamily_upc_fix.py`.
+3. **Issue A — ANTIQUE_WS per-color family:** Create a new LS family for the 56 ANTIQUE_WS variants (now correctly UPCed) using the same family structure as the other per-color families.
+4. **Our duplicate families (from S18 plan):** Still needs merge+delete: 10 BLA (`3a9d0ec7`), 5 WHI (`5cccae01`), 4 DD (`948ea461`), 2 GK (`53bbfa94` + `536d640e`).
+5. **Issue B — Data quality sweep (after Issue A):** (1) track_inventory: set `{"common": {"track_inventory": true}}` for any API-created products missing the flag since S13. (2) supplier_code backfill: match products by style number to suppliers. (3) Custom SKU: identify products in LS missing a CUSTOM product_code and write their SKU.
+3. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
+4. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
+5. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
 
 ### Current Gap Counts (as of 2026-05-06 Session 14)
 | Gap | LS | Our DB | Status |
@@ -91,6 +97,56 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 **Category map:** `scripts/write_categories_to_ls.py` CATEGORY_MAP (131 categories, from `GET /api/2.0/product_types`).
 
 ## Session Log
+
+### 2026-05-11 (Session 19) — 13MWZ Corrinne files analysis + big-family UPC fix
+
+**Trigger:** Corrinne provided two files: `product-export (11).xlsx` (199 currently-visible LS big-family variants) and `Wrangler 13MWZ.xlsx` (original 722-variant import file with corrected UPCs + NEW SKU column). She confirmed she cannot access the hidden LS variants without deleting visible ones first, and offered her source import file as an alternative.
+
+**Key findings from analysis:**
+- Per-color families (10 colors, 585 variants) are already 100% clean: correct M-Kon-... SKU format and correct 12-digit UPCs. No work needed there.
+- Big Navy family (c3c968b4, 700 variants, only 199 visible) has mixed data: some with correct UPCs, most without.
+- 0013M family (aa01454d, 106 variants): confirmed same product (Cowboy Cut Original Fit), no barcodes, probably Navy duplicates.
+- 722-variant Corrinne file has 586 variants with 11-digit UPCs (needing leading zero) and 136 already 12-digit.
+- LS export IDs are NOT in our lightspeed_index (different 199 from the same 700-variant family — different pagination order).
+- v2.1 does NOT support GET /products/{id} — use v2.0 for reads, v2.1 for writes.
+
+**Action: Big-family UPC fix (`docs/ls_13mwz_bigfamily_upc_fix.py`):**
+- Matched 108 of 199 visible variants to Corrinne's file by Color+Size+Length.
+- 78 updated successfully: 56 ANTIQUE_WS + 19 SW_GLD_BKL + 3 RIGID (all now have correct UPC + CUSTOM SKU).
+- 30 errors (422 "product code already exists"): these big-family variants are duplicates of per-color family variants — CUSTOM codes already live on the per-color side. These big-family variants should be deleted in a future cleanup pass.
+- 91 unmatched: RIGID variants with size+length combos not in Corrinne's file (old/discontinued). Written to `docs/ls_13mwz_unmatched_rigid.csv` for Corrinne review.
+
+**Bug discovered + fixed:** Script initially used v2.1 for GET (returns "No route found"). Fixed to use v2.0 for GET, v2.1 for PUT.
+
+### 2026-05-11 (Session 18) — 13MWZ cleanup planning + variant attribute order fix
+
+**Trigger:** Corrinne's 3-issue request about Wrangler 13MWZ family problems in Lightspeed.
+
+**Issue C — DONE: Variant attribute order fix (`supabase/functions/ls-upsert/index.ts`, commit b7573ae):**
+- Corrected variant attribute definition order in `buildVariantDefs()`: now Color → Size → Length → Width (was Size → Color). Matches Corrinne's standard attribute ordering in LS.
+- Added `ATTR_LENGTH_ID` (`6c510e74-8d1d-4a3f-b948-7c78ad96d3f1`) and `ATTR_WIDTH_ID` (`e7261267-9196-4701-88dd-1df8ffc374ec`) as named constants (were previously undeclared in this function's scope).
+- Updated `UpsertRequest` interface to accept `length` and `width` as optional fields, enabling EP to pass jeans length and footwear width to LS on product creation/update.
+- Deployed to production.
+
+**Issue A — PLANNED (blocked on Corrinne export): 13MWZ Navy family cleanup:**
+- Full 4-phase plan drafted: (1) validate, (2) identify hidden variants, (3) merge duplicate color families, (4) verify.
+- Blocked on Corrinne providing a targeted LS export of the Navy 13MWZ product (UPC 760609585789).
+- Open question: is "0013M" the same style as 13MWZ? Needs Corrinne confirmation before execution.
+- Email drafted and sent via Bill to Corrinne requesting the export.
+
+**LS catalog research findings (relevant for Issue A execution):**
+- Main Navy 13MWZ family: `c3c968b4-6ac0-4ab1-9774-2b02c9cde1f2` — 700 variants total, but our lightspeed_index only has 199 of them (LS API caps at 199 visible in index queries).
+- Other 13MWZ colors are Corrinne's original per-color families: PREWASHED_INDIGO (86 variants), SHADOW_BLK (82), TAN (66), CHARGREY (61), BLK_CHOCLT (60), GB_BLEACH (56), WHITE (56), SW_GLD_BKL (53), DK_STONE (52).
+- Our duplicate families that need merging: 10 BLA (`3a9d0ec7`), 5 WHI (`5cccae01`), 4 DD (`948ea461`), 2 GK (`53bbfa94` + `536d640e`).
+- "0013M" Navy family: `aa01454d-24f9-48e0-a1ad-74366fb12cbb`, 106 variants — may be same style as 13MWZ.
+- UPCs in our 199-variant slice: all 12 digits (4 start with 0, 6 with 6, 69 with 7). The 11-digit UPC issue Corrinne reported likely lives in the 501 hidden variants not in our index.
+
+**Issue B — PLANNED (after Issue A): Data quality sweep:**
+- Sub-task 1: track_inventory sweep for new API-created products since S13 fix.
+- Sub-task 2: supplier_code backfill by style number.
+- Sub-task 3: Custom SKU addition for LS products missing a CUSTOM product_code.
+
+---
 
 ### 2026-05-08 (Session 17) — All S15/S16 ops items closed via Corrinne confirmation
 
@@ -1028,4 +1084,39 @@ Thank you again for the thorough review — this directly improves what Lightspe
 
 ### Mid-Session Checkpoint (2026-05-08T16:35:39Z — auto-compaction)
 **Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-08T16:39:04Z — auto-compaction)
+**Ledger stats:** 7 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 089f819]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-11T17:27:19Z — auto-compaction)
+**Ledger stats:** 11 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main b7573ae]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-11T17:31:23Z — auto-compaction)
+**Ledger stats:** 11 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main b7573ae]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-11T17:38:02Z — auto-compaction)
+**Ledger stats:** 11 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Edge function deployed: ls-upsert
+- Git commit [main b7573ae]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-11T18:26:44Z — auto-compaction)
+**Ledger stats:** 5 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
