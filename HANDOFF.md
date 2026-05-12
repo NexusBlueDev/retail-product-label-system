@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-12 (Session 20 close) — S20 work complete. Email sent to Corrinne summarizing: (1) 0013M UPC fix done (91/106, 14 errors = genuine duplicates awaiting direction), (2) 585 per-color family variants confirmed 100% clean with 0 discrepancies, (3) 36 missing variants identified, (4) ANTIQUE_WS still needs own family, (5) big Navy catch-all ready to delete. Awaiting Corrinne's reply on two questions: 0013M rename format and retail price handling during rebuild.
+2026-05-12 (Session 21 close) — S21 work complete. 0013M family cleaned (105 already renamed by Corrinne, 1 renamed by script, 14 PREWASHED_INDIGO duplicates deleted). 36 missing variants hit a confirmed LS API limitation — v2.1 POST variant-add endpoint exists but `variant_definitions` field location is undiscoverable. Delivered `docs/ls_13mwz_missing_variants_for_corrinne.csv` for Corrinne to manually add via LS UI. ANTIQUE_WS and big catch-all deletion queued next session.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -33,14 +33,15 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - Menu badge shows photo-only queue count
 
 ## In Progress
-- **S20 — 13MWZ cleanup per Corrinne's delete-rebuild request (AWAITING CORRINNE):**
-  - ✅ **0013M UPC fix:** 91/106 variants fixed (leading zero prepended). 14 errors = UPC conflicts with per-color families (those 14 are genuine duplicates — 0013M and per-color family have overlapping size grids for PREWASHED_INDIGO). Audit log: `docs/ls_0013m_upc_fix_audit.csv`. Awaiting Corrinne on: (1) rename format for 0013M, (2) whether to keep or delete the 14 duplicate-UPC variants.
-  - ✅ **Full comparison run:** `docs/ls_13mwz_full_comparison.csv` — 784 LS variants compared to spreadsheet. **0 discrepancies** in the 585 per-color family variants (supply prices and barcodes all match). Script: `docs/ls_13mwz_comparison.py`.
-  - ✅ **Per-color family status:** 10 families (BLK_CHOCLT 60, CHARGREY 61, DK_STONE 52, GB_BLEACH 56, PREWASHED_INDIGO 86, RIGID 13, SHADOW_BLK 82, SW_GLD_BKL 53, TAN 66, WHITE 56) — all already named in correct NEW Name format, supply prices correct, 12-digit UPCs, retail prices set ($38.95-$68.95). No rebuild needed for these.
-  - ⚠️ **Missing from LS (36 variants):** DK_STONE: 4, PREWASHED_INDIGO: 1, SW_GLD_BKL: 26 (mainly big/tall sizes), SHADOW_BLK: 5. Need to be created.
-  - ⚠️ **Big Navy catch-all family (c3c968b4):** Contains 56 ANTIQUE_WS (need own family), 91 RIGID (excess vs 20 in spreadsheet), ~52 duplicates of per-color families. Plan: create ANTIQUE_WS family (56 variants), delete big family entirely including ~501 hidden.
-  - ⚠️ **ANTIQUE_WS (56 variants, no per-color family):** Still in big Navy catch-all. Need new per-color family "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS".
-  - ⚠️ **91 RIGID excess:** Spreadsheet has 20 RIGID (big/tall only: sizes 29-54). Per-color family has 13. Big family has 91 extras (many in sizes not in spreadsheet). Excess 78 (= 91-13 with possible overlap) to delete.
+- **S21 — 13MWZ cleanup continued:**
+  - ✅ **0013M rename + delete:** Script `docs/ls_0013m_rename_delete.py`. Result: 105 variants already renamed by Corrinne, 1 renamed by script, 14 PREWASHED_INDIGO duplicate variants deleted. All 0013M variants now named "Cowboy Cut Original Fit - 13MWZ - NAVY". Audit: `docs/ls_0013m_rename_delete_audit.csv`.
+  - ✅ **0013M UPC fix:** 91/106 variants fixed (leading zero prepended). 14 errors = UPC conflicts with per-color families (genuine duplicates, now deleted). Audit: `docs/ls_0013m_upc_fix_audit.csv`.
+  - ✅ **Full comparison run:** `docs/ls_13mwz_full_comparison.csv` — 784 LS variants vs spreadsheet. **0 discrepancies** in the 585 per-color family variants. Script: `docs/ls_13mwz_comparison.py`.
+  - ✅ **Per-color family status:** 10 families (BLK_CHOCLT 60, CHARGREY 61, DK_STONE 52, GB_BLEACH 56, PREWASHED_INDIGO 86, RIGID 13, SHADOW_BLK 82, SW_GLD_BKL 53, TAN 66, WHITE 56) — correct names, supply prices, 12-digit UPCs, retail prices. No rebuild needed.
+  - ⚠️ **Missing 36 variants — BLOCKED (LS API limitation):** DK_STONE: 4, PREWASHED_INDIGO: 1, SW_GLD_BKL: 26, SHADOW_BLK: 5. Cannot be added via REST API — v2.1 POST `/products` variant-add endpoint exists but `variant_definitions` schema is undiscoverable (validator reports `data.variant_definitions` required, but every field name/location tried returns "Unknown field"). Corrinne must add these manually via LS POS UI. Data file: `docs/ls_13mwz_missing_variants_for_corrinne.csv` (36 rows with family, size, length, UPC, SKU, retail price, supply price).
+  - ⚠️ **Big Navy catch-all family (c3c968b4):** Contains 56 ANTIQUE_WS (need own family), 91 RIGID excess, ~52 duplicates of per-color families. Plan: create ANTIQUE_WS family first (same API blocker for variants 2-56 — see above), then delete big family entirely.
+  - ⚠️ **ANTIQUE_WS (56 variants, no per-color family):** Still in big Navy catch-all. Need new per-color family "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS" — same API blocker as above. Corrinne to create via LS UI, or wait for API resolution.
+  - ⚠️ **91 RIGID excess:** Spreadsheet has 20 RIGID. Per-color family has 13. Big family has 91 extras. Excess to delete after ANTIQUE_WS extracted.
 - **Issue B — Data quality sweep (AFTER ISSUE A):** Queued: track_inventory sweep, supplier_code backfill, Custom SKU addition.
 - **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Variant attribute order fixed S18: Color → Size → Length → Width.
 - **lightspeed_index refreshed** — 75,379 rows (April 15 catalog + May 6 Supabase index). Per-color families not in catalog (created after April 15); accessible via Supabase.
@@ -48,16 +49,14 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## Next Up
 
 ### NexusBlue — Next Session (waiting on Corrinne)
-1. **0013M rename + 14 error resolution:** After Corrinne confirms naming format, rename 0013M family and resolve the 14 UPC-conflict variants (they're genuine duplicates of PREWASHED_INDIGO per-color family).
-2. **Add missing 36 variants:** Create variants in per-color families for DK_STONE (4), PWI (1), SGB (26), SHB (5). Use same family structure/SKU pattern as existing per-color variants.
-3. **ANTIQUE_WS per-color family:** Create "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS" family, move/rebuild 56 variants with correct M-Kon-1013MWZAW-... SKUs and UPCs.
-4. **Big Navy catch-all cleanup:** Delete all 199 visible + ~501 hidden variants in c3c968b4 (after ANTIQUE_WS extracted). All non-ANTIQUE_WS content is either covered by per-color families or is excess RIGID.
+1. **Corrinne: manually add 36 missing variants via LS UI.** Data file ready: `docs/ls_13mwz_missing_variants_for_corrinne.csv`. Groups: SW_GLD_BKL (26), SHADOW_BLK (5), DK_STONE (4), PREWASHED_INDIGO (1). Each row has family name, size, length, UPC, custom SKU, retail price, supply price.
+2. **Corrinne: create ANTIQUE_WS per-color family via LS UI.** Name: "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS". 56 variants with M-Kon-1013MWZAW-{size}-{length} SKUs. (We will provide the variant list once Corrinne confirms she's ready.)
+3. **Delete big Navy catch-all (c3c968b4):** After ANTIQUE_WS is confirmed in LS, delete all visible + hidden variants in c3c968b4. Write script to enumerate and bulk-delete.
+4. **Issue B — Data quality sweep (AFTER 13MWZ cleanup):** track_inventory sweep, supplier_code backfill, Custom SKU addition.
 5. **Kids variants:** 38 kids variants (Boys 8-18 PREWASH: 24, Childrens 1-7 PREWASH: 14) — check if they exist in LS already, create if missing.
-6. **953 orphaned Storage objects** — deferred. Service role key not accepted by Storage API.
-7. **2,847 old-format SKUs** — not urgent.
-3. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
-4. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
-5. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
+6. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
+7. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
+8. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
 
 ### Current Gap Counts (as of 2026-05-06 Session 14)
 | Gap | LS | Our DB | Status |
@@ -104,9 +103,38 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 **Gotcha:** `track_inventory` defaults to `false` for all products created via API. Must be explicitly set via `{"common": {"track_inventory": true}}` on creation or in a follow-up write.
 **Gotcha:** CUSTOM product codes are globally unique across ALL LS products (including soft-deleted). Cannot assign a CUSTOM code to a product while another (even deleted) product holds it. In dedupe flows: DELETE the source product FIRST, then assign its CUSTOM code to the target.
 **Gotcha:** `tag_ids` in v2.1 PUT is a FULL ARRAY REPLACEMENT — always GET existing tag_ids and merge before sending.
+**Gotcha (S21):** `POST v2.1 /products` is a variant-add endpoint (NOT product-create). It finds the parent family by `common.name`. It requires a `variant_definitions` field (validator error: `data.variant_definitions: Array must have at least 1 items`) but every field name and location tried returns "Unknown field in payload". The correct schema for this endpoint is undiscovered. Adding variants to existing families via REST API is NOT currently possible — use LS POS UI instead.
 **Category map:** `scripts/write_categories_to_ls.py` CATEGORY_MAP (131 categories, from `GET /api/2.0/product_types`).
 
 ## Session Log
+
+### 2026-05-12 (Session 21) — 0013M cleanup done, 36 missing variants blocked by LS API
+
+**Trigger:** Corrinne's answers to two S20 blocking questions: (1) rename 0013M to "Cowboy Cut Original Fit - 13MWZ - NAVY", (2) carry retail prices from matching per-color family by size.
+
+**0013M rename + delete (`docs/ls_0013m_rename_delete.py`):**
+- Phase 1: Renamed all 106 variants in family aa01454d to "Cowboy Cut Original Fit - 13MWZ - NAVY". Result: 1 RENAMED (Corrinne had already renamed 105 via LS UI), 105 SKIP_ALREADY_CORRECT.
+- Phase 2: Deleted 14 PREWASHED_INDIGO duplicate variants (UPC conflicts from S20 UPC fix). 14 DELETED.
+- Audit log: `docs/ls_0013m_rename_delete_audit.csv`.
+
+**36 missing variants — confirmed LS API limitation:**
+- Script `docs/ls_13mwz_missing_variants.py` ran via v2.0 POST: all 36 failed with 422 "name already exists for your retailer". Expected — per-color family names already exist in LS.
+- Exhaustive investigation of v2.1 POST `/products` (the intended variant-add endpoint):
+  - `common.name` correctly resolves the parent family (no "parent not found" error)
+  - Without any other fields: validator requires `data.variant_definitions: Array must have at least 1 items`
+  - With `details: {}` only: same validator error
+  - Every field name tried for variant definitions (`variant_definitions`, `options`, `attributes`, `size`, `variant_options`, `definitions`, etc.) in every location (`common`, `details`, root, `data` wrapper) returns "Unknown field in payload"
+  - Even `details.supply_price` (which works for PUT) returns "Unknown field" for POST — the schemas are entirely different
+  - `data.variant_definitions` in the error is NOT a literal JSON key path — `data` as a key is also rejected
+  - Endpoint type hint: `intent.ProductVariantAddDetails` for the `details` object — but no fields are discoverable
+  - v2.1 POST `/products/{id}` returns "No route found" — the variant-add endpoint is collection-only
+- **Conclusion:** The v2.1 POST variant-add endpoint is undocumented or the schema is not publicly accessible. Cannot add variants to existing families via REST API.
+- **Deliverable:** `docs/ls_13mwz_missing_variants_for_corrinne.csv` — 36 rows with all data for Corrinne to manually add via LS UI.
+
+**S20 notes (completed prior session):**
+- 0013M UPC fix: 91/106 variants fixed, 14 errors = PREWASHED_INDIGO duplicates (now deleted S21).
+- 585 per-color family variants confirmed 100% clean vs spreadsheet.
+- 36 missing variants identified by comparison script.
 
 ### 2026-05-11 (Session 19) — 13MWZ Corrinne files analysis + big-family UPC fix
 
@@ -1197,3 +1225,14 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
 **Actions completed:**
 - Git commit [main 274000d]
+
+### Mid-Session Checkpoint (2026-05-12T19:09:17Z — auto-compaction)
+**Ledger stats:** 11 entries (1 decisions, 1 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 274000d]
+- Git commit [main a66f17b]
+
+### Mid-Session Checkpoint (2026-05-12T20:13:48Z — auto-compaction)
+**Ledger stats:** 9 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
