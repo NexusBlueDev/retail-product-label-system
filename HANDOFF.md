@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-11 (Session 19) — Corrinne provided `Wrangler 13MWZ.xlsx` (original import, 722 variants, corrected UPCs, NEW SKU column) + `product-export (11).xlsx` (199 currently-visible LS variants). Analysis revealed per-color families (585 variants across 10 colors) are already clean. Big-family UPC fix executed: 78 of 108 matched variants updated (56 ANTIQUE_WS + 19 SW_GLD_BKL + 3 RIGID), 30 were duplicate codes already on per-color families. 91 unmatched RIGID variants flagged for Corrinne review. 0013M confirmed same product (Cowboy Cut Original Fit Navy), 106 variants, no barcodes.
+2026-05-12 (Session 20) — Corrinne responded to S19 questions. Approved full delete-and-rebuild workflow for all 13MWZ products using the Wrangler spreadsheet as authoritative source. Key findings from S20 analysis: (1) 0013M is a SEPARATE product line from the spreadsheet (supply price $21.25 vs $29+ for PWI, odd inseams not in spreadsheet). Needs UPC leading-zero fix + rename, NOT delete-rebuild. (2) 91 RIGID are inside the big catch-all family — spreadsheet has 20 RIGID variants (sizes 29-54 big-and-tall only), extra 71 will be deleted. (3) Big Navy family confirmed as mixed catch-all with 5 color groups. (4) LS retail prices mostly $0.00 — Corrinne needs to clarify handling. Awaiting Corrinne response on: 0013M rename and retail price handling before execution.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -33,19 +33,28 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - Menu badge shows photo-only queue count
 
 ## In Progress
-- **Issue A — Wrangler 13MWZ cleanup (PARTIALLY DONE):** Per-color families (585 variants, 10 colors) are clean — correct 12-digit UPCs and M-Kon-... CUSTOM SKUs already set. Big-family UPC fix applied to 78 matched variants (56 ANTIQUE_WS + 19 SW_GLD_BKL + 3 RIGID). Remaining work: (1) **91 unmatched RIGID** variants in the big family have no entry in Corrinne's file — need her review (see `docs/ls_13mwz_unmatched_rigid.csv`). (2) **0013M family** (106 Navy variants, no barcodes) — needs UPCs added, then decision on merging into PREWASHED_INDIGO family or leaving separate. (3) **ANTIQUE_WS needs a per-color family** — 56 variants updated with UPC/CUSTOM but still in the big mixed family. (4) **~501 hidden variants** in the big 700-variant family are not accessible without LS API pagination — future cleanup pass.
-- **Issue B — Data quality sweep (AFTER ISSUE A):** Three sub-tasks queued: (1) track_inventory sweep for any new API-created products missing the flag, (2) supplier_code backfill using style number, (3) Custom SKU addition for products missing it.
-- **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Duplicate prevention active. Price sync active (v2.1 PUT `{"details": {...}}` schema confirmed working — Session 5). Variant attribute order fixed S18: Color → Size → Length → Width. Length and Width fields now accepted in UpsertRequest.
-- **lightspeed_index refreshed** — 75,379 rows loaded with new columns: family_id, variant_parent_id, supplier_id, brand_id, product_type_id. Script: `docs/ls_index_refresh.py` (caches catalog, supports --dry-run/--validate-only).
+- **S20 — 13MWZ cleanup per Corrinne's delete-rebuild request (AWAITING CORRINNE):**
+  - ✅ **0013M UPC fix:** 91/106 variants fixed (leading zero prepended). 14 errors = UPC conflicts with per-color families (those 14 are genuine duplicates — 0013M and per-color family have overlapping size grids for PREWASHED_INDIGO). Audit log: `docs/ls_0013m_upc_fix_audit.csv`. Awaiting Corrinne on: (1) rename format for 0013M, (2) whether to keep or delete the 14 duplicate-UPC variants.
+  - ✅ **Full comparison run:** `docs/ls_13mwz_full_comparison.csv` — 784 LS variants compared to spreadsheet. **0 discrepancies** in the 585 per-color family variants (supply prices and barcodes all match). Script: `docs/ls_13mwz_comparison.py`.
+  - ✅ **Per-color family status:** 10 families (BLK_CHOCLT 60, CHARGREY 61, DK_STONE 52, GB_BLEACH 56, PREWASHED_INDIGO 86, RIGID 13, SHADOW_BLK 82, SW_GLD_BKL 53, TAN 66, WHITE 56) — all already named in correct NEW Name format, supply prices correct, 12-digit UPCs, retail prices set ($38.95-$68.95). No rebuild needed for these.
+  - ⚠️ **Missing from LS (36 variants):** DK_STONE: 4, PREWASHED_INDIGO: 1, SW_GLD_BKL: 26 (mainly big/tall sizes), SHADOW_BLK: 5. Need to be created.
+  - ⚠️ **Big Navy catch-all family (c3c968b4):** Contains 56 ANTIQUE_WS (need own family), 91 RIGID (excess vs 20 in spreadsheet), ~52 duplicates of per-color families. Plan: create ANTIQUE_WS family (56 variants), delete big family entirely including ~501 hidden.
+  - ⚠️ **ANTIQUE_WS (56 variants, no per-color family):** Still in big Navy catch-all. Need new per-color family "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS".
+  - ⚠️ **91 RIGID excess:** Spreadsheet has 20 RIGID (big/tall only: sizes 29-54). Per-color family has 13. Big family has 91 extras (many in sizes not in spreadsheet). Excess 78 (= 91-13 with possible overlap) to delete.
+- **Issue B — Data quality sweep (AFTER ISSUE A):** Queued: track_inventory sweep, supplier_code backfill, Custom SKU addition.
+- **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Variant attribute order fixed S18: Color → Size → Length → Width.
+- **lightspeed_index refreshed** — 75,379 rows (April 15 catalog + May 6 Supabase index). Per-color families not in catalog (created after April 15); accessible via Supabase.
 
 ## Next Up
 
-### NexusBlue — Next Session
-1. **Issue A — Corrinne review needed:** Send her `docs/ls_13mwz_unmatched_rigid.csv` (91 RIGID variants in big family, no match in her import file — sizes 27–54). Ask: keep, update, or delete? Also ask: should the 0013M family (106 Navy, no barcodes) be merged into PREWASHED_INDIGO or left as-is?
-2. **Issue A — 0013M UPC backfill:** After Corrinne confirms, match the 106 0013M variants by size+length to PREWASHED_INDIGO entries in her file, then PUT product_codes via v2.1. Script pattern: same as `docs/ls_13mwz_bigfamily_upc_fix.py`.
-3. **Issue A — ANTIQUE_WS per-color family:** Create a new LS family for the 56 ANTIQUE_WS variants (now correctly UPCed) using the same family structure as the other per-color families.
-4. **Our duplicate families (from S18 plan):** Still needs merge+delete: 10 BLA (`3a9d0ec7`), 5 WHI (`5cccae01`), 4 DD (`948ea461`), 2 GK (`53bbfa94` + `536d640e`).
-5. **Issue B — Data quality sweep (after Issue A):** (1) track_inventory: set `{"common": {"track_inventory": true}}` for any API-created products missing the flag since S13. (2) supplier_code backfill: match products by style number to suppliers. (3) Custom SKU: identify products in LS missing a CUSTOM product_code and write their SKU.
+### NexusBlue — Next Session (waiting on Corrinne)
+1. **0013M rename + 14 error resolution:** After Corrinne confirms naming format, rename 0013M family and resolve the 14 UPC-conflict variants (they're genuine duplicates of PREWASHED_INDIGO per-color family).
+2. **Add missing 36 variants:** Create variants in per-color families for DK_STONE (4), PWI (1), SGB (26), SHB (5). Use same family structure/SKU pattern as existing per-color variants.
+3. **ANTIQUE_WS per-color family:** Create "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS" family, move/rebuild 56 variants with correct M-Kon-1013MWZAW-... SKUs and UPCs.
+4. **Big Navy catch-all cleanup:** Delete all 199 visible + ~501 hidden variants in c3c968b4 (after ANTIQUE_WS extracted). All non-ANTIQUE_WS content is either covered by per-color families or is excess RIGID.
+5. **Kids variants:** 38 kids variants (Boys 8-18 PREWASH: 24, Childrens 1-7 PREWASH: 14) — check if they exist in LS already, create if missing.
+6. **953 orphaned Storage objects** — deferred. Service role key not accepted by Storage API.
+7. **2,847 old-format SKUs** — not urgent.
 3. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
 4. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
 5. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
@@ -1146,3 +1155,15 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Actions completed:**
 - Git commit [main 43af450]
 - Git commit [main 95bdf85]
+
+### Mid-Session Checkpoint (2026-05-11T18:58:14Z — auto-compaction)
+**Ledger stats:** 15 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 43af450]
+- Git commit [main 95bdf85]
+- Git commit [main 9ed46ef]
+
+### Mid-Session Checkpoint (2026-05-12T18:15:30Z — auto-compaction)
+**Ledger stats:** 1 entries (1 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
