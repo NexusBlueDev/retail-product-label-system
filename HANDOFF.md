@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-12 (Session 20) — Corrinne responded to S19 questions. Approved full delete-and-rebuild workflow for all 13MWZ products using the Wrangler spreadsheet as authoritative source. Key findings from S20 analysis: (1) 0013M is a SEPARATE product line from the spreadsheet (supply price $21.25 vs $29+ for PWI, odd inseams not in spreadsheet). Needs UPC leading-zero fix + rename, NOT delete-rebuild. (2) 91 RIGID are inside the big catch-all family — spreadsheet has 20 RIGID variants (sizes 29-54 big-and-tall only), extra 71 will be deleted. (3) Big Navy family confirmed as mixed catch-all with 5 color groups. (4) LS retail prices mostly $0.00 — Corrinne needs to clarify handling. Awaiting Corrinne response on: 0013M rename and retail price handling before execution.
+2026-05-12 (Session 20 close) — S20 work complete. Email sent to Corrinne summarizing: (1) 0013M UPC fix done (91/106, 14 errors = genuine duplicates awaiting direction), (2) 585 per-color family variants confirmed 100% clean with 0 discrepancies, (3) 36 missing variants identified, (4) ANTIQUE_WS still needs own family, (5) big Navy catch-all ready to delete. Awaiting Corrinne's reply on two questions: 0013M rename format and retail price handling during rebuild.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -1167,3 +1167,33 @@ Thank you again for the thorough review — this directly improves what Lightspe
 ### Mid-Session Checkpoint (2026-05-12T18:15:30Z — auto-compaction)
 **Ledger stats:** 1 entries (1 decisions, 0 lessons, 0 errors, 0 actions)
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-12T18:38:16Z — auto-compaction)
+**Ledger stats:** 10 entries (1 decisions, 1 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 274000d]
+
+### Mid-Session Checkpoint (2026-05-12T18:56:58Z — auto-compaction)
+**Ledger stats:** 10 entries (1 decisions, 1 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 274000d]
+
+### Mid-Session Checkpoint (2026-05-12T19:00:03Z — auto-compaction)
+**Ledger stats:** 10 entries (1 decisions, 1 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 274000d]
+
+### Mid-Session Checkpoint (2026-05-12T19:01:25Z — auto-compaction)
+**Ledger stats:** 10 entries (1 decisions, 1 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 274000d]
+
+### Mid-Session Checkpoint (2026-05-12T19:04:08Z — auto-compaction)
+**Ledger stats:** 10 entries (1 decisions, 1 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 274000d]
