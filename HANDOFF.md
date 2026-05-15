@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-15 (Session 23) — UPC audit complete. Corrinne requested a full scan of LS for UPC codes that are not 12 or 13 digits. Fresh live fetch of all 77,398 LS variants. Found 3,627 variants with bad UPCs (3,611 are 11-digit — leading zero dropped on import; 16 are other lengths). Output: `docs/ls_upc_audit.csv`. Script: `docs/ls_upc_audit.py`. Waiting for Corrinne to review and return corrected spreadsheet.
+2026-05-15 (Session 23 close) — UPC audit delivered. Fresh live fetch of 77,398 LS variants found 3,627 with bad UPCs (3,611 are 11-digit; 16 other). Output: `docs/ls_upc_audit.csv`. Script: `docs/ls_upc_audit.py`. Both emails sent to Corrinne via Microsoft Graph (bill@nexusblue.io): (1) UPC audit CSV, (2) 13MWZ open items with missing-variants CSV attached. Waiting on 3 responses from Corrinne. Email method going forward: always use Microsoft Graph, not SendGrid.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -1276,3 +1276,33 @@ Thank you again for the thorough review — this directly improves what Lightspe
 ### Mid-Session Checkpoint (2026-05-15T16:21:22Z — auto-compaction)
 **Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-15T16:28:30Z — auto-compaction)
+**Ledger stats:** 1 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main b63945a]
+
+### Mid-Session Checkpoint (2026-05-15T18:36:31Z — auto-compaction)
+**Ledger stats:** 1 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main b63945a]
+
+### Mid-Session Checkpoint (2026-05-15T18:37:24Z — auto-compaction)
+**Ledger stats:** 1 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main b63945a]
+
+### Mid-Session Checkpoint (2026-05-15T18:39:51Z — auto-compaction)
+**Ledger stats:** 1 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main b63945a]
+
+### Mid-Session Checkpoint (2026-05-15T18:41:35Z — auto-compaction)
+**Ledger stats:** 1 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main b63945a]
