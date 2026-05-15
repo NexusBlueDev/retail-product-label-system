@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-12 (Session 21 close) — S21 work complete. 0013M family cleaned (105 already renamed by Corrinne, 1 renamed by script, 14 PREWASHED_INDIGO duplicates deleted). 36 missing variants hit a confirmed LS API limitation — v2.1 POST variant-add endpoint exists but `variant_definitions` field location is undiscoverable. Delivered `docs/ls_13mwz_missing_variants_for_corrinne.csv` for Corrinne to manually add via LS UI. ANTIQUE_WS and big catch-all deletion queued next session.
+2026-05-15 (Session 23) — UPC audit complete. Corrinne requested a full scan of LS for UPC codes that are not 12 or 13 digits. Fresh live fetch of all 77,398 LS variants. Found 3,627 variants with bad UPCs (3,611 are 11-digit — leading zero dropped on import; 16 are other lengths). Output: `docs/ls_upc_audit.csv`. Script: `docs/ls_upc_audit.py`. Waiting for Corrinne to review and return corrected spreadsheet.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -33,6 +33,11 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - Menu badge shows photo-only queue count
 
 ## In Progress
+- **S23 — UPC audit (Corrinne request):**
+  - ✅ **Full UPC audit:** Fresh live fetch of all 77,398 LS variants. 3,627 found with non-12/13-digit UPCs. 3,611 are 11-digit (leading zero dropped on import). 16 are other lengths (7, 8, 9, 10 digit, or contain non-digit chars). Script: `docs/ls_upc_audit.py`. Output: `docs/ls_upc_audit.csv`.
+  - ⏳ **Waiting on Corrinne:** She will review the CSV, make corrections, and return the updated sheet. We then apply changes via LS API.
+  - **Note on retail price column:** 92.7% of bad-UPC rows show $0 retail price — this is accurate in LS (mostly Wrangler/Kontoor import products that never had retail prices set). Not a script error.
+
 - **S21 — 13MWZ cleanup continued:**
   - ✅ **0013M rename + delete:** Script `docs/ls_0013m_rename_delete.py`. Result: 105 variants already renamed by Corrinne, 1 renamed by script, 14 PREWASHED_INDIGO duplicate variants deleted. All 0013M variants now named "Cowboy Cut Original Fit - 13MWZ - NAVY". Audit: `docs/ls_0013m_rename_delete_audit.csv`.
   - ✅ **0013M UPC fix:** 91/106 variants fixed (leading zero prepended). 14 errors = UPC conflicts with per-color families (genuine duplicates, now deleted). Audit: `docs/ls_0013m_upc_fix_audit.csv`.
@@ -49,6 +54,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## Next Up
 
 ### NexusBlue — Next Session (waiting on Corrinne)
+0. **UPC corrections:** Corrinne reviews `docs/ls_upc_audit.csv`, corrects UPC values, returns updated sheet. We apply via LS API (prepend leading zero where 11-digit, fix others manually). ~3,627 variants affected.
 1. **Corrinne: manually add 36 missing variants via LS UI.** Data file ready: `docs/ls_13mwz_missing_variants_for_corrinne.csv`. Groups: SW_GLD_BKL (26), SHADOW_BLK (5), DK_STONE (4), PREWASHED_INDIGO (1). Each row has family name, size, length, UPC, custom SKU, retail price, supply price.
 2. **Corrinne: create ANTIQUE_WS per-color family via LS UI.** Name: "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS". 56 variants with M-Kon-1013MWZAW-{size}-{length} SKUs. (We will provide the variant list once Corrinne confirms she's ready.)
 3. **Delete big Navy catch-all (c3c968b4):** After ANTIQUE_WS is confirmed in LS, delete all visible + hidden variants in c3c968b4. Write script to enumerate and bulk-delete.
@@ -1259,4 +1265,14 @@ Thank you again for the thorough review — this directly improves what Lightspe
 
 ### Mid-Session Checkpoint (2026-05-12T21:18:20Z — auto-compaction)
 **Ledger stats:** 2 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+
+### Mid-Session Checkpoint (2026-05-12T21:22:52Z — auto-compaction)
+**Ledger stats:** 3 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 654fcd3]
+
+### Mid-Session Checkpoint (2026-05-15T16:21:22Z — auto-compaction)
+**Ledger stats:** 0 entries (0 decisions, 0 lessons, 0 errors, 0 actions)
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
