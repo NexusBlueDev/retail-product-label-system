@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-15 (Session 23 close) — UPC audit delivered. Fresh live fetch of 77,398 LS variants found 3,627 with bad UPCs (3,611 are 11-digit; 16 other). Output: `docs/ls_upc_audit.csv`. Script: `docs/ls_upc_audit.py`. Both emails sent to Corrinne via Microsoft Graph (bill@nexusblue.io): (1) UPC audit CSV, (2) 13MWZ open items with missing-variants CSV attached. Waiting on 3 responses from Corrinne. Email method going forward: always use Microsoft Graph, not SendGrid.
+2026-05-15 (Session 24) — Corrinne responded to UPC audit with corrected sheet. UPC fix running now in background (PID 2777281, ~3,627 variants, ~75 min remaining as of 20:16 UTC). Bracket/paren names report generated (4,374 variants) and emailed. Completion handler (PID 2787724) will auto-email error log when fix finishes.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -33,10 +33,12 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - Menu badge shows photo-only queue count
 
 ## In Progress
-- **S23 — UPC audit (Corrinne request):**
-  - ✅ **Full UPC audit:** Fresh live fetch of all 77,398 LS variants. 3,627 found with non-12/13-digit UPCs. 3,611 are 11-digit (leading zero dropped on import). 16 are other lengths (7, 8, 9, 10 digit, or contain non-digit chars). Script: `docs/ls_upc_audit.py`. Output: `docs/ls_upc_audit.csv`.
-  - ⏳ **Waiting on Corrinne:** She will review the CSV, make corrections, and return the updated sheet. We then apply changes via LS API.
-  - **Note on retail price column:** 92.7% of bad-UPC rows show $0 retail price — this is accurate in LS (mostly Wrangler/Kontoor import products that never had retail prices set). Not a script error.
+- **S24 — UPC fix + bracket names (Corrinne's S23 responses received):**
+  - ✅ **Corrinne returned corrected UPC sheet** (`docs/ls_upc_audit-response.csv`). 3,611 have valid NEW UPC; 16 have no NEW UPC (clear the UPC field); 36 had corrupted NEW UPC (Excel formatted retail_price + UPC as a decimal — auto-corrected by prepending "0" to original 11-digit UPC).
+  - ⏳ **UPC fix running:** `docs/ls_upc_fix.py` applying corrections via LS API v2.1 PUT. Background process PID 2777281, started 20:07 UTC. ~3,627 variants. Some 422 "UPC already exists" errors (~19 seen in first 300 rows). Completion handler will auto-email error log to Corrinne when done.
+  - ✅ **Bracket/paren names report sent:** `docs/ls_bracket_names.py` found 4,374 variants with brackets/parens. 3,632 are genuine "SKU in name" cases. 225 have automated match pairs. Full report + pairs emailed to Corrinne at 20:14 UTC. Awaiting her review and guidance on merge workflow.
+
+- **S23 — 13MWZ / Corrinne open items (3 still waiting):**
 
 - **S21 — 13MWZ cleanup continued:**
   - ✅ **0013M rename + delete:** Script `docs/ls_0013m_rename_delete.py`. Result: 105 variants already renamed by Corrinne, 1 renamed by script, 14 PREWASHED_INDIGO duplicate variants deleted. All 0013M variants now named "Cowboy Cut Original Fit - 13MWZ - NAVY". Audit: `docs/ls_0013m_rename_delete_audit.csv`.
@@ -54,7 +56,8 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## Next Up
 
 ### NexusBlue — Next Session (waiting on Corrinne)
-0. **UPC corrections:** Corrinne reviews `docs/ls_upc_audit.csv`, corrects UPC values, returns updated sheet. We apply via LS API (prepend leading zero where 11-digit, fix others manually). ~3,627 variants affected.
+0. **UPC fix follow-up:** Fix running in background. On completion, error log emailed to Corrinne automatically (`docs/await_upc_fix_and_email.sh`). Next: review errors, likely duplicates to delete. Script: `docs/ls_upc_fix.py`. Error log: `docs/ls_upc_fix_errors.csv` (written when fix completes). Note: 36 rows had Excel-corrupted NEW UPC (retail_price prefix) — auto-corrected.
+0b. **Bracket/paren name merge:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). She needs to confirm: (1) are the 225 auto-matches correct? (2) should we run a merge-and-delete script? (3) what about the remaining ~3,407 unmatched SKU-in-name variants?
 1. **Corrinne: manually add 36 missing variants via LS UI.** Data file ready: `docs/ls_13mwz_missing_variants_for_corrinne.csv`. Groups: SW_GLD_BKL (26), SHADOW_BLK (5), DK_STONE (4), PREWASHED_INDIGO (1). Each row has family name, size, length, UPC, custom SKU, retail price, supply price.
 2. **Corrinne: create ANTIQUE_WS per-color family via LS UI.** Name: "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS". 56 variants with M-Kon-1013MWZAW-{size}-{length} SKUs. (We will provide the variant list once Corrinne confirms she's ready.)
 3. **Delete big Navy catch-all (c3c968b4):** After ANTIQUE_WS is confirmed in LS, delete all visible + hidden variants in c3c968b4. Write script to enumerate and bulk-delete.
@@ -1306,3 +1309,10 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
 **Actions completed:**
 - Git commit [main b63945a]
+
+### Mid-Session Checkpoint (2026-05-15T18:43:12Z — auto-compaction)
+**Ledger stats:** 4 entries (1 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main b63945a]
+- Git commit [main 844bb77]
