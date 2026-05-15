@@ -23,7 +23,7 @@ ENV_FILE = NEXUSBLUE_WEBSITE / ".env.local"
 DOCS = Path("docs")
 
 SENDER = "bill@nexusblue.io"
-TO = "corrinne.torpey@nexusblue.io"
+TO = "corrinne@nexusblue.io"
 CC = "bill@nexusblue.io"
 
 GRAPH_TOKEN_URL = "https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"

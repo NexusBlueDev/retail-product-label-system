@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-15 (Session 24) — Corrinne responded to UPC audit with corrected sheet. UPC fix running now in background (PID 2777281, ~3,627 variants, ~75 min remaining as of 20:16 UTC). Bracket/paren names report generated (4,374 variants) and emailed. Completion handler (PID 2787724) will auto-email error log when fix finishes.
+2026-05-15 (Session 24 close) — UPC fix complete: 3,566 OK, 61 errors (duplicate UPC conflicts). Error log (`docs/ls_upc_fix_errors.csv`, 61 rows) emailed to corrinne@nexusblue.io. Bracket/paren names report (4,374 variants, 225 match pairs) emailed. Awaiting Corrinne on both. Corrinne's correct email confirmed: corrinne@nexusblue.io.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -35,7 +35,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## In Progress
 - **S24 — UPC fix + bracket names (Corrinne's S23 responses received):**
   - ✅ **Corrinne returned corrected UPC sheet** (`docs/ls_upc_audit-response.csv`). 3,611 have valid NEW UPC; 16 have no NEW UPC (clear the UPC field); 36 had corrupted NEW UPC (Excel formatted retail_price + UPC as a decimal — auto-corrected by prepending "0" to original 11-digit UPC).
-  - ⏳ **UPC fix running:** `docs/ls_upc_fix.py` applying corrections via LS API v2.1 PUT. Background process PID 2777281, started 20:07 UTC. ~3,627 variants. Some 422 "UPC already exists" errors (~19 seen in first 300 rows). Completion handler will auto-email error log to Corrinne when done.
+  - ✅ **UPC fix complete:** `docs/ls_upc_fix.py` finished 21:36 UTC. 3,566 OK, 61 errors (422 "UPC already exists" — corrected UPC already on another variant). Error log: `docs/ls_upc_fix_errors.csv` (61 rows). Auto-emailed to corrinne@nexusblue.io.
   - ✅ **Bracket/paren names report sent:** `docs/ls_bracket_names.py` found 4,374 variants with brackets/parens. 3,632 are genuine "SKU in name" cases. 225 have automated match pairs. Full report + pairs emailed to Corrinne at 20:14 UTC. Awaiting her review and guidance on merge workflow.
 
 - **S23 — 13MWZ / Corrinne open items (3 still waiting):**
@@ -56,7 +56,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## Next Up
 
 ### NexusBlue — Next Session (waiting on Corrinne)
-0. **UPC fix follow-up:** Fix running in background. On completion, error log emailed to Corrinne automatically (`docs/await_upc_fix_and_email.sh`). Next: review errors, likely duplicates to delete. Script: `docs/ls_upc_fix.py`. Error log: `docs/ls_upc_fix_errors.csv` (written when fix completes). Note: 36 rows had Excel-corrupted NEW UPC (retail_price prefix) — auto-corrected.
+0. **UPC fix errors (61 variants):** Error log at `docs/ls_upc_fix_errors.csv`, emailed to Corrinne. Each error = the corrected 12-digit UPC is already on another LS variant (likely a duplicate import). Awaiting Corrinne's guidance — most will probably be duplicates to delete. Note: 36 rows had Excel-corrupted NEW UPC (retail_price prefix merged into UPC cell) — auto-corrected by prepending "0" to original 11-digit UPC.
 0b. **Bracket/paren name merge:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). She needs to confirm: (1) are the 225 auto-matches correct? (2) should we run a merge-and-delete script? (3) what about the remaining ~3,407 unmatched SKU-in-name variants?
 1. **Corrinne: manually add 36 missing variants via LS UI.** Data file ready: `docs/ls_13mwz_missing_variants_for_corrinne.csv`. Groups: SW_GLD_BKL (26), SHADOW_BLK (5), DK_STONE (4), PREWASHED_INDIGO (1). Each row has family name, size, length, UPC, custom SKU, retail price, supply price.
 2. **Corrinne: create ANTIQUE_WS per-color family via LS UI.** Name: "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS". 56 variants with M-Kon-1013MWZAW-{size}-{length} SKUs. (We will provide the variant list once Corrinne confirms she's ready.)
@@ -1316,3 +1316,31 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Actions completed:**
 - Git commit [main b63945a]
 - Git commit [main 844bb77]
+
+### Mid-Session Checkpoint (2026-05-15T20:18:54Z — auto-compaction)
+**Ledger stats:** 2 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main cf59137]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-15T21:15:04Z — auto-compaction)
+**Ledger stats:** 2 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main cf59137]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-15T21:19:54Z — auto-compaction)
+**Ledger stats:** 2 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main cf59137]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-15T21:20:41Z — auto-compaction)
+**Ledger stats:** 2 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main cf59137]
+- Git push to main
