@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-18 (Session 25) — Items 1+2 verified, UPC re-audit complete (61/61 resolved), RIGID catch-all cleanup done (44 old-format deleted, 2 CUSTOM codes fixed). RIGID family now has 17 correct M-Kon variants. 3 missing RIGID sizes need Corrinne (48-32, 50-32, 52-32). Next: bracket/paren name merge (awaiting Corrinne), then Issue B data quality sweep.
+2026-05-18 (Session 26) — Issue B supplier backfill complete: 122 LS products assigned supplier (Kontoor, Ariat, Cinch/Miller, M&F Western, Trenditions, Scully, Saddle Barn, Hooey, BH Shoe, Jacks, et al.). track_inventory covered by S13 + ls-upsert. Custom SKU already present for all linked products. Issue B done. Awaiting Corrinne: bracket/paren review + 3 RIGID sizes.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -52,7 +52,10 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - ✅ **ANTIQUE_WS per-color family** — Corrinne created via LS UI (confirmed S25, 56 variants).
   - ⚠️ **Big Navy catch-all family (c3c968b4):** ANTIQUE_WS extracted — this family now only contains RIGID excess and per-color duplicates. Ready to delete. Script needed: enumerate all variants in c3c968b4 and bulk-delete.
   - ⚠️ **91 RIGID excess:** Spreadsheet has 20 RIGID. Per-color family has 13. Big catch-all has extras. Delete after catch-all audit.
-- **Issue B — Data quality sweep (AFTER ISSUE A):** Queued: track_inventory sweep, supplier_code backfill, Custom SKU addition.
+- **Issue B — Data quality sweep — COMPLETE (S26):**
+  - ✅ **track_inventory:** Set for 5,002 products in S13; ls-upsert sets it on creation since then. No sweep needed.
+  - ✅ **Supplier backfill:** 122 products assigned supplier via `docs/ls_issue_b_supplier_backfill.py`. Log: `docs/ls_issue_b_supplier_backfill_log.csv`. Remaining 104 skipped (Generic/Tucker/Cripple Creek — no confident LS supplier mapping). 437 have no supplier_name in our DB — cannot backfill.
+  - ✅ **Custom SKU addition:** All 1,945 linked products already have CUSTOM product_code in LS. No action needed.
 - **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Variant attribute order fixed S18: Color → Size → Length → Width.
 - **lightspeed_index refreshed** — 75,379 rows (April 15 catalog + May 6 Supabase index). Per-color families not in catalog (created after April 15); accessible via Supabase.
 
@@ -61,7 +64,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ### NexusBlue — Next Session
 1. **Corrinne: add 3 missing RIGID sizes via LS UI** under "COWBOY CUT JEAN* ORIGINAL FIT RIGID": Size 48-32 (SKU: M-Kon-1013MWZXS-48-32, UPC: 051071393225), 50-32 (M-Kon-1013MWZXS-50-32, 051071393249), 52-32 (M-Kon-1013MWZXS-52-32, 051071393263). Supply price $20.50 each.
 1b. **Bracket/paren name merge:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). Three questions for Corrinne: (1) are the 225 auto-matches correct? (2) run merge-and-delete script? (3) what to do with ~3,407 unmatched SKU-in-name variants?
-2. **Issue B — Data quality sweep:** track_inventory sweep, supplier_code backfill, Custom SKU addition. 13MWZ cleanup is now complete (RIGID clean, catch-all gone).
+2. ✅ **Issue B — Data quality sweep: COMPLETE.** All three sub-tasks done (see In Progress section).
 5. **Kids variants:** 38 kids variants (Boys 8-18 PREWASH: 24, Childrens 1-7 PREWASH: 14) — check if they exist in LS already, create if missing.
 6. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
 7. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
@@ -1359,3 +1362,24 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
 **Actions completed:**
 - Git commit [main 78c7345]
+
+### Mid-Session Checkpoint (2026-05-18T12:23:33Z — auto-compaction)
+**Ledger stats:** 7 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+
+### Mid-Session Checkpoint (2026-05-18T12:26:35Z — auto-compaction)
+**Ledger stats:** 7 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+
+### Mid-Session Checkpoint (2026-05-18T12:29:08Z — auto-compaction)
+**Ledger stats:** 7 entries (0 decisions, 0 lessons, 0 errors, 2 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
