@@ -1,7 +1,7 @@
 {
-  "run_at": "2026-05-04T03:20:08.425193+00:00",
-  "ls_total": 77769,
-  "our_enhanced_complete": 1370,
+  "run_at": "2026-05-18T13:28:27.233469+00:00",
+  "ls_total": 77349,
+  "our_enhanced_complete": 1593,
   "missing_from_ls": [
     {
       "name": "10X Shantung Hat",
@@ -133,55 +133,55 @@
       "name": "Duplicate",
       "sku": null,
       "barcode": null,
-      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
-    },
-    {
-      "name": "Duplicate",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
-    },
-    {
-      "name": "Duplicate",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
-    },
-    {
-      "name": "Duplicate",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
-    },
-    {
-      "name": "Duplicate",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
-    },
-    {
-      "name": "Duplicate",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
-    },
-    {
-      "name": "Duplicate",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
-    },
-    {
-      "name": "Duplicate",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
-    },
-    {
-      "name": "Duplicate",
-      "sku": null,
-      "barcode": null,
       "our_ls_id": null
+    },
+    {
+      "name": "Duplicate",
+      "sku": null,
+      "barcode": null,
+      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
+    },
+    {
+      "name": "Duplicate",
+      "sku": null,
+      "barcode": null,
+      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
+    },
+    {
+      "name": "Duplicate",
+      "sku": null,
+      "barcode": null,
+      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
+    },
+    {
+      "name": "Duplicate",
+      "sku": null,
+      "barcode": null,
+      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
+    },
+    {
+      "name": "Duplicate",
+      "sku": null,
+      "barcode": null,
+      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
+    },
+    {
+      "name": "Duplicate",
+      "sku": null,
+      "barcode": null,
+      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
+    },
+    {
+      "name": "Duplicate",
+      "sku": null,
+      "barcode": null,
+      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
+    },
+    {
+      "name": "Duplicate",
+      "sku": null,
+      "barcode": null,
+      "our_ls_id": "e4fc231f-029f-4ca9-8d31-14354dc4368c"
     },
     {
       "name": "Duplicate",
@@ -563,7 +563,7 @@
     },
     {
       "name": "Duplicate x3",
-      "sku": "A-GEN-464105",
+      "sku": "A-GEN-210995",
       "barcode": null,
       "our_ls_id": "5fde358b-d598-4c6d-ab1b-28fce88bc065"
     },
@@ -575,7 +575,7 @@
     },
     {
       "name": "Duplicate x3",
-      "sku": "A-GEN-210995",
+      "sku": "A-GEN-464105",
       "barcode": null,
       "our_ls_id": "5fde358b-d598-4c6d-ab1b-28fce88bc065"
     },
@@ -658,1864 +658,10 @@
       "our_ls_id": null
     },
     {
-      "name": "NA",
-      "sku": null,
+      "name": "Mustang Spur Tie Down",
+      "sku": "A-GEN-9065-BLA",
       "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
-    },
-    {
-      "name": "NA",
-      "sku": null,
-      "barcode": null,
-      "our_ls_id": null
+      "our_ls_id": "1c8f19bf-988c-4444-b034-fedbe8ed8796"
     },
     {
       "name": "NA",
@@ -2630,6 +776,12 @@
       "sku": null,
       "barcode": null,
       "our_ls_id": null
+    },
+    {
+      "name": "Pay Window Hat",
+      "sku": "A-RHE-RWPYWD-90425373-GRA-7-3/8",
+      "barcode": "88338390425373",
+      "our_ls_id": "5f69a870-636e-4104-ba8a-fcacb5231936"
     },
     {
       "name": "Quic Shade - Equine Sunscreen & Highlighter",
@@ -2854,18 +1006,56 @@
       "our_ls_id": null
     }
   ],
-  "stale_ls_ids": [],
+  "stale_ls_ids": [
+    {
+      "name": "Floral Tooled Embroidered",
+      "sku": "M-SSI-P634-WBK-XL",
+      "stale_id": "1287fd33-bf66-4abe-9e57-01d69bb14924",
+      "barcode_match_id": "2e499bdb-c980-4fe3-939f-3562551d9d74"
+    },
+    {
+      "name": "Saddle Oil",
+      "sku": null,
+      "stale_id": "b0b730c9-7fbd-4152-8f67-600bcd513bd1",
+      "barcode_match_id": "7945331f-7202-4b4b-b3b1-1e21673a4da1"
+    },
+    {
+      "name": "SMAluminum Mane Comb",
+      "sku": "A-GEN-244090-ALU",
+      "stale_id": "7f9b7421-289a-4c64-bb4a-1f204ed8b6ba",
+      "barcode_match_id": "98160813-7489-4057-9a29-dd4a2188af0d"
+    },
+    {
+      "name": "Wrangler Long Sleeve Flannel Shirt",
+      "sku": "M-KON-1075098AA-PLA-3XT",
+      "stale_id": "9d08bd80-dcc8-4d6b-981f-117d6ce67325",
+      "barcode_match_id": "1e158dd9-290a-427d-bd80-4c646020c6e3"
+    },
+    {
+      "name": "Wrangler Men\u2019s Long Sleeve Dobby Strip Shirt",
+      "sku": "M-KON-1075740WN-RED-2XLT",
+      "stale_id": "6d52efa7-1d35-48ba-8d8e-e01a8d62054c",
+      "barcode_match_id": "cf75c434-546d-43a3-a36e-841a0f48e5ad"
+    }
+  ],
   "price_mismatches": [
     {
+      "name": "1 1/2\" Tan Harness Creased Edge",
+      "sku": "A-GEN-D1147-42",
+      "our_price": 50.95,
+      "ls_price": 52.0,
+      "diff": -1.05
+    },
+    {
       "name": "3D Bi-Fold Wallet",
-      "sku": "A-GEN-D250008502-BIFOLD",
+      "sku": "M-GEN-D250008502-BRO-BIFOLD",
       "our_price": 47.95,
       "ls_price": 50.95,
       "diff": -3.0
     },
     {
       "name": "3D Bi-Fold Wallet",
-      "sku": "M-GEN-D250008502-BRO-BIFOLD",
+      "sku": "A-GEN-D250008502-BIFOLD",
       "our_price": 47.95,
       "ls_price": 50.95,
       "diff": -3.0
@@ -2876,48 +1066,6 @@
       "our_price": 53.95,
       "ls_price": 55.0,
       "diff": -1.05
-    },
-    {
-      "name": "ANITA LEATHER BOOT",
-      "sku": "W-DPC-5602-TAN-10-M",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "ANITA LEATHER BOOT",
-      "sku": "W-DPC-5602-TAN-8-M",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "ANITA LEATHER BOOT",
-      "sku": "W-DPC-5602-TAN-9.5-M",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "ANITA LEATHER BOOT",
-      "sku": "W-DPC-5602-TAN-7.5-M",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "ANITA LEATHER BOOT",
-      "sku": "W-DPC-5602-TAN-8.5-M",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "ANITA LEATHER BOOT",
-      "sku": "W-DPC-5602-TAN-7-M",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
     },
     {
       "name": "Ariat Casanova Sling Brown",
@@ -2941,123 +1089,46 @@
       "diff": -1.05
     },
     {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-13-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-11.5-EW",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-10.5-EW",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-9-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-9.5-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-11.5-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-11-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-12-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-10-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-10.5-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-12-EW",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-13-EW",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-10-EW",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-9.5-EW",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-9-EW",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
-      "name": "BIRCHWOOD LEATHER BOOT",
-      "sku": "M-DPC-68458-BLA-8.5-D",
-      "our_price": 159.95,
-      "ls_price": 164.95,
-      "diff": -5.0
-    },
-    {
       "name": "Blazin Roxx Earring 5 Pc Set Gold",
       "sku": "W-MFW-301001535",
       "our_price": 23.95,
       "ls_price": 26.0,
       "diff": -2.05
+    },
+    {
+      "name": "BOYS L/S PRINT 4/26",
+      "sku": "K-MIN-MTW7060413-WHI-L/12",
+      "our_price": 41.95,
+      "ls_price": 49.95,
+      "diff": -8.0
+    },
+    {
+      "name": "BOYS L/S PRINT 4/26",
+      "sku": "K-MIN-MTW7060413-WHI-XS/4-5",
+      "our_price": 41.95,
+      "ls_price": 49.95,
+      "diff": -8.0
+    },
+    {
+      "name": "BOYS L/S PRINT 4/26",
+      "sku": "K-MIN-MTW7060413-WHI-S/6-8",
+      "our_price": 41.95,
+      "ls_price": 49.95,
+      "diff": -8.0
+    },
+    {
+      "name": "BOYS L/S PRINT 4/26",
+      "sku": "K-MIN-MTW7060413-WHI-M/10",
+      "our_price": 41.95,
+      "ls_price": 49.95,
+      "diff": -8.0
+    },
+    {
+      "name": "BOYS L/S PRINT 4/26",
+      "sku": "K-MIN-MTW7060413-WHI-XL/14",
+      "our_price": 41.95,
+      "ls_price": 49.95,
+      "diff": -8.0
     },
     {
       "name": "BR HairTieBarbwireCncho",
@@ -3124,7 +1195,7 @@
     },
     {
       "name": "CALLOWAY",
-      "sku": "W-SMB-6517-WHI-10-B",
+      "sku": "W-SMB-6517-WHI-9-B",
       "our_price": 118.95,
       "ls_price": 124.0,
       "diff": -5.05
@@ -3132,13 +1203,6 @@
     {
       "name": "CALLOWAY",
       "sku": "W-SMB-6517-WHI-11-B",
-      "our_price": 118.95,
-      "ls_price": 124.0,
-      "diff": -5.05
-    },
-    {
-      "name": "CALLOWAY",
-      "sku": "W-SMB-6517-WHI-9-B",
       "our_price": 118.95,
       "ls_price": 124.0,
       "diff": -5.05
@@ -3166,10 +1230,31 @@
     },
     {
       "name": "CALLOWAY",
+      "sku": "W-SMB-6517-WHI-10-B",
+      "our_price": 118.95,
+      "ls_price": 124.0,
+      "diff": -5.05
+    },
+    {
+      "name": "CALLOWAY",
       "sku": "W-SMB-6517-WHI-7-B",
       "our_price": 118.95,
       "ls_price": 124.0,
       "diff": -5.05
+    },
+    {
+      "name": "Cinch Shirt",
+      "sku": "K-MIN-MTW7060413-WHI-XXL",
+      "our_price": 41.95,
+      "ls_price": 49.95,
+      "diff": -8.0
+    },
+    {
+      "name": "Circle S Ranch Pant",
+      "sku": "M-GEN-CP4793QR-41-42",
+      "our_price": 52.95,
+      "ls_price": 89.95,
+      "diff": -37.0
     },
     {
       "name": "Circle S Ranch Pant",
@@ -3180,10 +1265,10 @@
     },
     {
       "name": "Circle S Ranch Pant",
-      "sku": "M-GEN-CP4776-10-44",
-      "our_price": 42.95,
+      "sku": "M-GEN-CP4776-40-40",
+      "our_price": 56.95,
       "ls_price": 89.95,
-      "diff": -47.0
+      "diff": -33.0
     },
     {
       "name": "Circle S Ranch Pant",
@@ -3194,17 +1279,10 @@
     },
     {
       "name": "Circle S Ranch Pant",
-      "sku": "M-GEN-CP4776-40-40",
-      "our_price": 56.95,
+      "sku": "M-GEN-CP4776-10-44",
+      "our_price": 42.95,
       "ls_price": 89.95,
-      "diff": -33.0
-    },
-    {
-      "name": "Circle S Ranch Pant",
-      "sku": "M-GEN-CP4793QR-41-42",
-      "our_price": 52.95,
-      "ls_price": 89.95,
-      "diff": -37.0
+      "diff": -47.0
     },
     {
       "name": "CLARABELLE LEATHER BOOT",
@@ -3215,24 +1293,31 @@
     },
     {
       "name": "Crius Insulated Vest",
-      "sku": "W-ARI-10032984-BLA-1X",
-      "our_price": 84.95,
-      "ls_price": 62.97,
-      "diff": 21.98
-    },
-    {
-      "name": "Crius Insulated Vest",
       "sku": "W-ARI-10032984-BLA-XXL",
       "our_price": 84.95,
       "ls_price": 62.97,
       "diff": 21.98
     },
     {
-      "name": "Generic Product",
-      "sku": null,
-      "our_price": 24.95,
-      "ls_price": 21.95,
-      "diff": 3.0
+      "name": "Crius Insulated Vest",
+      "sku": "W-ARI-10032984-BLA-1X",
+      "our_price": 84.95,
+      "ls_price": 62.97,
+      "diff": 21.98
+    },
+    {
+      "name": "Cruel Denim Shirt",
+      "sku": "W-CRU-CTK7510003-LIG-S",
+      "our_price": 44.95,
+      "ls_price": 59.95,
+      "diff": -15.0
+    },
+    {
+      "name": "Eqyube Essentials Cool Leg Guards",
+      "sku": "A-GEN-BLA-PONY",
+      "our_price": 10.97,
+      "ls_price": 49.95,
+      "diff": -38.98
     },
     {
       "name": "Generic Product",
@@ -3242,10 +1327,10 @@
       "diff": 3.0
     },
     {
-      "name": "Gift Bag",
-      "sku": "A-GEN-724-BRO",
-      "our_price": 4.95,
-      "ls_price": 1.95,
+      "name": "Generic Product",
+      "sku": null,
+      "our_price": 24.95,
+      "ls_price": 21.95,
       "diff": 3.0
     },
     {
@@ -3254,6 +1339,13 @@
       "our_price": 1.94,
       "ls_price": 10.0,
       "diff": -8.06
+    },
+    {
+      "name": "Gift Bag",
+      "sku": "A-GEN-724-BRO",
+      "our_price": 4.95,
+      "ls_price": 1.95,
+      "diff": 3.0
     },
     {
       "name": "Ivory Skies Beaded Bracelet",
@@ -3271,73 +1363,10 @@
     },
     {
       "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-9-EW",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-12-D",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-14-D",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-11-EW",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-15-D",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-11.5-EW",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-114-EW",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-13-D",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-7.5-D",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-10.5-D",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
+      "sku": "M-DPC-7812-TAN-9.5-EW",
+      "our_price": 169.95,
+      "ls_price": 164.95,
+      "diff": 5.0
     },
     {
       "name": "KANE LEATHER BOOT",
@@ -3347,29 +1376,15 @@
       "diff": -5.0
     },
     {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-13-EW",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
-      "name": "KANE LEATHER BOOT",
-      "sku": "M-DPC-7812-TAN-10-EW",
-      "our_price": 164.95,
-      "ls_price": 169.95,
-      "diff": -5.0
-    },
-    {
       "name": "KnfShthUSA FlgBR",
-      "sku": null,
+      "sku": "A-BHS-1805608",
       "our_price": 27.95,
       "ls_price": 29.0,
       "diff": -1.05
     },
     {
       "name": "KnfShthUSA FlgBR",
-      "sku": "A-BHS-1805608",
+      "sku": null,
       "our_price": 27.95,
       "ls_price": 29.0,
       "diff": -1.05
@@ -3410,6 +1425,97 @@
       "diff": 3.0
     },
     {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106072-ROY-XXL",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106080-WHI-S",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106080-WHI-M",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106080-WHI-L",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106080-WHI-XL",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106072-ROY-L",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW106072X-ROY-3XL",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106080-WHI-XXL",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106072-ROY-S",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106072-ROY-M",
+      "our_price": 69.95,
+      "ls_price": 74.95,
+      "diff": -5.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106080-WHI-XS",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106072-ROY-XL",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
+      "name": "MENS L/S PRINT 4/26",
+      "sku": "M-MIN-MTW1106072-ROY-XS",
+      "our_price": 66.95,
+      "ls_price": 74.95,
+      "diff": -8.0
+    },
+    {
       "name": "MNS TEAM LOGO TWILL FTD LS SHRT BURG/WHT",
       "sku": "M-ARI-10034233-WIN-XXL",
       "our_price": 69.95,
@@ -3431,11 +1537,25 @@
       "diff": -10.05
     },
     {
+      "name": "Necklace with Pendant",
+      "sku": "A-GEN",
+      "our_price": 40.0,
+      "ls_price": 149.95,
+      "diff": -109.95
+    },
+    {
       "name": "Nocona 54\" Suspenders",
       "sku": "M-BHS-N8510001XL-BLA",
       "our_price": 18.95,
       "ls_price": 24.0,
       "diff": -5.05
+    },
+    {
+      "name": "Nocona Belt",
+      "sku": "A-MFW-212930",
+      "our_price": 16.95,
+      "ls_price": 14.9,
+      "diff": 2.05
     },
     {
       "name": "Out West Hoop Earrings",
@@ -3453,17 +1573,24 @@
     },
     {
       "name": "Real Crius Ins Vest",
+      "sku": "W-ARI-BLA-XS",
+      "our_price": 84.95,
+      "ls_price": 48.97,
+      "diff": 35.98
+    },
+    {
+      "name": "Real Crius Ins Vest",
       "sku": "W-ARI-10032984-BLA-XS",
       "our_price": 84.95,
       "ls_price": 67.97,
       "diff": 16.98
     },
     {
-      "name": "Real Crius Ins Vest",
-      "sku": "W-ARI-BLA-XS",
-      "our_price": 84.95,
-      "ls_price": 48.97,
-      "diff": 35.98
+      "name": "Roper Shirt",
+      "sku": null,
+      "our_price": 24.97,
+      "ls_price": 27.97,
+      "diff": -3.0
     },
     {
       "name": "Roper Shirt",
@@ -3487,25 +1614,11 @@
       "diff": -3.0
     },
     {
-      "name": "Roper Shirt",
-      "sku": null,
-      "our_price": 24.97,
-      "ls_price": 27.97,
-      "diff": -3.0
-    },
-    {
       "name": "Roper Tie",
       "sku": null,
       "our_price": 22.95,
       "ls_price": 24.95,
       "diff": -2.0
-    },
-    {
-      "name": "RR Eight Seconds Graphic",
-      "sku": "A-WMA-BB21T08868-RST-S",
-      "our_price": 24.95,
-      "ls_price": 28.95,
-      "diff": -4.0
     },
     {
       "name": "RR Eight Seconds Graphic",
@@ -3529,11 +1642,11 @@
       "diff": -4.0
     },
     {
-      "name": "RR Eight Seconds Graphic Tee",
-      "sku": "M-WMA-BU21T08868-RST-XS",
-      "our_price": 28.95,
-      "ls_price": 25.95,
-      "diff": 3.0
+      "name": "RR Eight Seconds Graphic",
+      "sku": "A-WMA-BB21T08868-RST-S",
+      "our_price": 24.95,
+      "ls_price": 28.95,
+      "diff": -4.0
     },
     {
       "name": "RR Eight Seconds Graphic Tee",
@@ -3541,6 +1654,41 @@
       "our_price": 28.95,
       "ls_price": 25.95,
       "diff": 3.0
+    },
+    {
+      "name": "RR Eight Seconds Graphic Tee",
+      "sku": "M-WMA-BU21T08868-RST-XS",
+      "our_price": 28.95,
+      "ls_price": 25.95,
+      "diff": 3.0
+    },
+    {
+      "name": "Saddle Slicker Adult BK",
+      "sku": "A-MFW-1213001-BLA-M",
+      "our_price": 44.95,
+      "ls_price": 54.0,
+      "diff": -9.05
+    },
+    {
+      "name": "Saddle Slicker Adult BK",
+      "sku": "A-MFW-1213001-BLA-L",
+      "our_price": 45.0,
+      "ls_price": 54.0,
+      "diff": -9.0
+    },
+    {
+      "name": "Saddle Slicker Adult BK Full Length",
+      "sku": "A-MFW-1213001-BLA-XL",
+      "our_price": 44.95,
+      "ls_price": 54.0,
+      "diff": -9.05
+    },
+    {
+      "name": "Saddle Slicker Adult BK Full Length",
+      "sku": "A-MFW-1213001-BLA-XXL",
+      "our_price": 44.95,
+      "ls_price": 54.0,
+      "diff": -9.05
     },
     {
       "name": "Silver Strike Ladies Earrings Resin Glitter Hoops",
@@ -3558,14 +1706,14 @@
     },
     {
       "name": "SILVERSMITH SQUARE TOE",
-      "sku": "M-ARI-10039074-BRO-9-NA",
+      "sku": "M-ARI-10039074-BRO-8-NA",
       "our_price": 65.95,
       "ls_price": 46.97,
       "diff": 18.98
     },
     {
       "name": "SILVERSMITH SQUARE TOE",
-      "sku": "M-ARI-10039074-BRO-8-NA",
+      "sku": "M-ARI-10039074-BRO-9-NA",
       "our_price": 65.95,
       "ls_price": 46.97,
       "diff": 18.98
@@ -3576,6 +1724,13 @@
       "our_price": 94.95,
       "ls_price": 119.93,
       "diff": -24.98
+    },
+    {
+      "name": "Solid Brass Rowels",
+      "sku": "A-GEN-1016-SOL",
+      "our_price": 4.95,
+      "ls_price": 2.95,
+      "diff": 2.0
     },
     {
       "name": "Solid Montana Vest",
@@ -3592,6 +1747,41 @@
       "diff": -1.05
     },
     {
+      "name": "Sport Western Snap Shirt - Long Sleeves - 75204PP",
+      "sku": "M-KON-1075204PP-S",
+      "our_price": 26.95,
+      "ls_price": 30.95,
+      "diff": -4.0
+    },
+    {
+      "name": "Tough1 Contoured Mesh Fly Boots - Pony",
+      "sku": "A-GEN-85-800P-BLA-Pony",
+      "our_price": 24.95,
+      "ls_price": 29.95,
+      "diff": -5.0
+    },
+    {
+      "name": "Turning Point Hat (A-BHH-0869BL-BLA) BLACK",
+      "sku": "A-BHH-0869BL-BLA-XL",
+      "our_price": 87.95,
+      "ls_price": 79.95,
+      "diff": 8.0
+    },
+    {
+      "name": "Turning Point Hat (A-BHH-0869BL-BLA) BLACK",
+      "sku": "A-BHH-0869BL-BLA-M",
+      "our_price": 87.95,
+      "ls_price": 79.95,
+      "diff": 8.0
+    },
+    {
+      "name": "Turning Point Hat (A-BHH-0869BL-BLA) BLACK",
+      "sku": "A-BHH-0869BL-BLA-S",
+      "our_price": 87.95,
+      "ls_price": 79.95,
+      "diff": 8.0
+    },
+    {
       "name": "Turquoise Glam Bracelet",
       "sku": "W-GEN-BC6372-TUR",
       "our_price": 68.95,
@@ -3606,8 +1796,15 @@
       "diff": -1.05
     },
     {
+      "name": "Weaver Leather Exhibitor Number Harness",
+      "sku": "A-WLE-35-8102-BLA-M/L---ADULT",
+      "our_price": 12.95,
+      "ls_price": 16.95,
+      "diff": -4.0
+    },
+    {
       "name": "Wild Rag Scarf",
-      "sku": "A-GEN-0904004",
+      "sku": "W-GEN-0904036-SIL-33X33",
       "our_price": 41.95,
       "ls_price": 36.95,
       "diff": 5.0
@@ -3621,17 +1818,52 @@
     },
     {
       "name": "Wild Rag Scarf",
-      "sku": "W-GEN-0904036-SIL-33X33",
+      "sku": "A-GEN-0904004",
       "our_price": 41.95,
       "ls_price": 36.95,
       "diff": 5.0
     },
     {
-      "name": "Wrangler Retro Shirt",
-      "sku": "M-KON-112368072-XL",
-      "our_price": 43.95,
-      "ls_price": 45.95,
-      "diff": -2.0
+      "name": "WOMENS TANK 4/26",
+      "sku": "A-CRU-CTK7510003-LIG-XS",
+      "our_price": 44.95,
+      "ls_price": 59.95,
+      "diff": -15.0
+    },
+    {
+      "name": "WOMENS TANK 4/26",
+      "sku": "A-CRU-CTK7510003-LIG-XXL",
+      "our_price": 44.95,
+      "ls_price": 59.95,
+      "diff": -15.0
+    },
+    {
+      "name": "WOMENS TANK 4/26",
+      "sku": "W-CRU-CTK7510003-LIG-XL",
+      "our_price": 44.95,
+      "ls_price": 59.95,
+      "diff": -15.0
+    },
+    {
+      "name": "WOMENS TANK 4/26",
+      "sku": "W-CRU-CTK7510003-LIG-L",
+      "our_price": 44.95,
+      "ls_price": 59.95,
+      "diff": -15.0
+    },
+    {
+      "name": "WOMENS TANK 4/26",
+      "sku": "W-CRU-CTK7510003-LIG-M",
+      "our_price": 44.93,
+      "ls_price": 59.95,
+      "diff": -15.02
+    },
+    {
+      "name": "Wrangler Long Sleeve Flannel Shirt",
+      "sku": "M-KON-1075098AA-PLA-3XT",
+      "our_price": 28.93,
+      "ls_price": 23.95,
+      "diff": 4.98
     },
     {
       "name": "Wrangler Retro Shirt",
@@ -3642,10 +1874,24 @@
     },
     {
       "name": "Wrangler Retro Shirt",
+      "sku": "M-KON-112368072-XL",
+      "our_price": 43.95,
+      "ls_price": 45.95,
+      "diff": -2.0
+    },
+    {
+      "name": "Wrangler Retro Shirt",
       "sku": "M-KON-112368072",
       "our_price": 43.95,
       "ls_price": 45.95,
       "diff": -2.0
+    },
+    {
+      "name": "Wrangler Shirt",
+      "sku": "M-KON-75098AS-XLT",
+      "our_price": 24.95,
+      "ls_price": 28.95,
+      "diff": -4.0
     },
     {
       "name": "Wrangler Shirt",
@@ -3663,13 +1909,6 @@
     },
     {
       "name": "Wrangler Shirt",
-      "sku": "M-KON-75098AS-XLT",
-      "our_price": 24.95,
-      "ls_price": 28.95,
-      "diff": -4.0
-    },
-    {
-      "name": "Wrangler Shirt",
       "sku": "M-KON-1075098AS-XLT",
       "our_price": 26.95,
       "ls_price": 28.95,
@@ -3678,20 +1917,8 @@
   ],
   "supplier_gaps": [
     {
-      "name": "\"Thunderbird\" Tan/Navy Chevron & Striped Pattern Classic Tote Purse",
-      "sku": "W-HBR-HCT004-TNNV-TAN",
-      "our_supplier": "Hooey Brands",
-      "ls_id": "968d3770-f412-492e-b461-581aa76255de"
-    },
-    {
-      "name": "1\" Red Dally Wrap (5-Pack)",
-      "sku": "A-CR-DALLY-RED-1\"",
-      "our_supplier": "Cactus Ropes",
-      "ls_id": "378666d8-70f3-4f42-bd15-f20fafcc300a"
-    },
-    {
       "name": "3D Bi-Fold Wallet",
-      "sku": "A-GEN-D250008502-BIFOLD",
+      "sku": "M-GEN-D2500124107-BIFOLD",
       "our_supplier": "Generic",
       "ls_id": "22db33d3-192a-418a-b7b5-fed5c014de8d"
     },
@@ -3703,15 +1930,9 @@
     },
     {
       "name": "3D Bi-Fold Wallet",
-      "sku": "M-GEN-D2500124107-BIFOLD",
+      "sku": "A-GEN-D250008502-BIFOLD",
       "our_supplier": "Generic",
       "ls_id": "22db33d3-192a-418a-b7b5-fed5c014de8d"
-    },
-    {
-      "name": "3D Deluxe Ceramic Mug",
-      "sku": null,
-      "our_supplier": "Generic",
-      "ls_id": "e5874db3-3740-49d1-adc3-ef732c2b54b6"
     },
     {
       "name": "3D Deluxe Ceramic Mug",
@@ -3720,76 +1941,58 @@
       "ls_id": "e5874db3-3740-49d1-adc3-ef732c2b54b6"
     },
     {
-      "name": "Amish B Long",
-      "sku": "A-GEN-SFAMSHB0234-BLA-7-3/8",
-      "our_supplier": "HATCO. RHE Hatco, Inc.",
-      "ls_id": "b912368e-c3b7-43e1-b699-39e9e4688ee1"
+      "name": "3D Deluxe Ceramic Mug",
+      "sku": null,
+      "our_supplier": "Generic",
+      "ls_id": "e5874db3-3740-49d1-adc3-ef732c2b54b6"
     },
     {
-      "name": "Ariat Bandana Navy",
-      "sku": "A-ARI-A1109003-NAV",
-      "our_supplier": "M&F Western",
-      "ls_id": "e97095db-4915-4cbb-81b5-f98283e7557f"
+      "name": "Am Royal Blanket Liner",
+      "sku": "A-GEN-7401/9-BLA-5/8",
+      "our_supplier": "Generic",
+      "ls_id": "b2769adf-ead6-4865-ae44-913e025cc4d2"
     },
     {
-      "name": "Ariat Knife Sheath with Embossed Logo",
-      "sku": "A-ARI-A1800344",
-      "our_supplier": "M&F Western",
-      "ls_id": "607beea8-80e0-4891-996b-480f72807901"
+      "name": "Am Royal Pad",
+      "sku": "A-GEN-750119-BLA",
+      "our_supplier": "Generic",
+      "ls_id": "8edbdf95-64e7-4f2b-b95a-d667c0708b8c"
     },
     {
-      "name": "Ariat Melody Slippers",
-      "sku": "W-ARI-10039081-BLU-S",
-      "our_supplier": "Ariat International",
-      "ls_id": "c677d248-3620-4742-a392-d236e0190302"
+      "name": "American Royal",
+      "sku": "A-GEN-740119-BLA",
+      "our_supplier": "Generic",
+      "ls_id": "e72c7072-617b-49f0-ab47-6b44e8631586"
     },
     {
-      "name": "Ariat Pro Smith LS Shirt",
-      "sku": "M-ARI-10058976-NAV-L",
-      "our_supplier": "Ariat International",
-      "ls_id": "5ab89607-6457-4b74-ac45-8c010b1da2a9"
+      "name": "American Royal Arch Mouth",
+      "sku": "A-GEN-ARCHMOUTH-5",
+      "our_supplier": "Generic",
+      "ls_id": "54464cbe-ea18-47b0-acbb-73317927a0f5"
     },
     {
-      "name": "Ariat Pro Smith LS Shirt",
-      "sku": "M-ARI-10058976-NAV-L-TALL",
-      "our_supplier": "Ariat International",
-      "ls_id": "5ab89607-6457-4b74-ac45-8c010b1da2a9"
+      "name": "American Royal Bit",
+      "sku": "A-GEN-255120",
+      "our_supplier": "Generic",
+      "ls_id": "f1de66bc-fb7c-45a8-910a-e1cfbf208fe2"
     },
     {
-      "name": "Ariat Pro Smith LS Shirt",
-      "sku": "M-ARI-10058976-NAV-XXL",
-      "our_supplier": "Ariat International",
-      "ls_id": "5ab89607-6457-4b74-ac45-8c010b1da2a9"
+      "name": "American Royal Snaffle",
+      "sku": "A-GEN-265200",
+      "our_supplier": "Generic",
+      "ls_id": "1b06bb93-fd06-4c29-b3b9-1dc461cf5601"
     },
     {
-      "name": "ARIAT Women's Buffalo Print Leather Trim Tote Bag",
-      "sku": "W-ARI-A770015797-BUF",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "3a056505-c1ef-49cf-9802-c4c052ac6705"
+      "name": "Aqua Seal Smooth Leather Cleaner",
+      "sku": "A-GEN-4-FL.-OZ.",
+      "our_supplier": "Generic",
+      "ls_id": "020e52b1-4fe7-4e3d-8f2f-5344d6266c2a"
     },
     {
-      "name": "AriatTEK Series High Performance Socks",
-      "sku": "A-ARI-10051906-PNK-S",
-      "our_supplier": "Ariat International",
-      "ls_id": "4a8da89d-c8a8-4835-b0fc-3ffb32c894e0"
-    },
-    {
-      "name": "AriatTEK Series High Performance Socks",
-      "sku": "A-ARI-10051906-PNK-M",
-      "our_supplier": "Ariat International",
-      "ls_id": "4a8da89d-c8a8-4835-b0fc-3ffb32c894e0"
-    },
-    {
-      "name": "Ashville Embroidered LS SNP Shirt",
-      "sku": "W-ARI-10073666-SEA-XL",
-      "our_supplier": "Ariat International",
-      "ls_id": "6ef1ae93-85c6-40a2-a64d-0a34fadcd3ce"
-    },
-    {
-      "name": "Ashville Embroidered LS SNP SHRT",
-      "sku": "W-ARI-10073666-SEA-XXL",
-      "our_supplier": "Ariat International",
-      "ls_id": "06043f8c-5e13-4c5a-ae30-0a9c3a7d7bd5"
+      "name": "Aqua Seal Waterproof & Condition Suede & Nubuck",
+      "sku": "A-GEN-4-OZ",
+      "our_supplier": "Generic",
+      "ls_id": "99351f10-b5d6-41cf-b9fa-58e9d999f69f"
     },
     {
       "name": "Attitude Buckles America Strong Caducau",
@@ -3798,40 +2001,22 @@
       "ls_id": "0dcf8f7e-e6a1-4ffc-9dd7-ba85656f36ab"
     },
     {
-      "name": "AWST Int'l \"Lila\" Pony Puff Coin Purse",
-      "sku": "A-GEN-63-GG623-12-BLU",
-      "our_supplier": "JPC",
-      "ls_id": "4bec06d8-04bb-4339-988f-e1e2a8b985c3"
+      "name": "Bit Master Offset Dee W/4 1/4\" Sweetiron Bradoon",
+      "sku": "A-GEN-62123-POA--ARABIAN",
+      "our_supplier": "Generic",
+      "ls_id": "af722711-9a3f-41aa-8de8-4b9eb9c349e7"
     },
     {
-      "name": "AWST Int'l Horse Bag Charm",
-      "sku": "A-GEN-63-GG423-BL-BLU-3-H-X-4-W",
-      "our_supplier": "AWST Int'l",
-      "ls_id": "92a7fa28-9873-4351-b541-ad6a9af492e6"
+      "name": "Black Felt Wither Pad",
+      "sku": "A-GEN-702D-BLA",
+      "our_supplier": "Generic",
+      "ls_id": "dd3d48ce-32d4-414e-8110-3b3cc9018ffc"
     },
     {
-      "name": "Bandana Red",
-      "sku": "A-ARI-A1109004-RED",
-      "our_supplier": "Ariat International",
-      "ls_id": "8f7ae868-5b8a-4223-8da9-0c17fa6129aa"
-    },
-    {
-      "name": "Bandana USA Flag",
-      "sku": "A-ARI-A1109397-USA",
-      "our_supplier": "M&F Western",
-      "ls_id": "02a0e9ae-b052-49d7-8d71-1b5cb4e9433a"
-    },
-    {
-      "name": "Bandanas Confederate Flag",
-      "sku": "A-ARI-10042111-CON",
-      "our_supplier": "Ariat International",
-      "ls_id": "c677bb20-0147-4b88-8bcb-a57645f7aef9"
-    },
-    {
-      "name": "Barn Sign 5\" Design B1",
-      "sku": "A-JTI-87-1451-0-950-B1-5",
-      "our_supplier": "JT International",
-      "ls_id": "54e54057-c095-4eca-912b-a9639d1bc298"
+      "name": "Black Satin Grazing Bit",
+      "sku": "A-GEN-263104-BLA-6.5-CHEEKS-5-MOUTH",
+      "our_supplier": "Generic",
+      "ls_id": "555de762-4405-4293-9e1b-92ddd3c91be6"
     },
     {
       "name": "Blue tie w/ longhorn design",
@@ -3840,22 +2025,10 @@
       "ls_id": "7de25cb3-7fcb-4200-9d5e-5891c633eefc"
     },
     {
-      "name": "Boar Suede Snap Front Vest",
-      "sku": "M-SSI-504-67-M",
-      "our_supplier": "Scully",
-      "ls_id": "dee0ceab-e397-4698-b26d-bbfa01693ffc"
-    },
-    {
-      "name": "Boar Suede Snap Front Vest",
-      "sku": "M-SSI-504-19-S",
-      "our_supplier": "Scully",
-      "ls_id": "dee0ceab-e397-4698-b26d-bbfa01693ffc"
-    },
-    {
-      "name": "Boy's Patriot Slipper",
-      "sku": "K-ARI-10043046-BRO-S",
-      "our_supplier": "Ariat International",
-      "ls_id": "eb013d44-4c97-48b9-bc29-884cd239d31d"
+      "name": "Breast Strap Montreal B/S Reflective BN BRFLECTIVE BIOTHANE ON BOD",
+      "sku": "A-TKR-0126-1201",
+      "our_supplier": "Generic",
+      "ls_id": "9e0fad90-6291-428b-b541-b2ee0889d4a4"
     },
     {
       "name": "Bronc & Brand No 415 Tie",
@@ -3864,51 +2037,21 @@
       "ls_id": "5cdacfe3-3263-481c-ba6a-bd830999291f"
     },
     {
-      "name": "Catchfly Studio Bag",
-      "sku": "W-GEN-23208893BOT-MUL",
-      "our_supplier": "Trenditions",
-      "ls_id": "d0f104d8-6351-40a7-b463-7d3a3f3a0f9f"
-    },
-    {
-      "name": "Catchfly Studio Bag",
-      "sku": "W-GEN-23071893GRN-GRN",
-      "our_supplier": "Trenditions",
-      "ls_id": "d0f104d8-6351-40a7-b463-7d3a3f3a0f9f"
-    },
-    {
       "name": "Ceramic Covered Wagon",
       "sku": "A-GEN-FM2445",
       "our_supplier": "Generic",
       "ls_id": "3fb3d4d7-561e-4fb2-99e3-45cc44ff4614"
     },
     {
-      "name": "Cinch Men's Stretch Solid Red Button Down Shirt",
-      "sku": "M-MIN-MTW1105805-RED-XS",
-      "our_supplier": "Miller International",
-      "ls_id": "593cafc7-ff49-43e9-b6f4-456a2b2b8b2d"
-    },
-    {
-      "name": "Cinch Men's Stretch Solid Red Button Down Shirt",
-      "sku": "M-MIN-MTW1105805-RED-M",
-      "our_supplier": "Miller International",
-      "ls_id": "593cafc7-ff49-43e9-b6f4-456a2b2b8b2d"
-    },
-    {
-      "name": "Cinch White Label Relaxed Jeans",
-      "sku": "M-MIN-MB92834045-IND-30-34",
-      "our_supplier": "Miller International",
-      "ls_id": "d35df320-a4c4-459e-98b1-842d2a1cd8b6"
+      "name": "Circle S Boise Jacket",
+      "sku": "M-GEN-CC2976-QR-40-54-L",
+      "our_supplier": "Generic",
+      "ls_id": "a27c0b6b-344e-4264-85b2-62954e7b6dc4"
     },
     {
       "name": "Circle S Boise Jacket",
       "sku": "M-GEN-CC2976-QR-10-54-L",
       "our_supplier": "Sidran",
-      "ls_id": "a27c0b6b-344e-4264-85b2-62954e7b6dc4"
-    },
-    {
-      "name": "Circle S Boise Jacket",
-      "sku": "M-GEN-CC2976-QR-40-54-L",
-      "our_supplier": "Generic",
       "ls_id": "a27c0b6b-344e-4264-85b2-62954e7b6dc4"
     },
     {
@@ -3930,18 +2073,6 @@
       "ls_id": "70c07431-8e2b-49be-abe1-33cc0c406524"
     },
     {
-      "name": "Circle SH Cutlery",
-      "sku": "A-WFA-CSH-BRONCC",
-      "our_supplier": "Western Fashion Accessories",
-      "ls_id": "8d8b825a-77eb-4c20-b1e1-06c03f3f7c0f"
-    },
-    {
-      "name": "Circle SH Cutlery Pocket Knife",
-      "sku": "A-WFA-CSH-BRONC",
-      "our_supplier": "Western Fashion Accessories",
-      "ls_id": "76685e6c-3e19-4aa5-9bb1-47147db4ecc6"
-    },
-    {
       "name": "Clip on Bow Tie",
       "sku": "A-GEN-BLU",
       "our_supplier": "Generic",
@@ -3954,22 +2085,28 @@
       "ls_id": "435d427b-81f9-4fcd-b33c-9e2ed29f5508"
     },
     {
+      "name": "Congress 7018-80",
+      "sku": "A-GEN-8018-BLU-80",
+      "our_supplier": "Generic",
+      "ls_id": "32adc94a-5fd8-48ba-9771-80be78284fe8"
+    },
+    {
+      "name": "Contoured 3-PC B/S COB BN RAS",
+      "sku": "A-TKR-0144-0201",
+      "our_supplier": "Generic",
+      "ls_id": "421b32e3-7eeb-4f68-b3a4-7fd1a43cb325"
+    },
+    {
+      "name": "Copper Bit",
+      "sku": "A-GEN-267100-5",
+      "our_supplier": "Generic",
+      "ls_id": "690679db-15ea-46a7-9600-8726ebe64182"
+    },
+    {
       "name": "Cow Thermometer",
       "sku": "A-GEN-14072-COW",
       "our_supplier": "Generic",
       "ls_id": "5743d2ed-052d-40e0-8e9c-1c46b583d53b"
-    },
-    {
-      "name": "Cowboy Boot Wall Decor",
-      "sku": "A-JTI-87-36140-0-0",
-      "our_supplier": "JT International",
-      "ls_id": "4b228793-bd58-4571-ac80-0c15913df20d"
-    },
-    {
-      "name": "Cowtown Pony Small Zip Top Tote \u2013 Hair-On Hide Genuine Leather",
-      "sku": "W-GEN-4160915S-11\" X 10\" X 4\"",
-      "our_supplier": "American West",
-      "ls_id": "06ded2f1-7e63-4c7f-8e5a-9bb4855dcc20"
     },
     {
       "name": "Cripple Creek",
@@ -3984,6 +2121,18 @@
       "ls_id": "9236aaf3-5df8-49a7-a98d-efaccf8baa77"
     },
     {
+      "name": "Custom Stirrups",
+      "sku": null,
+      "our_supplier": "Generic",
+      "ls_id": "3fba96fa-d12a-45ae-9ebe-9a937b0b4ee3"
+    },
+    {
+      "name": "Deluxe Ceramic Mug",
+      "sku": "A-GEN-2675-BOO-16OZ",
+      "our_supplier": "Generic",
+      "ls_id": "8774df49-8080-4cfa-b2a9-5a2ff9799db9"
+    },
+    {
       "name": "Deluxe Ceramic Mug",
       "sku": "A-GEN-2676-HOR-16OZ",
       "our_supplier": "Generic",
@@ -3996,28 +2145,16 @@
       "ls_id": "8774df49-8080-4cfa-b2a9-5a2ff9799db9"
     },
     {
-      "name": "Deluxe Ceramic Mug",
-      "sku": "A-GEN-2675-BOO-16OZ",
+      "name": "Easy to Use Foaming Tool",
+      "sku": "A-GEN-FT90800-48OZ",
       "our_supplier": "Generic",
-      "ls_id": "8774df49-8080-4cfa-b2a9-5a2ff9799db9"
+      "ls_id": "d678471b-f56e-4245-b1af-cc01e955c8d1"
     },
     {
-      "name": "Dodge City Marshal Badge - Toy",
-      "sku": "K-MFW-28228",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "9e799306-0df8-42d3-b64e-93d2f1610bc9"
-    },
-    {
-      "name": "Dress Western Basic Shirt, Long Sleeves",
-      "sku": "M-KON-1071130CS-16-1/2-X-37-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "5e2d2058-5406-4a34-8f76-e047ae656e46"
-    },
-    {
-      "name": "Dress Western Basic Shirt, Long Sleeves",
-      "sku": "M-KON-1071130CS-16-X-36",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "5e2d2058-5406-4a34-8f76-e047ae656e46"
+      "name": "Easyboot",
+      "sku": "A-GEN-SB-EB-00-00-SMALL",
+      "our_supplier": "Generic",
+      "ls_id": "fe4db0db-f859-4954-a2f3-a2e92209f7cc"
     },
     {
       "name": "Equi-Star Classic Show Bow",
@@ -4038,26 +2175,44 @@
       "ls_id": "5c57a907-7dad-4acb-aa89-408ea1e773c2"
     },
     {
+      "name": "EZ Foamer",
+      "sku": null,
+      "our_supplier": "Generic",
+      "ls_id": "b3ca0a02-d3d2-4da9-aad9-a9757e30e0d3"
+    },
+    {
       "name": "Farm Candle Warmer",
       "sku": "A-GEN-2883",
       "our_supplier": "Generic",
       "ls_id": "45103928-c12d-4daf-ba3b-a85333a07659"
     },
     {
-      "name": "Floral Tooled Embroidered",
-      "sku": "M-SSI-P634-WBK-XL",
-      "our_supplier": "Scully",
-      "ls_id": "1287fd33-bf66-4abe-9e57-01d69bb14924"
+      "name": "Farnam Flex-Ever Foal Feeder",
+      "sku": null,
+      "our_supplier": "Generic",
+      "ls_id": "e0de4893-e530-426e-9666-e1ce84723514"
     },
     {
-      "name": "Fringe Jacket W/Emb.",
-      "sku": "W-SSI-HC687-OFF-XL",
-      "our_supplier": "Scully",
-      "ls_id": "e49cd7cf-ae43-4f21-a8b6-076b486fcc8f"
+      "name": "Farnam SuperMask II Horse Fly Mask",
+      "sku": "A-GEN-HG-YEARLING",
+      "our_supplier": "Generic",
+      "ls_id": "604b3fb6-76e5-407a-b2c2-a02aebb87068"
+    },
+    {
+      "name": "Gambler Spurs",
+      "sku": "A-GEN-GAMBLERSPURS",
+      "our_supplier": "Generic",
+      "ls_id": "15291161-ccfb-4c23-84b5-f626e9ce45cc"
     },
     {
       "name": "Gift Bag",
-      "sku": "A-GEN-4543-HOR-M",
+      "sku": "A-GEN-WHI-M",
+      "our_supplier": "Generic",
+      "ls_id": "4b1362f7-fdbd-460b-afb0-5d37a1f6ec09"
+    },
+    {
+      "name": "Gift Bag",
+      "sku": "A-GEN-724-BRO",
       "our_supplier": "Generic",
       "ls_id": "cd4c8f6d-5f85-40b1-b4a3-709f86626503"
     },
@@ -4075,15 +2230,9 @@
     },
     {
       "name": "Gift Bag",
-      "sku": "A-GEN-724-BRO",
+      "sku": "A-GEN-4543-HOR-M",
       "our_supplier": "Generic",
       "ls_id": "cd4c8f6d-5f85-40b1-b4a3-709f86626503"
-    },
-    {
-      "name": "Gift Bag",
-      "sku": "A-GEN-WHI-M",
-      "our_supplier": "Generic",
-      "ls_id": "4b1362f7-fdbd-460b-afb0-5d37a1f6ec09"
     },
     {
       "name": "Gift Boxed Mug",
@@ -4110,10 +2259,10 @@
       "ls_id": "c2a8389e-8da6-46db-95b1-084544735a01"
     },
     {
-      "name": "Hand Engraved Brass Heel Cap",
-      "sku": "A-MFW-1415001-BRA",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "296d143d-1871-4fb1-b05d-972059b0c6b4"
+      "name": "Greg Darnell Don Dodge Snaffle",
+      "sku": "A-GEN-3/8",
+      "our_supplier": "Generic",
+      "ls_id": "b230472a-b3a2-4226-ae01-bceb291d2d28"
     },
     {
       "name": "Hat on a Wheel Metal Wallhanging",
@@ -4123,21 +2272,21 @@
     },
     {
       "name": "Heads Up Ceramic Coffee Mug",
-      "sku": "A-GEN-10995021042-14-OZ",
-      "our_supplier": "Generic",
-      "ls_id": "5233c3d0-06df-4128-89b4-ec18fa590ad3"
-    },
-    {
-      "name": "Heads Up Ceramic Coffee Mug",
       "sku": null,
       "our_supplier": "Generic",
       "ls_id": "5233c3d0-06df-4128-89b4-ec18fa590ad3"
     },
     {
-      "name": "Heritage Lacer II",
-      "sku": "W-ARI-10002147-DIS-9.5-B",
-      "our_supplier": "Ariat International",
-      "ls_id": "b304f6f3-7cc7-48d2-8427-46c9e35b5d53"
+      "name": "Heads Up Ceramic Coffee Mug",
+      "sku": "A-GEN-10995021042-14-OZ",
+      "our_supplier": "Generic",
+      "ls_id": "5233c3d0-06df-4128-89b4-ec18fa590ad3"
+    },
+    {
+      "name": "Hobble Strap 1 1/4\" Harness Latigo Lined Doubled S",
+      "sku": "A-GEN-HOBH-1.25",
+      "our_supplier": "Generic",
+      "ls_id": "08e1b178-5424-4bce-a66d-412ed506d37e"
     },
     {
       "name": "Hollywood Packaging Wrap",
@@ -4152,94 +2301,28 @@
       "ls_id": "b117d5c1-bf19-4d3c-a6fb-375d17ea3507"
     },
     {
-      "name": "Justin Bifold Wallet",
-      "sku": "A-BHS-24010138W1-BRO-BIFOLD",
-      "our_supplier": "Trenditions",
-      "ls_id": "a26b64ec-3e3b-4c48-808c-318fd15f699f"
+      "name": "Jacks Day/Night Sheet",
+      "sku": "A-GEN-10549-RE--74",
+      "our_supplier": "Generic",
+      "ls_id": "0cb23d74-a8c1-4dd2-90b1-86d04a219da6"
     },
     {
-      "name": "Justin Men's Genuine Leather Slim Card with Stitching Wallet",
-      "sku": "M-BHS-2520576624-BRO",
-      "our_supplier": "M&F Western",
-      "ls_id": "e847a536-d534-408e-aa9b-99b5d3e86d84"
-    },
-    {
-      "name": "Kid's Boar Suede Vest",
-      "sku": "K-SSI-2002-67-S",
-      "our_supplier": "Scully",
-      "ls_id": "b1172769-f4d7-4a4d-9d8e-484d24c752bc"
-    },
-    {
-      "name": "Kids Boar Suede Vest",
-      "sku": "K-SSI-2002-19-M",
-      "our_supplier": "Scully",
-      "ls_id": "3a49aab0-4829-429a-94b5-f5f791b23087"
-    },
-    {
-      "name": "Kids Boar Suede Vest",
-      "sku": "K-SSI-2002-19-S",
-      "our_supplier": "Scully",
-      "ls_id": "3a49aab0-4829-429a-94b5-f5f791b23087"
-    },
-    {
-      "name": "Liberty Roper Men's Black Crew Neck",
-      "sku": "M-HBR-HT1680BK-BLA-XXL",
-      "our_supplier": "Hooey Brands",
-      "ls_id": "6f65107e-9d6f-4be4-ac3b-3f52f41f9d0a"
-    },
-    {
-      "name": "Liberty Roper Men's Black Crew Neck",
-      "sku": "M-HBR-BKHT-BLA-L",
-      "our_supplier": "Hooey Brands",
-      "ls_id": "6f65107e-9d6f-4be4-ac3b-3f52f41f9d0a"
-    },
-    {
-      "name": "Liberty Roper Men's Black Crew Neck SS",
-      "sku": "A-HBR-HT1680BK-BLA-M",
-      "our_supplier": "Hooey Brands",
-      "ls_id": "809ff600-8fb8-4cfe-986c-0c4ec3041f19"
-    },
-    {
-      "name": "Liberty Roper Men's Grey Crew Neck Reactive Dye Short Sleeve T-Shirt",
-      "sku": "M-HBR-HT1680GY-GRA-L",
-      "our_supplier": "Hooey Brands",
-      "ls_id": "47188d69-1984-4004-bc77-a2257e57bab8"
-    },
-    {
-      "name": "Liberty Roper, Men's Black Crew Neck",
-      "sku": "M-HBR-HT1680BK-BLA-L",
-      "our_supplier": "Hooey Brands",
-      "ls_id": "91983c06-497b-48fd-9d45-f6babdfd3960"
-    },
-    {
-      "name": "Liberty Roper, Men's Black Crew Neck SS",
-      "sku": "M-HBR-HT1680BK-BLA-M",
-      "our_supplier": "Hooey Brands",
-      "ls_id": "015c1a1d-a93e-4250-8572-db895581207a"
-    },
-    {
-      "name": "M & F Western Leather Stampede String",
-      "sku": null,
-      "our_supplier": "M&F Western Products",
-      "ls_id": "7fc7d40a-1ffb-4e4d-9e87-137b1f44d340"
-    },
-    {
-      "name": "M & F Western Leather Stampede String",
-      "sku": "A-MFW-TUR-OS",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "7fc7d40a-1ffb-4e4d-9e87-137b1f44d340"
-    },
-    {
-      "name": "M & F Western Leather Stampede String",
-      "sku": null,
-      "our_supplier": "M&F Western Products",
-      "ls_id": "7fc7d40a-1ffb-4e4d-9e87-137b1f44d340"
+      "name": "Jacks Multi-purpose Horse Boots",
+      "sku": "A-GEN-1372",
+      "our_supplier": "Generic",
+      "ls_id": "3dba82a4-99c4-47df-9794-ddd79d77f22d"
     },
     {
       "name": "Massey Ferguson Metal Belt Buckle",
       "sku": "A-GEN-03070-MF",
       "our_supplier": "Generic",
       "ls_id": "46508e05-8ab4-42a6-bcbb-978e52fb2670"
+    },
+    {
+      "name": "McCormick Farmall Belt",
+      "sku": "A-GEN-1-4309-PNK-L",
+      "our_supplier": "Generic",
+      "ls_id": "f7a5f040-d835-4b9c-8488-36495adc379e"
     },
     {
       "name": "McCormick Farmhall Work Suspenders",
@@ -4254,166 +2337,10 @@
       "ls_id": "32fe755a-c354-4e13-865c-9332aa4a7108"
     },
     {
-      "name": "Men's Brown Yoke Stitched Trifold Wallet",
-      "sku": "M-BHS-2520573224-BRO-TRIFOLD",
-      "our_supplier": "Trenditions",
-      "ls_id": "313ca276-1d80-4ec2-a83c-1f72bc2fe9ce"
-    },
-    {
-      "name": "Men\u2019s Classic Fit Button-Down Western Shirt",
-      "sku": "M-MIN-MTW1105974-PUR-XXL",
-      "our_supplier": "Miller International",
-      "ls_id": "a9873b6c-b746-4bf5-8f79-8b0646edc550"
-    },
-    {
-      "name": "Men's Cody Johnson Two Pocket Western Snap Shirt",
-      "sku": "M-KON-112378949-BAB-S",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "e88046ef-1baa-4826-9845-63ef68453ccd"
-    },
-    {
-      "name": "Men's Cody Johnson Two Pocket Western Snap Shirt",
-      "sku": "M-KON-112378949-BAB-L",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "81a7d1b9-5ceb-4a9f-af46-5d42ba2d7ab2"
-    },
-    {
-      "name": "Men's Cody Johnson Two Pocket Western Snap Shirt",
-      "sku": "M-KON-112378949-BAB-LT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "935c1611-18bb-4cc5-8b73-edb8f989b093"
-    },
-    {
-      "name": "Men's Cody Johnson Two Pocket Western Snap Shirt",
-      "sku": "M-KON-112378949-BAB-XL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "6e11e730-e145-406e-9951-a36b8db48992"
-    },
-    {
-      "name": "Men's Cody Johnson Two Pocket Western Snap Shirt",
-      "sku": "M-KON-112378949-BAB-M",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "e6b0d0fd-faf9-44bb-b1af-c3261239a03c"
-    },
-    {
-      "name": "Men's Cody Johnson Two Pocket Western Snap Shirt",
-      "sku": "M-KON-112378949-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "c495c35f-c7bb-4989-b71e-1c2e194f3c06"
-    },
-    {
-      "name": "Men's Cody Johnson Two Pocket Western Snap Shirt",
-      "sku": "M-KON-112378949-BAB-XLT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "c495c35f-c7bb-4989-b71e-1c2e194f3c06"
-    },
-    {
-      "name": "Men's Concealed Carry Bonded Vest",
-      "sku": "M-MIN-MWV1541010-BLA-XS",
-      "our_supplier": "Miller International",
-      "ls_id": "a3e7f3f3-75fb-4e12-af5a-afe23e9744ee"
-    },
-    {
-      "name": "Men's George Strait Snap Button Long Sleeve Shirt",
-      "sku": "M-KON-112368231-BLU-S",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "55574736-5f4c-4527-96cc-5ca222970160"
-    },
-    {
-      "name": "Men's Signature Bifold Wallet",
-      "sku": "M-MFW-N5480644-MED-BIFOLD",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "3e55035f-126f-415a-b27d-4ea33364df6a"
-    },
-    {
       "name": "Men's Snap Front Leather Vest",
       "sku": "M-CCR-ML1059-41-XXL",
       "our_supplier": "Cripple Creek",
       "ls_id": "416ffa42-5d09-44d3-844a-a30d18b2be8c"
-    },
-    {
-      "name": "Men's Solid Classic Fit Button-Down Western Shirt",
-      "sku": "M-MIN-MTW1104238-GRY-GRA-XS",
-      "our_supplier": "Miller International",
-      "ls_id": "d7dd96df-519f-4c4b-b4fe-7ce49f13bc97"
-    },
-    {
-      "name": "Men's Solid Classic Fit Button-Down Western Shirt",
-      "sku": "M-MIN-MTW1104238-GRA-XS",
-      "our_supplier": "Miller International",
-      "ls_id": "d7dd96df-519f-4c4b-b4fe-7ce49f13bc97"
-    },
-    {
-      "name": "Men's Solid Classic Fit Button-Down Western Shirt",
-      "sku": "M-MIN-MT10320020-WHI-L",
-      "our_supplier": "Miller International",
-      "ls_id": "d7dd96df-519f-4c4b-b4fe-7ce49f13bc97"
-    },
-    {
-      "name": "Men's Solid Classic Fit Button-Down Western Shirt",
-      "sku": "M-MIN-MTW1103313-RED-XS",
-      "our_supplier": "Miller International",
-      "ls_id": "d7dd96df-519f-4c4b-b4fe-7ce49f13bc97"
-    },
-    {
-      "name": "Men's Solid Classic Fit Western Button-Down Shirt",
-      "sku": "M-MIN-MTW1103802-PUR-L",
-      "our_supplier": "Miller International",
-      "ls_id": "04d9fc8f-fc8a-45fb-8b98-cfc33c56944f"
-    },
-    {
-      "name": "Men's Solid Classic Fit Western Button-Down Shirt",
-      "sku": null,
-      "our_supplier": "Miller International",
-      "ls_id": "04d9fc8f-fc8a-45fb-8b98-cfc33c56944f"
-    },
-    {
-      "name": "Men's Solid Classic Fit Western Button-Down Shirt",
-      "sku": "M-MIN-MTW1103802-PUR-XXL",
-      "our_supplier": "Miller International",
-      "ls_id": "04d9fc8f-fc8a-45fb-8b98-cfc33c56944f"
-    },
-    {
-      "name": "Men's Wrangler Blanket Lined Denim Jacket",
-      "sku": "M-KON-1074260PW-48",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "ce972697-0b40-4324-9f58-506f84d0db5c"
-    },
-    {
-      "name": "Men's Wrangler Cody Johnson Long Sleeve",
-      "sku": "M-KON-112368021-WHI-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d1e17dfc-d69c-412d-90b3-ec95608fab97"
-    },
-    {
-      "name": "Men's Wrangler Cody Johnson Long Sleeve",
-      "sku": "M-KON-112368021-WHI-XLT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d1e17dfc-d69c-412d-90b3-ec95608fab97"
-    },
-    {
-      "name": "Men's Wrangler Cody Johnson Long Sleeve",
-      "sku": "M-KON-112368021-WHI-S",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d1e17dfc-d69c-412d-90b3-ec95608fab97"
-    },
-    {
-      "name": "Men's Wrangler Cody Johnson Snap Front Shirt",
-      "sku": "M-KON-112378949-BAB-2XT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "458d3cea-f85b-45e6-a751-3a2b81b20704"
-    },
-    {
-      "name": "MENS GENUINE LEATHER RODEO WALLET YOKE WITH STITCHING",
-      "sku": "M-BHS-2520571384-BRO-BIFOLD",
-      "our_supplier": "Trenditions",
-      "ls_id": "91452fb8-f015-4310-abea-5fee4b9c9937"
-    },
-    {
-      "name": "MENS GENUINE LEATHER RODEO WALLET YOKE WITH STITCHING",
-      "sku": "M-BHS-2520575664-BRO",
-      "our_supplier": "Trenditions",
-      "ls_id": "91452fb8-f015-4310-abea-5fee4b9c9937"
     },
     {
       "name": "Metal Belt Buckle",
@@ -4428,10 +2355,10 @@
       "ls_id": "f24c1ec5-9d41-4689-84d2-fddc70ca1c11"
     },
     {
-      "name": "MW Steel Toe Merino Crew",
-      "sku": "A-ARI-AR2187-050-M",
-      "our_supplier": "Ariat International",
-      "ls_id": "ca7da156-8582-46ff-ab4f-43939230182e"
+      "name": "Navajo Open Front Blanket Wrap Jacket",
+      "sku": "W-CCR-CR15349-224-M",
+      "our_supplier": "Cripple Creek",
+      "ls_id": "814f6786-bec5-4129-9770-75f4961f8e5c"
     },
     {
       "name": "Navajo Open Front Blanket Wrap Jacket",
@@ -4441,19 +2368,13 @@
     },
     {
       "name": "Navajo Open Front Blanket Wrap Jacket",
-      "sku": "W-CCR-CR15349-224-L",
-      "our_supplier": "Cripple Creek",
-      "ls_id": "814f6786-bec5-4129-9770-75f4961f8e5c"
-    },
-    {
-      "name": "Navajo Open Front Blanket Wrap Jacket",
-      "sku": "W-CCR-CR15349-224-M",
-      "our_supplier": "Cripple Creek",
-      "ls_id": "814f6786-bec5-4129-9770-75f4961f8e5c"
-    },
-    {
-      "name": "Navajo Open Front Blanket Wrap Jacket",
       "sku": "W-CCR-CR15349-224-XXL",
+      "our_supplier": "Cripple Creek",
+      "ls_id": "814f6786-bec5-4129-9770-75f4961f8e5c"
+    },
+    {
+      "name": "Navajo Open Front Blanket Wrap Jacket",
+      "sku": "W-CCR-CR15349-224-L",
       "our_supplier": "Cripple Creek",
       "ls_id": "814f6786-bec5-4129-9770-75f4961f8e5c"
     },
@@ -4470,40 +2391,16 @@
       "ls_id": "002e85ff-bfa4-4e91-8e03-7aecb6d44d00"
     },
     {
-      "name": "Nocona Stacey Bucket Purse",
-      "sku": "W-MFW-N770010501-BLA",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "b9816a6f-6781-4fe0-8766-ef35243d0a0c"
-    },
-    {
-      "name": "Old West Collection Men's Long Sleeve Snap Embroidered Western Shirt",
-      "sku": "M-KAR-03-001-0040-0675-WH-XL",
-      "our_supplier": "Karman Inc",
-      "ls_id": "82898430-2a5a-4f93-bd45-429484b44918"
-    },
-    {
-      "name": "Pay Window Hat",
-      "sku": "A-RHE-RWPYWD-90425373-GRA-7-3/8",
-      "our_supplier": "Hatco",
-      "ls_id": "5f69a870-636e-4104-ba8a-fcacb5231936"
-    },
-    {
       "name": "Pig Thermometer",
       "sku": "A-GEN-14072-PIG",
       "our_supplier": "Generic",
       "ls_id": "c459c886-9940-41cf-885d-9a0336d52b0b"
     },
     {
-      "name": "Pro Smith LS Shirt",
-      "sku": "M-ARI-10058976-NAV-3XL",
-      "our_supplier": "Ariat International",
-      "ls_id": "ccfa89ce-d5e2-44b9-8279-adc0875814b7"
-    },
-    {
-      "name": "PRO SMITH LS SHRT",
-      "sku": "M-ARI-10058976-NAV-XS",
-      "our_supplier": "Ariat International",
-      "ls_id": "5d1d8c5c-07bb-4c2d-8ed5-0a75b63d039e"
+      "name": "Pocket",
+      "sku": "A-GEN-22-PKT-CLE",
+      "our_supplier": "Generic",
+      "ls_id": "a1c02629-ece9-460f-89ca-32827fe15655"
     },
     {
       "name": "Puzzle in Tin",
@@ -4518,28 +2415,28 @@
       "ls_id": "eb39a46d-4524-4bd8-acdc-c91cfce10061"
     },
     {
+      "name": "Pyranha Fly Mask",
+      "sku": "A-GEN-3979-L-L",
+      "our_supplier": "Generic",
+      "ls_id": "10e46414-413b-46e6-893e-ef578efad84f"
+    },
+    {
       "name": "Range Riders Cookin'",
       "sku": null,
       "our_supplier": "Generic",
       "ls_id": "5cd91608-08b4-4299-843d-a78fd46d048a"
     },
     {
-      "name": "Real Crius Ins Vest",
-      "sku": "W-ARI-BLA-XS",
-      "our_supplier": "Ariat International",
-      "ls_id": "faf9bfc4-3b5d-460d-a2fc-f7e6e1857b45"
+      "name": "Red Deluxe 5\" Neoprene Cowl",
+      "sku": "A-GEN-9401-1-RED-5",
+      "our_supplier": "Generic",
+      "ls_id": "ccc4239b-49af-4516-bf93-4e036a57fbe2"
     },
     {
-      "name": "Removable Passcase Wallet",
-      "sku": "A-BHS-N5413402",
-      "our_supplier": "BH Shoe Holdings",
-      "ls_id": "5cff239a-49a7-464e-b17d-505ba4e6cb31"
-    },
-    {
-      "name": "Roper Men's Tone on Tone Stripe Shirt",
-      "sku": "M-KAR-1-01-145-363-WHI-3XL",
-      "our_supplier": "Karman Inc",
-      "ls_id": "8ee8bdc2-4fd2-4caf-ae0f-59f645cb45f2"
+      "name": "Reinsman Quick Change Bit System",
+      "sku": null,
+      "our_supplier": "Generic",
+      "ls_id": "dc2f9f86-263b-45b8-804b-39b2d67bf77d"
     },
     {
       "name": "Roper Tie",
@@ -4548,34 +2445,28 @@
       "ls_id": "0d4cce0f-1e32-4825-bc75-e80befc88ce8"
     },
     {
-      "name": "Round Up Ruidoso",
-      "sku": "W-ARI-10074332-TB-8.5-C",
-      "our_supplier": "Ariat International",
-      "ls_id": "1785dddf-b1d5-49cd-910c-90c5b3bf415d"
-    },
-    {
       "name": "Roy Rogers No. 411",
       "sku": "A-GEN-411",
       "our_supplier": "Generic",
       "ls_id": "21441a82-b998-4fc1-b7dd-c51698b2dab7"
     },
     {
-      "name": "Salt & Pepper Holder w/Shakers",
-      "sku": "A-GEN-94122",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "6a5c984b-8e0f-43dc-bea7-0e32262cc74a"
+      "name": "Salt Block Holder",
+      "sku": "A-GEN-10546-BLA",
+      "our_supplier": "Generic",
+      "ls_id": "4b14feb9-3539-4e8b-94c0-a05d411c4611"
     },
     {
-      "name": "Salt & Pepper Holder w/Shakers",
-      "sku": "A-MFW-94122",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "6a5c984b-8e0f-43dc-bea7-0e32262cc74a"
+      "name": "Salt Block Holder",
+      "sku": "A-JMA-10546-WHI",
+      "our_supplier": "Horse/Rodeo - Feed, Water & Stable Supplies",
+      "ls_id": "4b14feb9-3539-4e8b-94c0-a05d411c4611"
     },
     {
-      "name": "Scarf Slide",
-      "sku": "W-MFW-2808048-RAW-OS",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "80d54b81-7766-4b85-8271-4575cde8b286"
+      "name": "Scalloped Navajo Pony Pad",
+      "sku": "A-GEN-1108-BLA-23X23",
+      "our_supplier": "Generic",
+      "ls_id": "017b0bc2-c6f8-4081-a62b-e67708dce5ce"
     },
     {
       "name": "ShowQuest Bun Net",
@@ -4590,10 +2481,10 @@
       "ls_id": "000115c4-7bd7-4e0f-9a1c-3a93f931ced5"
     },
     {
-      "name": "Solid Blazer with Piping",
-      "sku": "M-SSI-10376-BLA-48",
-      "our_supplier": "Scully",
-      "ls_id": "c5f2ee48-abe0-4e04-bc40-188fddd73f06"
+      "name": "Silvertip Halters 10' Lead",
+      "sku": "A-GEN-LP510-BLU-10-LEAD-5/8-BRAID",
+      "our_supplier": "Generic",
+      "ls_id": "9ea8f007-0682-4b48-bd52-2c9144f5139a"
     },
     {
       "name": "Solid Wool Blend Pants",
@@ -4602,10 +2493,64 @@
       "ls_id": "072c0689-4b59-4276-ab46-d1087755a281"
     },
     {
-      "name": "Tek Series High Performance Socks",
-      "sku": "A-ARI-10051906-PNK-L",
-      "our_supplier": "Ariat International",
-      "ls_id": "22a4f5bc-ed87-49f1-83f9-dd2d495c5011"
+      "name": "SS Hackamore Pony Bit Rub Cov Bike Chn",
+      "sku": "A-GEN-251080-PONY",
+      "our_supplier": "Generic",
+      "ls_id": "61ff8234-678d-439a-9db6-677a970465b9"
+    },
+    {
+      "name": "Stainless Steel Light Weight Gag Bit by Metalab",
+      "sku": "A-GEN-255560-STA-5-MOUTH-3-HALF-RINGS",
+      "our_supplier": "Generic",
+      "ls_id": "add63abb-0112-4e43-ba14-e19430df8e32"
+    },
+    {
+      "name": "Stainless Steel light weight Kimberwick Bit",
+      "sku": "A-GEN-255600-5-MOUTH",
+      "our_supplier": "Generic",
+      "ls_id": "159167ff-5668-4753-8de2-eed020405401"
+    },
+    {
+      "name": "Stainless Steel Light Weight Training Bit",
+      "sku": "A-GEN-255116-STA-5.75-MOUTH-6.5-CHEEKS",
+      "our_supplier": "Generic",
+      "ls_id": "57171bd3-f277-4afd-a267-6dd8b5571dd2"
+    },
+    {
+      "name": "Stainless Steel Ring Snaffle",
+      "sku": "A-GEN-255109-DTP-5.5",
+      "our_supplier": "Generic",
+      "ls_id": "cffcc062-1226-415b-90df-806e288f86a0"
+    },
+    {
+      "name": "Stainless Steel Ring Snaffle by Metalab",
+      "sku": "A-GEN-255511-STA-5-MOUTH-3-RINGS",
+      "our_supplier": "Generic",
+      "ls_id": "0fba16d6-61a3-4ea2-92bc-f95601d21dad"
+    },
+    {
+      "name": "Stainless Steel Training Bit",
+      "sku": "A-GEN-256860-STA-5-MOUTH-8-CHEEKS",
+      "our_supplier": "Generic",
+      "ls_id": "b91fe12c-7068-408e-8348-260856c8ec8f"
+    },
+    {
+      "name": "Stirrup Leathers BK-58\"W/BUCK",
+      "sku": "A-GEN-0179-1158-BLA-58",
+      "our_supplier": "Generic",
+      "ls_id": "5db121c3-4527-4cee-bd13-b815388c3131"
+    },
+    {
+      "name": "Straight Mouth Bits",
+      "sku": "A-GEN-269040-TRAINING",
+      "our_supplier": "Generic",
+      "ls_id": "7472e717-ba7f-4d24-8ac9-9393023b5d46"
+    },
+    {
+      "name": "Sweet Iron Copper Iron",
+      "sku": "A-GEN-5",
+      "our_supplier": "Generic",
+      "ls_id": "f3ff9ab1-c732-4157-8989-1e4071bf20cd"
     },
     {
       "name": "The Original Whiskey Bent Knives",
@@ -4626,34 +2571,40 @@
       "ls_id": "1da07741-f8a5-419a-ab46-36dd90ed0c50"
     },
     {
+      "name": "Trail Flide Stiffup",
+      "sku": "A-TKR-0242-3100",
+      "our_supplier": "Generic",
+      "ls_id": "171ed05f-a23f-4b2b-acf6-e63314db05a3"
+    },
+    {
       "name": "Trend Mug",
       "sku": "A-GEN-160302270-HON-13.5-OZ",
       "our_supplier": "Generic",
       "ls_id": "0f9d1332-678e-4aa4-95be-a878bf71c177"
     },
     {
-      "name": "Trenditions",
-      "sku": "A-GEN-2520701531",
-      "our_supplier": "Trenditions",
-      "ls_id": "6ab30329-0cea-4458-ba94-b2c11f71175f"
+      "name": "Tucker Fenders",
+      "sku": "A-TKR-TUCKERFENDERS-BRO",
+      "our_supplier": "Tucker",
+      "ls_id": "52e87e59-bc4e-44a3-a8e3-4228f929d11d"
     },
     {
-      "name": "Tribull EMB Shirt",
-      "sku": "M-SSI-P-884X-BLA-3X",
-      "our_supplier": "Scully",
-      "ls_id": "59b8737b-eea2-4a18-9959-ae0e072dc92a"
+      "name": "Tucker Stiffups 240",
+      "sku": "A-TKR-TUCKER240",
+      "our_supplier": "Tucker",
+      "ls_id": "0b0905b5-2a42-4af4-bfcd-ff9b1e917bcb"
     },
     {
-      "name": "Twisted X SK5003",
-      "sku": "A-TWX-XK6003",
-      "our_supplier": "Western Fashion Accessories",
-      "ls_id": "4e2737cf-3e9b-4388-8804-f8dc7cc46004"
+      "name": "Tucker Stirrup",
+      "sku": "A-TKR-TUCKERSTIRRUP",
+      "our_supplier": "Tucker",
+      "ls_id": "338ca951-24ad-478b-9e02-ad3ec4cd20a5"
     },
     {
-      "name": "Twisted X XK4003",
-      "sku": "A-TWX-XK4003",
-      "our_supplier": "Western Fashion Accessories",
-      "ls_id": "a95d9aac-f4e4-4972-8000-852e25842e02"
+      "name": "Turbo Dry Cooler",
+      "sku": "A-GEN-471053-NAV",
+      "our_supplier": "Generic",
+      "ls_id": "eea60905-a2ac-4f9d-a32e-73b5fa7e8e5a"
     },
     {
       "name": "Vance Bags Leather Garment",
@@ -4674,22 +2625,10 @@
       "ls_id": "d8ba6bc4-2ca5-4227-9c6d-e3b957dd5838"
     },
     {
-      "name": "Western Moments Champagne Flutes",
-      "sku": "A-MFW-94847",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "f8f2adaa-d39e-4b29-a5ec-479de39cc498"
-    },
-    {
       "name": "Western Moments Frame",
       "sku": "A-GEN-9499902-4X6",
       "our_supplier": "Generic",
       "ls_id": "d3add02d-c485-4676-83a8-e1deb9d41435"
-    },
-    {
-      "name": "Western Moments Mug",
-      "sku": "A-GEN-94973-16OZ",
-      "our_supplier": "M&F Western Products",
-      "ls_id": "0c883fe0-5110-4703-a663-05d33449922c"
     },
     {
       "name": "Whiskey Bent Knives",
@@ -4704,364 +2643,22 @@
       "ls_id": "c598615e-0b03-4638-b74d-db537c8a4865"
     },
     {
-      "name": "Women's Convertible Wristlet Embroidered Crossbody Bag by Justin",
-      "sku": "W-GEN-23110687",
-      "our_supplier": "Trenditions",
-      "ls_id": "2629cf12-3283-4d15-9c51-a640e82d13b8"
+      "name": "Women\u2019s Catchfly Tan Belt With Turquoise Underlay",
+      "sku": "W-GEN-2129BE15-TAN-M",
+      "our_supplier": "Generic",
+      "ls_id": "b88bc0f4-8f7c-4b15-aa77-fd741a48f715"
     },
     {
-      "name": "Wrangler Bespoke Trouser",
-      "sku": null,
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d76c2e56-25fa-4dc1-b548-d867f727e7df"
-    },
-    {
-      "name": "WRANGLER COWBOY DENIM UNLINED JACKET",
-      "sku": "W-KON-112346157-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "4b89526f-b53d-456d-83c2-1a82eea0895f"
-    },
-    {
-      "name": "Wrangler Dress Basic Shirt",
-      "sku": "M-KON-1071125CP-16-X-35",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "288f7770-d701-4b74-8332-2057ed95fada"
-    },
-    {
-      "name": "Wrangler Dress Basic Shirt",
-      "sku": "M-KON-1071125CP-14-1/2-X-33",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "288f7770-d701-4b74-8332-2057ed95fada"
-    },
-    {
-      "name": "Wrangler Dress Basic Shirt",
-      "sku": "M-KON-1071125CP-20-X-35",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "288f7770-d701-4b74-8332-2057ed95fada"
-    },
-    {
-      "name": "Wrangler Dress Basic Shirt, Long Sleeve",
-      "sku": "M-KON-1071125CP-16-1/2-X-38-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "f902b2c4-30fd-4740-9e5c-986dafb6c820"
-    },
-    {
-      "name": "Wrangler George Strait Collection Shirt",
-      "sku": "M-KON-112368231-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "f8e5349d-6f20-4cb3-9b32-43e931fe484a"
-    },
-    {
-      "name": "Wrangler George Strait Collection Shirt",
-      "sku": "M-KON-112368231-XLT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "f8e5349d-6f20-4cb3-9b32-43e931fe484a"
-    },
-    {
-      "name": "Wrangler George Strait Collection Shirt",
-      "sku": "M-KON-112368231-3XT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "f8e5349d-6f20-4cb3-9b32-43e931fe484a"
-    },
-    {
-      "name": "Wrangler Men's Blue Multi Stripe Logo Snap Shir",
-      "sku": "M-KON-112379239-BLU-M",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "066a90a1-d3dd-4199-8237-afaad5dcc108"
-    },
-    {
-      "name": "Wrangler Men's Blue Multi Stripe Logo Snap Shirt",
-      "sku": "M-KON-112379239-BLU-XL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "a471db61-a11d-4cb1-bdf1-18b58ce576fb"
-    },
-    {
-      "name": "Wrangler Men's Checotah Dress Western Grey Multi Snap Shirt",
-      "sku": "M-KON-112374908-GRA-L",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "9dc8961a-49ff-47a8-9b12-b01a0cb131cf"
-    },
-    {
-      "name": "Wrangler Men's Checotah Western Red Snap Dress Shirt",
-      "sku": "M-KON-112374909-RED-S",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "89b8b321-52bc-4276-a9aa-5be5289f4ede"
-    },
-    {
-      "name": "Wrangler Men's Checotah\u00ae Teal Multi Western Snap Shirt",
-      "sku": "M-KON-112369467-LT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "2c33800f-219f-4d7b-a0cf-c47f5d4d97d2"
-    },
-    {
-      "name": "Wrangler Men's Lined Denim Washed Black Jacket",
-      "sku": "M-KON-112367635-WAS-M",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "f22b69d6-4d88-4adb-b7d2-687fec109461"
-    },
-    {
-      "name": "Wrangler Men's Lined Denim Washed Black Jacket",
-      "sku": "M-KON-112367635-WAS-S",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "f22b69d6-4d88-4adb-b7d2-687fec109461"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-20X35",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-20X37-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071125CP-17-1/5-X-36-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-17-1/2-X-36-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-16-1/2-X-36-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-20X36-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-18X35",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071125CP-18X36-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-17-1/2-X-37-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-16-1/2-X-38-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071125CP-17-1/2-X-38-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071125CP-19X37-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071125CP-20X36-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men's Long Sleeve Basic Western Shirt",
-      "sku": "M-KON-1071130CS-18X36-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "d06a2fdc-56d5-4d82-b6c6-a2a64b297e6d"
-    },
-    {
-      "name": "Wrangler Men\u2019s Long Sleeve Dobby Strip Shirt",
-      "sku": "M-KON-1075740WN-RED-2XLT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "6d52efa7-1d35-48ba-8d8e-e01a8d62054c"
-    },
-    {
-      "name": "Wrangler Men's Retro Sherpa Lined Denim Jacket",
-      "sku": "M-KON-112335737-BLU-S",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "0cbec6f9-9c36-4066-85dd-b00d1f60f1e8"
-    },
-    {
-      "name": "Wrangler Men's Sport White Western Snap Shirt",
-      "sku": "M-KON-1071105WH-WHI-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "2462a03e-861a-4955-9252-2f14a8918d9a"
-    },
-    {
-      "name": "Wrangler Men's Sport White Western Snap Shirt",
-      "sku": "M-KON-1071105WH-WHI-2XLT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "2462a03e-861a-4955-9252-2f14a8918d9a"
-    },
-    {
-      "name": "Wrangler Men's Sport White Western Snap Shirt",
-      "sku": "M-KON-1071105WH-WHI-4X",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "2462a03e-861a-4955-9252-2f14a8918d9a"
-    },
-    {
-      "name": "Wrangler Men's Sport White Western Snap Shirt",
-      "sku": "M-KON-1071105WH-WHI-3X",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "2462a03e-861a-4955-9252-2f14a8918d9a"
-    },
-    {
-      "name": "Wrangler Men's Sport White Western Snap Shirt",
-      "sku": "M-KON-1071105WH-WHI-XLT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "2462a03e-861a-4955-9252-2f14a8918d9a"
-    },
-    {
-      "name": "Wrangler Men's Vintage BrushPopper Blue Stripe Snap Shirt",
-      "sku": "M-KON-112368191-BLU-M",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "8daebb4d-f6a9-4b71-9ff5-05c0c8820642"
-    },
-    {
-      "name": "Wrangler Men's Vintage BrushPopper Blue Stripe Snap Shirt",
-      "sku": "M-KON-112368191-BLU-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "8daebb4d-f6a9-4b71-9ff5-05c0c8820642"
-    },
-    {
-      "name": "Wrangler Men's Vintage BrushPopper Blue Stripe Snap Shirt",
-      "sku": null,
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "8daebb4d-f6a9-4b71-9ff5-05c0c8820642"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Black Multi Snap Shirt",
-      "sku": "M-KON-112374803-BLA-M",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "a03ddb81-b5f5-4e5d-aa17-c58f86772947"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Black Multi Snap Shirt",
-      "sku": "M-KON-112374803-BLA-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "a03ddb81-b5f5-4e5d-aa17-c58f86772947"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt",
-      "sku": "M-KON-112375916-BLU-2XT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "72753cab-b2e5-4023-9c74-99dd9353a24f"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt",
-      "sku": "M-KON-112379229-BLU-XL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "72753cab-b2e5-4023-9c74-99dd9353a24f"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt",
-      "sku": "M-KON-112379229-BLU-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "72753cab-b2e5-4023-9c74-99dd9353a24f"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt",
-      "sku": "M-KON-112379230-BLU-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "72753cab-b2e5-4023-9c74-99dd9353a24f"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt",
-      "sku": "M-KON-112375916-BLU-LT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "72753cab-b2e5-4023-9c74-99dd9353a24f"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt",
-      "sku": "M-KON-112375916-BLU-XLT",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "72753cab-b2e5-4023-9c74-99dd9353a24f"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Blue Multi Stripe Snap Shirt",
-      "sku": "M-KON-112375917-BLU-XXL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "72753cab-b2e5-4023-9c74-99dd9353a24f"
-    },
-    {
-      "name": "Wrangler Men's Vintage Inspired Indigo Snap Shirt",
-      "sku": "M-KON-112374802-IND-S",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "f2370fa8-1ccb-45ce-bef6-eef6a65538f9"
-    },
-    {
-      "name": "Wrangler Mens Basic Western Snap Shirt",
-      "sku": "M-KON-107105WH-WHI-S",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "e3cc056c-3265-4ac1-ba55-d390fe94090a"
+      "name": "Wonder Bit 3/8\" Large Twisted S.I. Snaffle",
+      "sku": "A-GEN-307-7-CHEEKS-5-MOUTH",
+      "our_supplier": "Generic",
+      "ls_id": "e8044002-0943-4e2f-a922-5f264910ea85"
     },
     {
       "name": "Wrapping Paper Roll",
       "sku": "A-GEN-WES-24\" X 7'",
       "our_supplier": "Generic",
       "ls_id": "9bb3684f-7967-49d9-a95f-f0324a1b9401"
-    },
-    {
-      "name": "www.dbsupply.com \u203a wrangler-long-sleeve-westernWrangler Dress Western Basic Shirt, Long Sleeves",
-      "sku": "M-KON-1071125CP-17-1/2-X-37-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "5851f1e1-ee4b-4182-946b-76734463294c"
-    },
-    {
-      "name": "www.dbsupply.com \u203a wrangler-long-sleeve-westernWrangler Dress Western Basic Shirt, Long Sleeves",
-      "sku": "M-KON-1071125CP-17X37-TALL",
-      "our_supplier": "Kontoor Brands",
-      "ls_id": "5851f1e1-ee4b-4182-946b-76734463294c"
-    },
-    {
-      "name": "YTH PATRIOT ANTQ MOCHA/SAND CAMO PRINT (K-ARI-10019913-A-10.5-M)",
-      "sku": "K-ARI-10019913-AS-4.5-M",
-      "our_supplier": "Ariat International",
-      "ls_id": "e9b265a9-fc4d-4abe-afd8-9b85cdf825e2"
-    },
-    {
-      "name": "YTH PATRIOT ANTQ MOCHA/SAND CAMO PRINT (K-ARI-10019913-A-10.5-M)",
-      "sku": "K-ARI-10019913-AS-1-M",
-      "our_supplier": "Ariat International",
-      "ls_id": "e9b265a9-fc4d-4abe-afd8-9b85cdf825e2"
-    },
-    {
-      "name": "YTH PATRIOT ANTQ MOCHA/SAND CAMO PRINT (K-ARI-10019913-A-10.5-M)",
-      "sku": "K-ARI-10019913-AS-3.5-M",
-      "our_supplier": "Ariat International",
-      "ls_id": "e9b265a9-fc4d-4abe-afd8-9b85cdf825e2"
-    },
-    {
-      "name": "YTH PATRIOT ANTQ MOCHA/SAND CAMO PRINT (K-ARI-10019913-A-10.5-M)",
-      "sku": "K-ARI-10019913-AS-2-M",
-      "our_supplier": "Ariat International",
-      "ls_id": "114c2376-773e-4e35-a351-f4b2fcdb3026"
-    },
-    {
-      "name": "YTH PATRIOT ANTQ MOCHA/SAND CAMO PRINT (K-ARI-10019913-AS-12-NA)",
-      "sku": "K-ARI-10019913-AS-12-M",
-      "our_supplier": "Ariat International",
-      "ls_id": "b02fe005-e60a-49f8-9a9a-63cfaf54e8f1"
     }
   ]
 }

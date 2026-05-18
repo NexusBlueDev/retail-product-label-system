@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-18 (Session 26) — Issue B complete (supplier backfill 122 products). Kids variants verified: all 38 exist in LS (Boys 8-18 + Childrens 1-7). Fixed 2 size-20 Boys CUSTOM codes (13MWZ-Boys-20-* → B-Kon-1013MWZBP-20-*) and renamed Boys family to "COWBOY CUT JEAN* BOYS 8-18 PREWASH". Awaiting Corrinne: bracket/paren review + 3 RIGID sizes.
+2026-05-18 (Session 26) — Issue B complete. Kids variants verified (38/38). lightspeed_index refreshed: 77,349 rows. Validation: 5 stale LS IDs in our DB, 125 price mismatches (>$1), 124 supplier gaps (all Generic — expected). Awaiting Corrinne: bracket/paren review + 3 RIGID sizes.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -57,7 +57,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - ✅ **Supplier backfill:** 122 products assigned supplier via `docs/ls_issue_b_supplier_backfill.py`. Log: `docs/ls_issue_b_supplier_backfill_log.csv`. Remaining 104 skipped (Generic/Tucker/Cripple Creek — no confident LS supplier mapping). 437 have no supplier_name in our DB — cannot backfill.
   - ✅ **Custom SKU addition:** All 1,945 linked products already have CUSTOM product_code in LS. No action needed.
 - **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Variant attribute order fixed S18: Color → Size → Length → Width.
-- **lightspeed_index refreshed** — 75,379 rows (April 15 catalog + May 6 Supabase index). Per-color families not in catalog (created after April 15); accessible via Supabase.
+- **lightspeed_index refreshed (S26)** — 77,349 rows, live as of 2026-05-18. Validation: 5 stale LS IDs in our DB, 125 price mismatches (>$1), 124 supplier gaps (all Generic). Full report: `docs/ls_validation_report.json`.
 
 ## Next Up
 
@@ -66,6 +66,8 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 1b. **Bracket/paren name merge:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). Three questions for Corrinne: (1) are the 225 auto-matches correct? (2) run merge-and-delete script? (3) what to do with ~3,407 unmatched SKU-in-name variants?
 2. ✅ **Issue B — Data quality sweep: COMPLETE.** All three sub-tasks done (see In Progress section).
 5. ✅ **Kids variants — COMPLETE (S26):** All 38 exist in LS. Boys family (24 variants, family_id=63671fcf) renamed to "COWBOY CUT JEAN* BOYS 8-18 PREWASH". 2 size-20 variants had old SKU format (13MWZ-Boys-20-*) — updated to B-Kon-1013MWZBP-20-REG/SLM with correct UPCs. Childrens family (14 variants, family_id=ef3101a7) was already clean.
+3. **5 stale LS IDs in our DB** — `docs/ls_validation_report.json` has correct IDs. Low priority — no functional impact, just cosmetic.
+4. **125 price mismatches (>$1)** — our DB vs LS. Notable: Necklace ($40 vs $149.95), CALLOWAY ($18.95 vs $124), Circle S Ranch Pant (multiple, ours $42-57 vs LS $89.95). Corrinne should review — likely LS prices are correct.
 6. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
 7. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
 8. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
@@ -1391,3 +1393,39 @@ Thank you again for the thorough review — this directly improves what Lightspe
 - Git commit [main 78c7345]
 - Git commit [main 7a96b75]
 - Git commit [main 3785302]
+
+### Mid-Session Checkpoint (2026-05-18T12:57:50Z — auto-compaction)
+**Ledger stats:** 24 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+- Git commit [main 3785302]
+- Git commit [main ac3070d]
+
+### Mid-Session Checkpoint (2026-05-18T13:18:12Z — auto-compaction)
+**Ledger stats:** 24 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+- Git commit [main 3785302]
+- Git commit [main ac3070d]
+
+### Mid-Session Checkpoint (2026-05-18T13:22:58Z — auto-compaction)
+**Ledger stats:** 24 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+- Git commit [main 3785302]
+- Git commit [main ac3070d]
+
+### Mid-Session Checkpoint (2026-05-18T13:28:13Z — auto-compaction)
+**Ledger stats:** 24 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+- Git commit [main 3785302]
+- Git commit [main ac3070d]
