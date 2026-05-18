@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-18 (Session 25 start) — Corrinne completed items 1 and 2 manually. Both verified in LS. UPC error re-audit run: 61 errors fully resolved (38 direct fixes + 13 script fixes S25 + 10 duplicate deletions by Corrinne). All 13MWZ per-color families complete. Next: delete big Navy catch-all (c3c968b4), then Issue B data quality sweep.
+2026-05-18 (Session 25) — Items 1+2 verified, UPC re-audit complete (61/61 resolved), RIGID catch-all cleanup done (44 old-format deleted, 2 CUSTOM codes fixed). RIGID family now has 17 correct M-Kon variants. 3 missing RIGID sizes need Corrinne (48-32, 50-32, 52-32). Next: bracket/paren name merge (awaiting Corrinne), then Issue B data quality sweep.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -59,9 +59,9 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 ## Next Up
 
 ### NexusBlue — Next Session
-1. **Delete big Navy catch-all (c3c968b4):** ANTIQUE_WS confirmed extracted (S25). Write script to enumerate and bulk-delete all remaining variants in c3c968b4 (RIGID excess + per-color duplicates). Confirm count vs expected before running.
+1. **Corrinne: add 3 missing RIGID sizes via LS UI** under "COWBOY CUT JEAN* ORIGINAL FIT RIGID": Size 48-32 (SKU: M-Kon-1013MWZXS-48-32, UPC: 051071393225), 50-32 (M-Kon-1013MWZXS-50-32, 051071393249), 52-32 (M-Kon-1013MWZXS-52-32, 051071393263). Supply price $20.50 each.
 1b. **Bracket/paren name merge:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). Three questions for Corrinne: (1) are the 225 auto-matches correct? (2) run merge-and-delete script? (3) what to do with ~3,407 unmatched SKU-in-name variants?
-4. **Issue B — Data quality sweep (AFTER 13MWZ cleanup):** track_inventory sweep, supplier_code backfill, Custom SKU addition.
+2. **Issue B — Data quality sweep:** track_inventory sweep, supplier_code backfill, Custom SKU addition. 13MWZ cleanup is now complete (RIGID clean, catch-all gone).
 5. **Kids variants:** 38 kids variants (Boys 8-18 PREWASH: 24, Childrens 1-7 PREWASH: 14) — check if they exist in LS already, create if missing.
 6. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
 7. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
@@ -1353,3 +1353,9 @@ Thank you again for the thorough review — this directly improves what Lightspe
 - Git push to main
 - Git commit [main 411ef44]
 - Git push to main
+
+### Mid-Session Checkpoint (2026-05-18T12:06:43Z — auto-compaction)
+**Ledger stats:** 5 entries (0 decisions, 0 lessons, 0 errors, 1 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
