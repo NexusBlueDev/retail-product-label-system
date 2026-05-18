@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-15 (Session 24 close) — UPC fix complete: 3,566 OK, 61 errors (duplicate UPC conflicts). Error log (`docs/ls_upc_fix_errors.csv`, 61 rows) emailed to corrinne@nexusblue.io. Bracket/paren names report (4,374 variants, 225 match pairs) emailed. Awaiting Corrinne on both. Corrinne's correct email confirmed: corrinne@nexusblue.io.
+2026-05-18 (Session 25 start) — Corrinne completed items 1 and 2 manually. Both verified in LS. UPC error re-audit run: 61 errors fully resolved (38 direct fixes + 13 script fixes S25 + 10 duplicate deletions by Corrinne). All 13MWZ per-color families complete. Next: delete big Navy catch-all (c3c968b4), then Issue B data quality sweep.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -33,34 +33,34 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
   - Menu badge shows photo-only queue count
 
 ## In Progress
-- **S24 — UPC fix + bracket names (Corrinne's S23 responses received):**
-  - ✅ **Corrinne returned corrected UPC sheet** (`docs/ls_upc_audit-response.csv`). 3,611 have valid NEW UPC; 16 have no NEW UPC (clear the UPC field); 36 had corrupted NEW UPC (Excel formatted retail_price + UPC as a decimal — auto-corrected by prepending "0" to original 11-digit UPC).
-  - ✅ **UPC fix complete:** `docs/ls_upc_fix.py` finished 21:36 UTC. 3,566 OK, 61 errors (422 "UPC already exists" — corrected UPC already on another variant). Error log: `docs/ls_upc_fix_errors.csv` (61 rows). Auto-emailed to corrinne@nexusblue.io.
-  - ✅ **Bracket/paren names report sent:** `docs/ls_bracket_names.py` found 4,374 variants with brackets/parens. 3,632 are genuine "SKU in name" cases. 225 have automated match pairs. Full report + pairs emailed to Corrinne at 20:14 UTC. Awaiting her review and guidance on merge workflow.
+- **S25 — Corrinne items 1+2 verified, UPC re-audit complete:**
+  - ✅ **Item 1 — 36 missing 13MWZ variants:** All 36 confirmed in LS (36/36 found by CUSTOM SKU). SW_GLD_BKL +26, SHADOW_BLK +5, DK_STONE +4, PREWASHED_INDIGO +1. Verification script: `docs/ls_verify_items1_2.py`. Results: `docs/ls_verify_items1_2_results.csv`.
+  - ✅ **Item 2 — ANTIQUE_WS per-color family:** Confirmed in LS — 56 variants under "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS" with correct M-Kon-1013MWZAW SKUs and UPCs.
+  - ✅ **UPC re-audit (61 errors) — all 61 resolved:**
+    - 38 FIXED: Corrinne updated survivors; UPC now correct on those variants.
+    - 13 FIXED (S25 script): Tack items (reins, bits, cinch) had CUSTOM codes in the UPC field; fix script `docs/ls_upc_reaudit_fix.py` moved each code from UPC type to CUSTOM type. Log: `docs/ls_upc_reaudit_fix_log.csv`.
+    - 10 DELETED by Corrinne: Sport Western Snap Shirt 71105 duplicates (our import copies) — Corrinne deleted them. The original LS products for these sizes already had the correct 12-digit UPCs; no further action needed.
+  - ⚠️ **Bracket/paren name merge still pending:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). She needs to confirm: (1) are the 225 auto-matches correct? (2) run merge-and-delete script? (3) what about remaining ~3,407 unmatched SKU-in-name variants?
 
-- **S23 — 13MWZ / Corrinne open items (3 still waiting):**
+- **S24 — UPC fix + bracket names:**
+  - ✅ Corrinne returned corrected UPC sheet. 3,566 OK, 61 errors resolved in S25.
+  - ✅ Bracket/paren names report sent. Awaiting Corrinne review.
 
-- **S21 — 13MWZ cleanup continued:**
-  - ✅ **0013M rename + delete:** Script `docs/ls_0013m_rename_delete.py`. Result: 105 variants already renamed by Corrinne, 1 renamed by script, 14 PREWASHED_INDIGO duplicate variants deleted. All 0013M variants now named "Cowboy Cut Original Fit - 13MWZ - NAVY". Audit: `docs/ls_0013m_rename_delete_audit.csv`.
-  - ✅ **0013M UPC fix:** 91/106 variants fixed (leading zero prepended). 14 errors = UPC conflicts with per-color families (genuine duplicates, now deleted). Audit: `docs/ls_0013m_upc_fix_audit.csv`.
-  - ✅ **Full comparison run:** `docs/ls_13mwz_full_comparison.csv` — 784 LS variants vs spreadsheet. **0 discrepancies** in the 585 per-color family variants. Script: `docs/ls_13mwz_comparison.py`.
-  - ✅ **Per-color family status:** 10 families (BLK_CHOCLT 60, CHARGREY 61, DK_STONE 52, GB_BLEACH 56, PREWASHED_INDIGO 86, RIGID 13, SHADOW_BLK 82, SW_GLD_BKL 53, TAN 66, WHITE 56) — correct names, supply prices, 12-digit UPCs, retail prices. No rebuild needed.
-  - ⚠️ **Missing 36 variants — BLOCKED (LS API limitation):** DK_STONE: 4, PREWASHED_INDIGO: 1, SW_GLD_BKL: 26, SHADOW_BLK: 5. Cannot be added via REST API — v2.1 POST `/products` variant-add endpoint exists but `variant_definitions` schema is undiscoverable (validator reports `data.variant_definitions` required, but every field name/location tried returns "Unknown field"). Corrinne must add these manually via LS POS UI. Data file: `docs/ls_13mwz_missing_variants_for_corrinne.csv` (36 rows with family, size, length, UPC, SKU, retail price, supply price).
-  - ⚠️ **Big Navy catch-all family (c3c968b4):** Contains 56 ANTIQUE_WS (need own family), 91 RIGID excess, ~52 duplicates of per-color families. Plan: create ANTIQUE_WS family first (same API blocker for variants 2-56 — see above), then delete big family entirely.
-  - ⚠️ **ANTIQUE_WS (56 variants, no per-color family):** Still in big Navy catch-all. Need new per-color family "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS" — same API blocker as above. Corrinne to create via LS UI, or wait for API resolution.
-  - ⚠️ **91 RIGID excess:** Spreadsheet has 20 RIGID. Per-color family has 13. Big family has 91 extras. Excess to delete after ANTIQUE_WS extracted.
+- **S21 — 13MWZ cleanup completed:**
+  - ✅ **0013M rename + delete, UPC fix, full comparison, 10 per-color families** — all done. See S21 log below.
+  - ✅ **Missing 36 variants** — Corrinne added manually via LS UI (confirmed S25, all 36 found).
+  - ✅ **ANTIQUE_WS per-color family** — Corrinne created via LS UI (confirmed S25, 56 variants).
+  - ⚠️ **Big Navy catch-all family (c3c968b4):** ANTIQUE_WS extracted — this family now only contains RIGID excess and per-color duplicates. Ready to delete. Script needed: enumerate all variants in c3c968b4 and bulk-delete.
+  - ⚠️ **91 RIGID excess:** Spreadsheet has 20 RIGID. Per-color family has 13. Big catch-all has extras. Delete after catch-all audit.
 - **Issue B — Data quality sweep (AFTER ISSUE A):** Queued: track_inventory sweep, supplier_code backfill, Custom SKU addition.
 - **ls-upsert Edge Function live** — lookup-first LS import wired into saveAndComplete(). Variant attribute order fixed S18: Color → Size → Length → Width.
 - **lightspeed_index refreshed** — 75,379 rows (April 15 catalog + May 6 Supabase index). Per-color families not in catalog (created after April 15); accessible via Supabase.
 
 ## Next Up
 
-### NexusBlue — Next Session (waiting on Corrinne)
-0. **UPC fix errors (61 variants):** Error log at `docs/ls_upc_fix_errors.csv`, emailed to Corrinne. Each error = the corrected 12-digit UPC is already on another LS variant (likely a duplicate import). Awaiting Corrinne's guidance — most will probably be duplicates to delete. Note: 36 rows had Excel-corrupted NEW UPC (retail_price prefix merged into UPC cell) — auto-corrected by prepending "0" to original 11-digit UPC.
-0b. **Bracket/paren name merge:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). She needs to confirm: (1) are the 225 auto-matches correct? (2) should we run a merge-and-delete script? (3) what about the remaining ~3,407 unmatched SKU-in-name variants?
-1. **Corrinne: manually add 36 missing variants via LS UI.** Data file ready: `docs/ls_13mwz_missing_variants_for_corrinne.csv`. Groups: SW_GLD_BKL (26), SHADOW_BLK (5), DK_STONE (4), PREWASHED_INDIGO (1). Each row has family name, size, length, UPC, custom SKU, retail price, supply price.
-2. **Corrinne: create ANTIQUE_WS per-color family via LS UI.** Name: "COWBOY CUT JEAN* ORIGINAL FIT ANTIQUE_WS". 56 variants with M-Kon-1013MWZAW-{size}-{length} SKUs. (We will provide the variant list once Corrinne confirms she's ready.)
-3. **Delete big Navy catch-all (c3c968b4):** After ANTIQUE_WS is confirmed in LS, delete all visible + hidden variants in c3c968b4. Write script to enumerate and bulk-delete.
+### NexusBlue — Next Session
+1. **Delete big Navy catch-all (c3c968b4):** ANTIQUE_WS confirmed extracted (S25). Write script to enumerate and bulk-delete all remaining variants in c3c968b4 (RIGID excess + per-color duplicates). Confirm count vs expected before running.
+1b. **Bracket/paren name merge:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). Three questions for Corrinne: (1) are the 225 auto-matches correct? (2) run merge-and-delete script? (3) what to do with ~3,407 unmatched SKU-in-name variants?
 4. **Issue B — Data quality sweep (AFTER 13MWZ cleanup):** track_inventory sweep, supplier_code backfill, Custom SKU addition.
 5. **Kids variants:** 38 kids variants (Boys 8-18 PREWASH: 24, Childrens 1-7 PREWASH: 14) — check if they exist in LS already, create if missing.
 6. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
@@ -1343,4 +1343,13 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
 **Actions completed:**
 - Git commit [main cf59137]
+- Git push to main
+
+### Mid-Session Checkpoint (2026-05-15T21:56:14Z — auto-compaction)
+**Ledger stats:** 4 entries (0 decisions, 0 lessons, 0 errors, 4 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main cf59137]
+- Git push to main
+- Git commit [main 411ef44]
 - Git push to main
