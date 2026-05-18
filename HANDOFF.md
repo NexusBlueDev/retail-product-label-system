@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-18 (Session 26) — Issue B supplier backfill complete: 122 LS products assigned supplier (Kontoor, Ariat, Cinch/Miller, M&F Western, Trenditions, Scully, Saddle Barn, Hooey, BH Shoe, Jacks, et al.). track_inventory covered by S13 + ls-upsert. Custom SKU already present for all linked products. Issue B done. Awaiting Corrinne: bracket/paren review + 3 RIGID sizes.
+2026-05-18 (Session 26) — Issue B complete (supplier backfill 122 products). Kids variants verified: all 38 exist in LS (Boys 8-18 + Childrens 1-7). Fixed 2 size-20 Boys CUSTOM codes (13MWZ-Boys-20-* → B-Kon-1013MWZBP-20-*) and renamed Boys family to "COWBOY CUT JEAN* BOYS 8-18 PREWASH". Awaiting Corrinne: bracket/paren review + 3 RIGID sizes.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -65,7 +65,7 @@ All images in Supabase Storage (`product-images` bucket). Products have `status`
 1. **Corrinne: add 3 missing RIGID sizes via LS UI** under "COWBOY CUT JEAN* ORIGINAL FIT RIGID": Size 48-32 (SKU: M-Kon-1013MWZXS-48-32, UPC: 051071393225), 50-32 (M-Kon-1013MWZXS-50-32, 051071393249), 52-32 (M-Kon-1013MWZXS-52-32, 051071393263). Supply price $20.50 each.
 1b. **Bracket/paren name merge:** Awaiting Corrinne's review of `docs/ls_bracket_names.csv` (4,374 rows) and `docs/ls_bracket_match_pairs.csv` (225 pairs). Three questions for Corrinne: (1) are the 225 auto-matches correct? (2) run merge-and-delete script? (3) what to do with ~3,407 unmatched SKU-in-name variants?
 2. ✅ **Issue B — Data quality sweep: COMPLETE.** All three sub-tasks done (see In Progress section).
-5. **Kids variants:** 38 kids variants (Boys 8-18 PREWASH: 24, Childrens 1-7 PREWASH: 14) — check if they exist in LS already, create if missing.
+5. ✅ **Kids variants — COMPLETE (S26):** All 38 exist in LS. Boys family (24 variants, family_id=63671fcf) renamed to "COWBOY CUT JEAN* BOYS 8-18 PREWASH". 2 size-20 variants had old SKU format (13MWZ-Boys-20-*) — updated to B-Kon-1013MWZBP-20-REG/SLM with correct UPCs. Childrens family (14 variants, family_id=ef3101a7) was already clean.
 6. **953 orphaned Storage objects** — cleanup deferred. Service role key (`sb_secret_...`) not accepted as JWT by Storage API. Needs investigation or use of a properly-minted JWT.
 7. **2,847 old-format SKUs** — unique, just in old naming convention. No urgent cleanup needed.
 8. **Remaining missing barcodes** — ~8,000 LS products still missing UPC. No source data available; no action possible.
@@ -1383,3 +1383,11 @@ Thank you again for the thorough review — this directly improves what Lightspe
 **Actions completed:**
 - Git commit [main 78c7345]
 - Git commit [main 7a96b75]
+
+### Mid-Session Checkpoint (2026-05-18T12:38:57Z — auto-compaction)
+**Ledger stats:** 21 entries (0 decisions, 0 lessons, 0 errors, 3 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+- Git commit [main 3785302]
