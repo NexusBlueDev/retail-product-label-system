@@ -13,7 +13,7 @@
     "typecheck": "echo 'Static HTML/ES6 app — no TypeScript' && exit 0"
   },
   "devDependencies": {
-    "supabase": "^2.93.0",
+    "supabase": "^2.107.0",
     "typescript": "^6.0.3"
   }
 }
