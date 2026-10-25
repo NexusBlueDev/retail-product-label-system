@@ -1,7 +1,7 @@
 # HANDOFF — Retail Product Label System
 
 ## Last Updated
-2026-05-18 (Session 26) — Issue B complete. Kids variants verified (38/38). lightspeed_index refreshed: 77,349 rows. Validation: 5 stale LS IDs in our DB, 125 price mismatches (>$1), 124 supplier gaps (all Generic — expected). Awaiting Corrinne: bracket/paren review + 3 RIGID sizes.
+2026-10-25 (Security — Supabase Data API grant migration) — see Session Log entry at bottom of this file. Data-quality work (Session 26, 2026-05-18) is still the latest LS/Corrinne-facing state; that section below is unchanged.
 
 ## Project State
 Production app (v6.0) with four operational modes + Lightspeed POS integration. Post-login menu leads to:
@@ -1429,3 +1429,45 @@ Thank you again for the thorough review — this directly improves what Lightspe
 - Git commit [main 7a96b75]
 - Git commit [main 3785302]
 - Git commit [main ac3070d]
+
+### Mid-Session Checkpoint (2026-05-18T13:29:18Z — auto-compaction)
+**Ledger stats:** 25 entries (0 decisions, 0 lessons, 0 errors, 5 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+- Git commit [main 3785302]
+- Git commit [main ac3070d]
+- Git commit [main 788cadb]
+
+### Mid-Session Checkpoint (2026-05-18T13:39:29Z — auto-compaction)
+**Ledger stats:** 25 entries (0 decisions, 0 lessons, 0 errors, 5 actions)
+**Session ledger:** /home/nexusblue/.claude/projects/-home-nexusblue-dev-retail-product-label-system/memory/session-ledger.md
+**Actions completed:**
+- Git commit [main 78c7345]
+- Git commit [main 7a96b75]
+- Git commit [main 3785302]
+- Git commit [main ac3070d]
+- Git commit [main 788cadb]
+
+---
+
+### 2026-10-25 (Security) — Supabase Data API grant migration (Tier 1, platform-wide program)
+
+**Trigger:** Supabase is removing the automatic Data API grant on public-schema tables for every existing project on 2026-10-30 (https://supabase.com/changelog/45329). This repo had zero `GRANT ... ON <table> TO <role>` statements anywhere in its 13-file migration history — same exposure the platform-wide program (brain repo: nexusblue-core, `docs/roadmap/SUPABASE_DATA_API_GRANT_AUDIT.md`) found and fixed first in Core DB. This repo was dispatched as one of the Tier-1 (zero-coverage) repos.
+
+**Live audit (project ref `ayfwyvripnetwrkimxka`), 2026-10-25:**
+- 6 public-schema tables (`app_users`, `lightspeed_index`, `normalized_products`, `products`, `project_library`, `rate_limits`). 0 views, 0 materialized views — the platform's "views are in scope" finding does not apply to this repo.
+- All 6 tables have `rowsecurity = true`. **No RLS-disabled tables found.**
+- No unguarded `qual = true` policies found anywhere in this schema.
+- One RLS-authoring style inconsistency flagged (not fixed, out of this migration's scope): `normalized_products`' policy has `roles={public}` (no explicit `TO authenticated`), unlike its 3 sibling owner-scoped tables (`app_users`/`lightspeed_index`/`products`), which use an explicit `TO authenticated`. Confirmed not a live anon exposure: the policy's `qual` compares `auth.uid()` to a fixed owner UUID, which evaluates `NULL` for an anon request (no JWT `sub` claim), so RLS denies every row for anon regardless of grant. Also confirmed via grep: `normalized_products` and `project_library` are not referenced anywhere in `js/` or `supabase/functions/` — no live app code path touches either table today.
+
+**Migration:** `supabase/migrations/20261025_grant_data_api_access.sql` — additive, idempotent. service_role: `GRANT ALL` on all 6 tables. authenticated: `SELECT/INSERT/UPDATE/DELETE` on `app_users`, `lightspeed_index`, `normalized_products`, `products`; `SELECT` only on `project_library`; nothing on `rate_limits` (RLS default-denies authenticated there — only its one policy, an anon `qual=false` deny, exists). anon: no grants anywhere in this schema (no table has a real, intentional anon-permitting policy). Full per-table derivation with the exact `pg_policies` rows is documented in the migration file's own header comment.
+
+**Rule #69 architect review:** `.architect-verdict-grant-migration.json` — **APPROVED**, no required changes. The architect independently re-queried the live DB (not just the migration's comments) and confirmed every policy fact, the "no views" finding, and the non-destructive nature of the file. One non-blocking observation: this repo's own CLAUDE.md "Tables" line only documents 3 of the 6 tables — pre-existing docs staleness, unrelated to this migration, not fixed here.
+
+**Applied live** via Supabase Management API. **Verified** via `information_schema.role_table_grants` subset-containment check (not exact-equality, since Supabase's pre-removal default already grants anon/authenticated full CRUD on every table today — confirmed 6/6 before this migration) across 11 (table, role) pairs: **0 failures**.
+
+**Verification:** `ci-local.sh` passed (`tsc --noEmit` — this is a static HTML/ES6 PWA with no build step or CI pipeline per its own CLAUDE.md; applying directly via Management API with no build/deploy step is this repo's normal migration pattern).
+
+**Not touched (per task scope):** `setup_blockers b99e988f` (the platform-wide cross-repo tracking row) is owned by the orchestrating nexusblue-core session, not updated from here.
