@@ -1,6 +1,6 @@
 # TODO — Retail Product Label System
 
-> Last updated: 2026-04-21 (Session 7)
+> Last updated: 2026-10-25 (docs-gate audit — Supabase Data API grant migration session)
 > These are actions required from the client or NexusBlue team — NOT Claude tasks.
 
 ## Client — Pending Testing
@@ -22,6 +22,10 @@
 - [x] **NexusBlue** P4 SKU normalization — complete 2026-04-21. 4,096 SKUs generated (collision-safe: 423 duplicate-scan skips, 564 no-style skips). complete: 5,351/6,201 now have SKU. enhanced_complete: 537/674.
 - [x] **NexusBlue** Price sync gap — FIXED 2026-04-21. v2.1 PUT requires fields nested under `details` key (not flat). Updated `ls-upsert` Edge Function: `{"details": {"price_excluding_tax": value}}`. Confirmed `action: "updated"` end-to-end.
 - [x] **NexusBlue** Archive `docs/lightspeed_import.py` + `docs/lightspeed_import_v2.py` (contain hardcoded LS token from old pattern) — deleted 2026-04-20. Rotate the LS personal access token in the Lightspeed dashboard.
+
+## NexusBlue — Docs / Housekeeping (found during 2026-10-25 docs-gate audit)
+- [ ] **NexusBlue** `normalized_products` RLS policy has no explicit `TO authenticated` clause (`roles={public}`), unlike its 3 sibling owner-scoped tables. Not a live exploit (its `qual` evaluates NULL for anon, so RLS denies every row regardless), but an RLS-authoring style inconsistency worth fixing in its own small migration, Rule #69 reviewed. Flagged by the architect review of `supabase/migrations/20261025_grant_data_api_access.sql` (`.architect-verdict-grant-migration.json`), not fixed there (out of that migration's scope).
+- [ ] **NexusBlue** HANDOFF.md is 1,473 lines, far over the platform's 200-line standard (Rule #200: history belongs in git + Core DB, not an ever-growing file). Pre-existing, accumulated since Session 1 (2026-03-03) — not caused by any single session. Needs a condensing pass: move session log detail (currently back to Session 5) into git history / Core DB `core_decisions`/`eng_project_library` references, keep only current state + a short session-log index in the file itself.
 
 ## Nice to Have
 - [ ] **NexusBlue** User PINs stored in plaintext — consider hashing (low priority, internal tool)

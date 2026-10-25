@@ -77,7 +77,7 @@ curl -s -X POST "https://api.supabase.com/v1/projects/ayfwyvripnetwrkimxka/datab
 
 Full CRUD verified: SELECT, INSERT, UPDATE, DELETE, DDL (CREATE/ALTER), and pg_cron scheduling all work.
 
-**Tables:** `products` (1,514 rows), `app_users` (6 rows), `rate_limits` (transient)
+**Tables:** `products` (1,514 rows), `app_users` (6 rows), `rate_limits` (transient), `lightspeed_index` (77K+ rows, LS catalog cache), `normalized_products` (not referenced by live app code as of 2026-10-25), `project_library` (not referenced by live app code as of 2026-10-25). All 6 have explicit Data API GRANTs as of `supabase/migrations/20261025_grant_data_api_access.sql` — see that file's header for the full per-table RLS derivation.
 
 ## Database Migrations
 Migrations in `supabase/migrations/` are reference SQL — they have already been applied to the production database. New migrations use the same Management API pattern above.
